@@ -3,5 +3,6 @@
 - Volume
 - Mono
 - Stero Width
-- Channel swap
 - channel phase swap
+  - Note that this is done before the channel swap
+- Channel swap
