@@ -1,9 +1,38 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-ChanToolProcessor::ChanToolProcessor()
+#include <memory>
+
+ChanToolProcessor::Parameters::Parameters(ChanToolProcessor& processor) {
+    juce::AudioProcessorValueTreeState::ParameterLayout layout;
+
+    mono = new juce::AudioParameterBool({"Mono", 1}, "Mono", false);
+    layout.add(std::unique_ptr<juce::RangedAudioParameter>(mono));
+
+    gain = new juce::AudioParameterFloat({"Gain", 1}, "Gain", -100.f, 40.f, 0.f);
+    layout.add(std::unique_ptr<juce::RangedAudioParameter>(gain));
+
+    stereo = new juce::AudioParameterFloat({"Stereo", 1}, "Stereo", 0.f, 200.f, 100.f);
+    layout.add(std::unique_ptr<juce::RangedAudioParameter>(stereo));
+
+    swap = new juce::AudioParameterBool({"Swap", 1}, "Swap", false);
+    layout.add(std::unique_ptr<juce::RangedAudioParameter>(swap));
+
+    invertL = new juce::AudioParameterBool({"InvertL", 1}, "InvertL", false);
+    layout.add(std::unique_ptr<juce::RangedAudioParameter>(invertL));
+
+    invertR = new juce::AudioParameterBool({"InvertR", 1}, "InvertR", false);
+    layout.add(std::unique_ptr<juce::RangedAudioParameter>(invertR));
+
+    apvts = std::unique_ptr<juce::AudioProcessorValueTreeState>(
+        new juce::AudioProcessorValueTreeState(
+        processor, nullptr, "CHANNELTOOLS-PARAMETERS", std::move(layout)));
+}
+
+
+
+ChanToolProcessor::ChanToolProcessor() : parameters(*this)
 {
-    parameters.add(*this);
 }
 
 void ChanToolProcessor::processBlock(juce::AudioBuffer<float>& buffer,
@@ -65,51 +94,27 @@ void ChanToolProcessor::processBlock(juce::AudioBuffer<float>& buffer,
         
 }
 juce::AudioProcessorEditor* ChanToolProcessor::createEditor() {
-    return new NewPluginTemplateAudioProcessorEditor(*this);
+    return new ChanToolEditor(*this);
 }
 
-void ChanToolProcessor::getStateInformation(juce::MemoryBlock& destData)
-{
-    //Serializes your parameters, and any other potential data into an XML:
+void ChanToolProcessor::getStateInformation(juce::MemoryBlock& destData) {
 
-    juce::ValueTree params("Params");
-
-    for (auto& param: getParameters())
-    {
-        juce::ValueTree paramTree(PluginHelpers::getParamID(param));
-        paramTree.setProperty("Value", param->getValue(), nullptr);
-        params.appendChild(paramTree, nullptr);
-    }
-
-    juce::ValueTree pluginPreset("MyPlugin");
-    pluginPreset.appendChild(params, nullptr);
-    //This a good place to add any non-parameters to your preset
-
-    copyXmlToBinary(*pluginPreset.createXml(), destData);
+    auto state = parameters.apvts->copyState();
+    std::unique_ptr<juce::XmlElement> xml(state.createXml());
+    copyXmlToBinary(*xml, destData);
+  
 }
 
 void ChanToolProcessor::setStateInformation(const void* data,
-                                                          int sizeInBytes)
+                                            int sizeInBytes)
 {
-    //Loads your parameters, and any other potential data from an XML:
+    std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
 
-    auto xml = getXmlFromBinary(data, sizeInBytes);
-
-    if (xml != nullptr)
-    {
-        auto preset = juce::ValueTree::fromXml(*xml);
-        auto params = preset.getChildWithName("Params");
-
-        for (auto& param: getParameters())
-        {
-            auto paramTree = params.getChildWithName(PluginHelpers::getParamID(param));
-
-            if (paramTree.isValid())
-                param->setValueNotifyingHost(paramTree["Value"]);
+    if (xmlState.get() != nullptr) {
+        if (xmlState->hasTagName(parameters.apvts->state.getType())) {
+            parameters.apvts->replaceState(juce::ValueTree::fromXml(*xmlState));
         }
-
-        //Load your non-parameter data now
-    }
+    }  
 }
 
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()

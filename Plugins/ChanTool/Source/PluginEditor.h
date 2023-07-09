@@ -2,10 +2,10 @@
 
 #include "PluginProcessor.h"
 
-class NewPluginTemplateAudioProcessorEditor : public juce::AudioProcessorEditor
+class ChanToolEditor : public juce::AudioProcessorEditor
 {
 public:
-    explicit NewPluginTemplateAudioProcessorEditor(ChanToolProcessor&);
+    explicit ChanToolEditor(ChanToolProcessor&);
 
 private:
     void paint(juce::Graphics&) override;

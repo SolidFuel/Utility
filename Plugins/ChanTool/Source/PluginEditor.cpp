@@ -1,7 +1,7 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-NewPluginTemplateAudioProcessorEditor::NewPluginTemplateAudioProcessorEditor(
+ChanToolEditor::ChanToolEditor(
     ChanToolProcessor& p)
     : AudioProcessorEditor(&p)
 {
@@ -9,12 +9,12 @@ NewPluginTemplateAudioProcessorEditor::NewPluginTemplateAudioProcessorEditor(
     setSize(400, 300);
 }
 
-void NewPluginTemplateAudioProcessorEditor::paint(juce::Graphics& g)
+void ChanToolEditor::paint(juce::Graphics& g)
 {
     g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
 }
 
-void NewPluginTemplateAudioProcessorEditor::resized()
+void ChanToolEditor::resized()
 {
     editor.setBounds(getLocalBounds());
 }
