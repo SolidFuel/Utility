@@ -102,15 +102,8 @@ void ChanToolProcessor::processBlock(juce::AudioBuffer<float>& buffer,
             channel1_data[i] = out1;
         }
     }
-
-
-    if (parameters.mono->get()) {
-
-    } else {
-        buffer.applyGain(gain);
-    }
-        
 }
+
 juce::AudioProcessorEditor* ChanToolProcessor::createEditor() {
     return new ChanToolEditor(*this);
 }
