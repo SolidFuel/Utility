@@ -47,6 +47,22 @@ void ChanToolProcessor::processBlock(juce::AudioBuffer<float>& buffer,
     }
     bool mono = parameters.mono->get();
 
+    float l_delta = 0.0;
+    float l_factor = invertL_old ? -1.f : 1.f;
+
+    if (invertL_old != parameters.invertL->get() ) {
+        l_delta = (2.f / (num_samples-1)) * (-l_factor);
+        invertL_old = !invertL_old;
+    }
+
+    float r_delta = 0.0;
+    float r_factor = invertR_old ? -1.f : 1.f;
+
+    if (invertR_old != parameters.invertR->get() ) {
+        r_delta = (2.f / (num_samples-1)) * (-r_factor);
+        invertR_old = !invertR_old;
+    }
+
     auto* channel0_data = buffer.getWritePointer(0);
     auto* channel1_data = buffer.getWritePointer(1);
     for (int i = 0; i < num_samples; ++i) {
@@ -71,10 +87,12 @@ void ChanToolProcessor::processBlock(juce::AudioBuffer<float>& buffer,
 
         }
 
-        if (parameters.invertL->get())
-            out0 = -out0;
-        if (parameters.invertR->get())
-            out1 = -out1;
+        // inverting
+        out0 = out0 * l_factor;
+        l_factor += l_delta;
+
+        out1 = out1 * r_factor;
+        r_factor += r_delta;
 
         if (parameters.swap->get()) {
             channel1_data[i] = out0;

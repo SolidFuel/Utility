@@ -34,4 +34,7 @@ struct Parameters
 };
 
     Parameters parameters;
+
+    bool invertR_old = false;
+    bool invertL_old = false;
 };
