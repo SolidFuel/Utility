@@ -15,23 +15,23 @@ public:
 
 private:
 
-struct Parameters
-{    juce::AudioParameterBool* mono; 
+    struct Parameters
+    {    juce::AudioParameterBool* mono; 
 
-    juce::AudioParameterFloat* gain;
+        juce::AudioParameterFloat* gain;
 
-    juce::AudioParameterFloat* stereo;
+        juce::AudioParameterFloat* stereo;
 
-    juce::AudioParameterBool* swap;
+        juce::AudioParameterBool* swap;
 
-    juce::AudioParameterBool* invertL;
-    juce::AudioParameterBool* invertR;
+        juce::AudioParameterBool* invertL;
+        juce::AudioParameterBool* invertR;
 
-    std::unique_ptr<juce::AudioProcessorValueTreeState> apvts;
+        std::unique_ptr<juce::AudioProcessorValueTreeState> apvts;
 
-     Parameters(ChanToolProcessor& processor);
+        Parameters(ChanToolProcessor& processor);
 
-};
+    };
 
     Parameters parameters;
 

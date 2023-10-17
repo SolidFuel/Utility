@@ -1,4 +1,3 @@
-project(ChanTool VERSION 0.0.1)
 
 set (BaseTargetName ChanTool)
 
