@@ -3,10 +3,12 @@
 
 ChanToolEditor::ChanToolEditor(
     ChanToolProcessor& p)
-    : AudioProcessorEditor(&p)
+    : AudioProcessorEditor(&p), proc_(p),
+    mainComponent(p.getChanToolParameters()->apvts.get())
 {
-    addAndMakeVisible(editor);
-    setSize(400, 300);
+
+    addAndMakeVisible (mainComponent);
+    setSize(600, 400);
 }
 
 void ChanToolEditor::paint(juce::Graphics& g)
@@ -16,5 +18,6 @@ void ChanToolEditor::paint(juce::Graphics& g)
 
 void ChanToolEditor::resized()
 {
-    editor.setBounds(getLocalBounds());
+    mainComponent.setBounds (0, 0, getWidth(), getHeight());
+    //setBounds(getLocalBounds());
 }

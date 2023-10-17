@@ -19,8 +19,9 @@ juce_add_plugin("${BaseTargetName}"
         PRODUCT_NAME "Channel Tool")
 
 target_sources(${BaseTargetName} PRIVATE
-        Source/PluginProcessor.cpp
-        Source/PluginEditor.cpp)
+        PluginProcessor.cpp
+        PluginEditor.cpp
+        MainComponent.cpp)
 
 target_compile_definitions(${BaseTargetName}
         PUBLIC

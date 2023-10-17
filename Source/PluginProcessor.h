@@ -37,4 +37,7 @@ struct Parameters
 
     bool invertR_old = false;
     bool invertL_old = false;
+
+public:
+    Parameters* getChanToolParameters() { return &parameters; }
 };
