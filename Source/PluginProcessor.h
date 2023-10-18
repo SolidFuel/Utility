@@ -2,11 +2,16 @@
 
 #include <shared_plugin_helpers/shared_plugin_helpers.h>
 
+#include "Glider.h"
+
+const long GLIDER_TIMING = 3000; // in samples
+
 class ChanToolProcessor : public PluginHelpers::ProcessorBase {
 public:
     ChanToolProcessor();
 
     void processBlock(juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
+    void ChanToolProcessor::prepareToPlay(double sampleRate, int samplesPerBlock) override;
 
     juce::AudioProcessorEditor* createEditor() override;
 
@@ -35,8 +40,10 @@ private:
 
     Parameters parameters;
 
-    bool invertR_old = false;
-    bool invertL_old = false;
+    BooleanGlider<float> monoGlider_{0.f, 1.f, GLIDER_TIMING};
+
+    BooleanGlider<float> leftGlider_ {1.f, -1.f, GLIDER_TIMING};
+    BooleanGlider<float> rightGlider_ {1.f, -1.f, GLIDER_TIMING};
 
 public:
     Parameters* getChanToolParameters() { return &parameters; }

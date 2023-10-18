@@ -3,6 +3,7 @@
 
 #include <memory>
 
+
 ChanToolProcessor::Parameters::Parameters(ChanToolProcessor& processor) {
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
 
@@ -35,33 +36,45 @@ ChanToolProcessor::ChanToolProcessor() : parameters(*this)
 {
 }
 
+void ChanToolProcessor::prepareToPlay(double sampleRate, int samplesPerBlock) {
+    juce::ignoreUnused(sampleRate, samplesPerBlock);
+
+    monoGlider_.forceValue(parameters.mono->get());
+
+    leftGlider_.forceValue(parameters.invertL->get());
+
+    rightGlider_.forceValue(parameters.invertR->get());
+
+};
+
+
 void ChanToolProcessor::processBlock(juce::AudioBuffer<float>& buffer,
                                     juce::MidiBuffer& midiMessages) {
     juce::ignoreUnused(midiMessages);
 
     auto num_samples = buffer.getNumSamples();
+
+    // ---- MONO parameter
+    bool mono = parameters.mono->get();
+    monoGlider_.go(mono);
+
+    // -- GAIN parameter
     float gain = powf(2.f, parameters.gain->get() / 6.f);
+
+    // -- STEREO parameter
     float stereo = parameters.stereo->get() / 100.f;
     if (stereo > 1.f) {
         stereo = 1.f + (stereo-1.f)/2.f;
     }
-    bool mono = parameters.mono->get();
 
-    float l_delta = 0.0;
-    float l_factor = invertL_old ? -1.f : 1.f;
 
-    if (invertL_old != parameters.invertL->get() ) {
-        l_delta = (2.f / (num_samples-1)) * (-l_factor);
-        invertL_old = !invertL_old;
-    }
+    // INVERTL parameter
+    leftGlider_.go(parameters.invertL->get()); 
 
-    float r_delta = 0.0;
-    float r_factor = invertR_old ? -1.f : 1.f;
+    // INVERTR parameter
+    rightGlider_.go(parameters.invertR->get()); 
 
-    if (invertR_old != parameters.invertR->get() ) {
-        r_delta = (2.f / (num_samples-1)) * (-r_factor);
-        invertR_old = !invertR_old;
-    }
+    auto swap = parameters.swap->get();
 
     auto* channel0_data = buffer.getWritePointer(0);
     auto* channel1_data = buffer.getWritePointer(1);
@@ -71,36 +84,35 @@ void ChanToolProcessor::processBlock(juce::AudioBuffer<float>& buffer,
         float out0 = in0;
         float out1 = in1;
 
-        if (mono) {
-            float output = gain * (channel0_data[i] + channel1_data[i])/ 2.0f;
-            out0 = out1 = output;
+
+        if (mono || monoGlider_.in_process()) {
+            auto val = monoGlider_.nextValue();
+            // Divide by 4 since we copy to both outputs. That effectively doubles.
+            auto mid = (out0 + out1)/4.0f;
+
+            out0 = out0 *(1.f-val)/2.f + mid * val;
+            out1 = out1 *(1.f-val)/2.f + mid * val;
+
         } else {
-            auto mid = (in0 + in1)/2.0f;
-            auto side = (in0 - in1)/2.0f;
-            if (stereo <  0.01f) {
-                out0 = gain * mid;
-                out1 = gain * mid;
-            } else {
-                out0 = gain * ((2.f - stereo) * mid + (stereo * side)) / 2.f;
-                out1 = gain * ((2.f - stereo) * mid - (stereo * side)) / 2.f;
-            }
+            auto mid = (out0 + out1)/2.0f;
+            auto side = (out0 - out1)/2.0f;
+            out0 = ((2.f - stereo) * mid + (stereo * side)) / 2.f;
+            out1 = ((2.f - stereo) * mid - (stereo * side)) / 2.f;
 
         }
+
+        // gain
+        out0 = gain * out0;
+        out1 = gain * out1;
 
         // inverting
-        out0 = out0 * l_factor;
-        l_factor += l_delta;
+        out0 = out0 * leftGlider_.nextValue();
+        out1 = out1 * rightGlider_.nextValue();
 
-        out1 = out1 * r_factor;
-        r_factor += r_delta;
+        // Swap the channels
+        channel0_data[i] = out0 *(1-swap) + out1 * swap;
+        channel1_data[i] = out1 *(1-swap) + out0 * swap;
 
-        if (parameters.swap->get()) {
-            channel1_data[i] = out0;
-            channel0_data[i] = out1;
-        } else {
-            channel0_data[i] = out0;
-            channel1_data[i] = out1;
-        }
     }
 }
 
@@ -124,6 +136,9 @@ void ChanToolProcessor::setStateInformation(const void* data,
     if (xmlState.get() != nullptr) {
         if (xmlState->hasTagName(parameters.apvts->state.getType())) {
             parameters.apvts->replaceState(juce::ValueTree::fromXml(*xmlState));
+            leftGlider_.forceValue(parameters.invertL->get());
+            rightGlider_.forceValue(parameters.invertR->get());
+            monoGlider_.forceValue(parameters.mono->get());
         }
     }  
 }

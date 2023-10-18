@@ -14,7 +14,7 @@
     addAndMakeVisible (rightInvertButton);
     rightInvertAttachment.reset (new ButtonAttachment (*params, "InvertR", rightInvertButton));
 
-    leftInvertButton.setButtonText ("InvertR");
+    leftInvertButton.setButtonText ("InvertL");
     addAndMakeVisible (leftInvertButton);
     leftInvertAttachment.reset (new ButtonAttachment (*params, "InvertL", leftInvertButton));
 
@@ -60,8 +60,8 @@ void MainComponent::resized()
     outerGrid.items.add(GridItem(swapButton).withArea(1, GridItem::Span (3)));
 
     outerGrid.templateRows.add(Track (Fr (1)));
-    outerGrid.items.add(GridItem(rightInvertButton).withArea(2, GridItem::Span (3)));
     outerGrid.items.add(GridItem(leftInvertButton).withArea(2, GridItem::Span (3)));
+    outerGrid.items.add(GridItem(rightInvertButton).withArea(2, GridItem::Span (3)));
 
     outerGrid.templateRows.add(Track (Fr (1)));
     outerGrid.items.add(GridItem(gainLabel));
