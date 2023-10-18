@@ -44,6 +44,8 @@ private:
 
     BooleanGlider<float> leftGlider_ {1.f, -1.f, GLIDER_TIMING};
     BooleanGlider<float> rightGlider_ {1.f, -1.f, GLIDER_TIMING};
+    
+    BooleanGlider<float> swapGlider_ {0.f, 1.f, GLIDER_TIMING};
 
 public:
     Parameters* getChanToolParameters() { return &parameters; }

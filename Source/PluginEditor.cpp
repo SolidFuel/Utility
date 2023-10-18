@@ -8,7 +8,7 @@ ChanToolEditor::ChanToolEditor(
 {
 
     addAndMakeVisible (mainComponent);
-    setSize(600, 400);
+    setSize(600, 100);
 }
 
 void ChanToolEditor::paint(juce::Graphics& g)

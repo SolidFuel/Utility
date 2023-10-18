@@ -24,14 +24,13 @@
     addAndMakeVisible (gainSlider);
     gainAttachment.reset (new SliderAttachment (*params, "Gain", gainSlider));
 
-
+#if (0)
     stereoLabel.setText ("Stereo", juce::dontSendNotification);
     addAndMakeVisible (stereoLabel);
 
     addAndMakeVisible (stereoSlider);
     stereoAttachment.reset (new SliderAttachment (*params, "Stereo", stereoSlider));
-
-    setSize (600, 400);
+#endif
 
  }
 
@@ -67,11 +66,12 @@ void MainComponent::resized()
     outerGrid.items.add(GridItem(gainLabel));
     outerGrid.items.add(GridItem(gainSlider).withArea(3, GridItem::Span (5)));
 
+#if (0)
     outerGrid.templateRows.add(Track (Fr (1)));
     outerGrid.items.add(GridItem(stereoLabel));
     outerGrid.items.add(GridItem(stereoSlider).withArea(4, GridItem::Span (5)));
 
-
+#endif
     outerGrid.performLayout (getLocalBounds());
     
 }

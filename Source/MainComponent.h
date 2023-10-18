@@ -32,9 +32,11 @@ private:
     juce::Slider gainSlider;
     std::unique_ptr<SliderAttachment> gainAttachment;
 
+#if (0)
     juce::Label stereoLabel;
     juce::Slider stereoSlider;
     std::unique_ptr<SliderAttachment> stereoAttachment;
+#endif
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
 };

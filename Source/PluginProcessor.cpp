@@ -58,15 +58,16 @@ void ChanToolProcessor::processBlock(juce::AudioBuffer<float>& buffer,
     bool mono = parameters.mono->get();
     monoGlider_.go(mono);
 
-    // -- GAIN parameter
-    float gain = powf(2.f, parameters.gain->get() / 6.f);
-
+#if (0)
     // -- STEREO parameter
     float stereo = parameters.stereo->get() / 100.f;
     if (stereo > 1.f) {
         stereo = 1.f + (stereo-1.f)/2.f;
     }
+#endif
 
+    // -- GAIN parameter
+    float gain = powf(2.f, parameters.gain->get() / 6.f);
 
     // INVERTL parameter
     leftGlider_.go(parameters.invertL->get()); 
@@ -74,8 +75,12 @@ void ChanToolProcessor::processBlock(juce::AudioBuffer<float>& buffer,
     // INVERTR parameter
     rightGlider_.go(parameters.invertR->get()); 
 
+    // SWAP parameter
     auto swap = parameters.swap->get();
+    swapGlider_.go(swap);
 
+
+    // --- LOOP Start
     auto* channel0_data = buffer.getWritePointer(0);
     auto* channel1_data = buffer.getWritePointer(1);
     for (int i = 0; i < num_samples; ++i) {
@@ -84,22 +89,12 @@ void ChanToolProcessor::processBlock(juce::AudioBuffer<float>& buffer,
         float out0 = in0;
         float out1 = in1;
 
+        // mono
+        auto val = monoGlider_.nextValue();
+        auto mid = (out0 + out1)/2.0f;
 
-        if (mono || monoGlider_.in_process()) {
-            auto val = monoGlider_.nextValue();
-            // Divide by 4 since we copy to both outputs. That effectively doubles.
-            auto mid = (out0 + out1)/4.0f;
-
-            out0 = out0 *(1.f-val)/2.f + mid * val;
-            out1 = out1 *(1.f-val)/2.f + mid * val;
-
-        } else {
-            auto mid = (out0 + out1)/2.0f;
-            auto side = (out0 - out1)/2.0f;
-            out0 = ((2.f - stereo) * mid + (stereo * side)) / 2.f;
-            out1 = ((2.f - stereo) * mid - (stereo * side)) / 2.f;
-
-        }
+        out0 = out0 *(1.f-val) + mid * val;
+        out1 = out1 *(1.f-val) + mid * val;
 
         // gain
         out0 = gain * out0;
@@ -110,8 +105,13 @@ void ChanToolProcessor::processBlock(juce::AudioBuffer<float>& buffer,
         out1 = out1 * rightGlider_.nextValue();
 
         // Swap the channels
-        channel0_data[i] = out0 *(1-swap) + out1 * swap;
-        channel1_data[i] = out1 *(1-swap) + out0 * swap;
+        auto swapVal = swapGlider_.nextValue();
+        out0 = out0 *(1-swapVal) + out1 * swapVal;
+        out1 = out1 *(1-swapVal) + out0 * swapVal;
+
+        // Output
+        channel0_data[i] = out0;
+        channel1_data[i] = out1;
 
     }
 }
