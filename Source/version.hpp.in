@@ -12,6 +12,9 @@
 
 #include <string>
 
+const std::string PLUGIN_NAME = "@PLUGIN_PRODUCT_NAME@";
+const std::string PLUGIN_NAME_UPPER = "@PLUGIN_NAME_UPPER@";
+
 const std::string GIT_HASH = "@GIT_SHORT_HASH@";
 
-const std::string STARP_VERSION = "@CMAKE_PROJECT_VERSION@";
+const std::string PLUGIN_VERSION = "@CMAKE_PROJECT_VERSION@";

@@ -15,17 +15,18 @@ message("GIT_REF = " ${GIT_REF})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-configure_file(version.hpp.in version.hpp @ONLY)
-
 string(TOUPPER "${CMAKE_BUILD_TYPE}" chantool_build_type)
 if(${chantool_build_type} STREQUAL "RELEASE")
-        set(ChanTool_PRODUCT_NAME "ChanTool")
-        set(ChanTool_PLUGIN_CODE "Chnt" )
+        set(PLUGIN_PRODUCT_NAME "ChanTool")
+        set(PLUGIN_PRODUCT_CODE "Chnt" )
 else()
-        set(ChanTool_PRODUCT_NAME "ChanToolDev")
-        set(ChanTool_PLUGIN_CODE "ChnD")
+        set(PLUGIN_PRODUCT_NAME "ChanToolDev")
+        set(PLUGIN_PRODUCT_CODE "ChnD")
 endif()
 
+string(TOUPPER "${PLUGIN_PRODUCT_NAME}" PLUGIN_NAME_UPPER)
+
+configure_file(version.hpp.in version.hpp @ONLY)
 
 juce_add_plugin("${BaseTargetName}"
         # VERSION ...                               # Set this if the plugin version is different to the project version
@@ -39,9 +40,9 @@ juce_add_plugin("${BaseTargetName}"
         EDITOR_WANTS_KEYBOARD_FOCUS FALSE
         COPY_PLUGIN_AFTER_BUILD FALSE
         PLUGIN_MANUFACTURER_CODE "Sdfl"
-        PLUGIN_CODE ${ChanTool_PLUGIN_CODE}
+        PLUGIN_CODE ${PLUGIN_PRODUCT_CODE}
         FORMATS VST3
-        PRODUCT_NAME ${ChanTool_PRODUCT_NAME})
+        PRODUCT_NAME ${PLUGIN_PRODUCT_NAME})
 
 target_sources(${BaseTargetName} PRIVATE
         ChanTool.hpp
@@ -50,7 +51,12 @@ target_sources(${BaseTargetName} PRIVATE
         Processor/setup.cpp Processor/processing.cpp
         ProcessorParameters.hpp ProcessorParameters.cpp
         ChanToolEditor.hpp ChanToolEditor.cpp
-        MainComponent.hpp MainComponent.cpp
+        EditorComponent/BoxComponent.hpp
+        EditorComponent/BoxComponent.cpp
+        EditorComponent/MainComponent.hpp
+        EditorComponent/MainComponent.cpp
+        EditorComponent/HeaderComponent.hpp
+        EditorComponent/HeaderComponent.cpp
         )
 
 
