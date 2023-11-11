@@ -2,7 +2,7 @@
 
 #include <shared_plugin_helpers/shared_plugin_helpers.h>
 
-#include "Glider.h"
+#include "Glider.hpp"
 
 const long GLIDER_TIMING = 3000; // in samples
 

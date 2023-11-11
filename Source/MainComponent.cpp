@@ -1,4 +1,4 @@
-#include "MainComponent.h"
+#include "MainComponent.hpp"
 
 
  MainComponent::MainComponent(juce::AudioProcessorValueTreeState *params) {

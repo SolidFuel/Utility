@@ -5,22 +5,24 @@ juce_add_plugin("${BaseTargetName}"
         # VERSION ...                               # Set this if the plugin version is different to the project version
         # ICON_BIG ...                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
         # ICON_SMALL ...
-        COMPANY_NAME "CodeVamping"
+        COMPANY_NAME "SolidFuel"
         IS_SYNTH FALSE
         NEEDS_MIDI_INPUT FALSE
         NEEDS_MIDI_OUTPUT FALSE
         IS_MIDI_EFFECT FALSE
         EDITOR_WANTS_KEYBOARD_FOCUS FALSE
         COPY_PLUGIN_AFTER_BUILD FALSE
-        PLUGIN_MANUFACTURER_CODE CVmp
-        PLUGIN_CODE Chnt
+        PLUGIN_MANUFACTURER_CODE "Sdfl"
+        PLUGIN_CODE "Chnt"
         FORMATS VST3
-        PRODUCT_NAME "Channel Tool")
+        PRODUCT_NAME "ChanTool")
 
 target_sources(${BaseTargetName} PRIVATE
-        PluginProcessor.cpp
-        PluginEditor.cpp
-        MainComponent.cpp)
+        Glider.hpp
+        PluginProcessor.hpp PluginProcessor.cpp
+        PluginEditor.hpp PluginEditor.cpp
+        MainComponent.hpp MainComponent.cpp
+        )
 
 target_compile_definitions(${BaseTargetName}
         PUBLIC

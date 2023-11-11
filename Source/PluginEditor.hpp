@@ -1,8 +1,8 @@
 #pragma once
 
-#include "PluginProcessor.h"
+#include "PluginProcessor.hpp"
 
-#include "MainComponent.h"
+#include "MainComponent.hpp"
 
 class ChanToolEditor : public juce::AudioProcessorEditor
 {
