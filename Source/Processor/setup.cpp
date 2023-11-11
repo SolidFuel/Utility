@@ -21,37 +21,94 @@
 #endif
 
 
-ChanToolProcessor::ChanToolProcessor() : parameters(*this){
+//============================================================================
+ChanToolProcessor::ChanToolProcessor() : parameters_(*this){
 }
 
+//============================================================================
 juce::AudioProcessorEditor* ChanToolProcessor::createEditor() {
 
     DBGLOG("------- Setting Up Editor -----------");
     return new ChanToolEditor (*this);
 }
 
+//============================================================================
+// Serialize Parameters for the host to save for us.
+//
+
+constexpr int CURRENT_STATE_VERSION = 1;
+const juce::String XML_TOP_TAG = "ChanTool-Preset";
+
 void ChanToolProcessor::getStateInformation(juce::MemoryBlock& destData) {
 
-    auto state = parameters.apvts->copyState();
-    std::unique_ptr<juce::XmlElement> xml(state.createXml());
+    DBGLOG("GET STATE called");
+
+    auto xml = std::make_unique<juce::XmlElement>(XML_TOP_TAG);
+    xml->setAttribute("version", CURRENT_STATE_VERSION);
+
+    DBGLOG("  Created Top")
+
+
+    //--------------------------------------
+    auto state = parameters_.apvts->copyState();
+    auto apvts_xml =state.createXml();
+    // createXml gives back a unqiue_ptr. So we need to unwrap it.
+    xml->addChildElement(apvts_xml.release());
+    DBGLOG("  Wrote ValueTree")
+
+    //--------------------------------------
+    DBGLOG("XML out =", xml->toString());
     copyXmlToBinary(*xml, destData);
-  
+    DBGLOG("  Done")
+
 }
 
-void ChanToolProcessor::setStateInformation(const void* data,
-                                            int sizeInBytes)
-{
-    std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
+//============================================================================
+void ChanToolProcessor::parseCurrentXml(const juce::XmlElement * elem) {
 
-    if (xmlState.get() != nullptr) {
-        if (xmlState->hasTagName(parameters.apvts->state.getType())) {
-            parameters.apvts->replaceState(juce::ValueTree::fromXml(*xmlState));
-            leftGlider_.forceValue(parameters.invertL->get());
-            rightGlider_.forceValue(parameters.invertR->get());
-            monoGlider_.forceValue(parameters.mono->get());
+    DBGLOG("ChanToolProcessor::parseCurrentXml called")
+
+    auto *child = elem->getChildByName(parameters_.apvts->state.getType());
+    if (child) {
+        parameters_.apvts->replaceState(juce::ValueTree::fromXml(*child));
+        leftGlider_.forceValue(parameters_.invertL->get());
+        rightGlider_.forceValue(parameters_.invertR->get());
+        monoGlider_.forceValue(parameters_.mono->get());
+
+    }
+
+    DBGLOG(" -- apvts  done")
+
+}
+
+//============================================================================
+// Read Serialize Parameters from the host and set our state.
+//
+void ChanToolProcessor::setStateInformation (const void* data, int sizeInBytes) {
+    DBGLOG("SET STATE called");
+
+    auto xml = getXmlFromBinary(data, sizeInBytes);
+
+    if (xml) {
+        DBGLOG("XML in =", xml->toString());
+
+        if (xml->hasTagName(XML_TOP_TAG)) {
+            int version = xml->getIntAttribute("version");
+            if (version == CURRENT_STATE_VERSION) {
+                parseCurrentXml(xml.get());
+            } else {
+                jassert(false);
+            }
         }
-    }  
+
+    }  else {
+        DBGLOG("   NO XML decoded")
+    }
 }
+
+
+//============================================================================
+// This creates new instances of the plugin..
 
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {

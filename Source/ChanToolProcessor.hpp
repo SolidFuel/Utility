@@ -52,7 +52,7 @@ public:
 
 private:
 
-    ProcessorParameters parameters;
+    ProcessorParameters parameters_;
 
     BooleanGlider<float> monoGlider_{0.f, 1.f, GLIDER_TIMING};
 
@@ -61,8 +61,10 @@ private:
     
     BooleanGlider<float> swapGlider_ {0.f, 1.f, GLIDER_TIMING};
 
+    void parseCurrentXml(const juce::XmlElement * elem);
+
 public:
-    ProcessorParameters* getChanToolParameters() { return &parameters; }
+    ProcessorParameters* getChanToolParameters() { return &parameters_; }
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ChanToolProcessor)

@@ -18,11 +18,11 @@
 void ChanToolProcessor::prepareToPlay(double sampleRate, int samplesPerBlock) {
     juce::ignoreUnused(sampleRate, samplesPerBlock);
 
-    monoGlider_.forceValue(parameters.mono->get());
+    monoGlider_.forceValue(parameters_.mono->get());
 
-    leftGlider_.forceValue(parameters.invertL->get());
+    leftGlider_.forceValue(parameters_.invertL->get());
 
-    rightGlider_.forceValue(parameters.invertR->get());
+    rightGlider_.forceValue(parameters_.invertR->get());
 
 };
 
@@ -34,28 +34,28 @@ void ChanToolProcessor::processBlock(juce::AudioBuffer<float>& buffer,
     auto num_samples = buffer.getNumSamples();
 
     // ---- MONO parameter
-    bool mono = parameters.mono->get();
+    bool mono = parameters_.mono->get();
     monoGlider_.go(mono);
 
 #if (0)
     // -- STEREO parameter
-    float stereo = parameters.stereo->get() / 100.f;
+    float stereo = parameters_.stereo->get() / 100.f;
     if (stereo > 1.f) {
         stereo = 1.f + (stereo-1.f)/2.f;
     }
 #endif
 
     // -- GAIN parameter
-    float gain = powf(2.f, parameters.gain->get() / 6.f);
+    float gain = powf(2.f, parameters_.gain->get() / 6.f);
 
     // INVERTL parameter
-    leftGlider_.go(parameters.invertL->get()); 
+    leftGlider_.go(parameters_.invertL->get()); 
 
     // INVERTR parameter
-    rightGlider_.go(parameters.invertR->get()); 
+    rightGlider_.go(parameters_.invertR->get()); 
 
     // SWAP parameter
-    auto swap = parameters.swap->get();
+    auto swap = parameters_.swap->get();
     swapGlider_.go(swap);
 
 
