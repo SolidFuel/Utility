@@ -1,5 +1,5 @@
-#include "PluginProcessor.hpp"
-#include "PluginEditor.hpp"
+#include "ChanToolProcessor.hpp"
+#include "ChanToolEditor.hpp"
 
 ChanToolEditor::ChanToolEditor(
     ChanToolProcessor& p)
@@ -19,5 +19,4 @@ void ChanToolEditor::paint(juce::Graphics& g)
 void ChanToolEditor::resized()
 {
     mainComponent.setBounds (0, 0, getWidth(), getHeight());
-    //setBounds(getLocalBounds());
 }

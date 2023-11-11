@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PluginProcessor.hpp"
+#include "ChanToolProcessor.hpp"
 
 #include "MainComponent.hpp"
 

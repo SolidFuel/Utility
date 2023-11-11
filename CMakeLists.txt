@@ -7,6 +7,13 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake")
 #Compile commands, useful for some IDEs like VS-Code
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 
+set(default_build_type "Release")
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  message(STATUS "Setting build type to '${default_build_type}' as none was specified.")
+  set(CMAKE_BUILD_TYPE "${default_build_type}" CACHE
+      STRING "Choose the type of build." FORCE)
+endif()
+
 #Minimum MacOS target, set globally
 
 if (${CMAKE_SYSTEM_NAME} STREQUAL "iOS")
@@ -25,10 +32,13 @@ if (UniversalBinary)
     set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE INTERNAL "")
 endif()
 
-#static linking in Windows
-set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    #static linking in Windows
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    add_compile_options("$<$<CONFIG:Release>:/O2>")
+endif()
 
-add_compile_options("$<$<CONFIG:Release>:/Ox>")
+add_compile_definitions("$<$<CONFIG:Release>:STARP_DEBUG=0>")
 
 #We 'require' that we need juce. If JUCE isn't found, it will revert to what's in
 #CMake/Findjuce.cmake, where you can see how JUCE is brought in/configured

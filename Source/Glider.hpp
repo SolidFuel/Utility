@@ -1,6 +1,39 @@
+/****
+ * ChanTool - Simple DAW Channel Utility 
+ * Copyright (C) 2023 Solid Fuel
+ * This program is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the 
+ * Free Software Foundation, either version 3 of the License, or (at your 
+ * option) any later version. This program is distributed in the hope that it 
+ * will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the LICENSE file
+ * in the root directory.
+ ****/
+
+#pragma once
+
+/**
+ * Glider
+ * Simple linear ramping class that returns a sequence of numbers that
+ * start at @startValue and end at @targetValue.
+ * Once @targetValue has been reached, it will continue
+ * to give that value.
+ * 
+*/
 template <class FT> class Glider {
 public :
+    /**
+     * Default Constructor
+     * 
+     * restart() will need to called before using the object.
+    */
     Glider() : samples_(0) {}
+
+    /**
+     * @param startValue
+     * @param targetValue
+     * @param samples - how long should it take to move to targetValue
+    */
     Glider(FT startValue, FT targetValue, long samples ) {
         restart(startValue, targetValue, samples);
 
@@ -18,12 +51,21 @@ public :
 
     FT nextValue() { 
         latestValue_ += (delta_ * in_progress() );
-        --samples_;
+        samples_ -= in_progress();
         return latestValue_;
     }
 
+    /**
+     * Stop the sequence. The Glider will continue to return
+     * the same value until reset() is called.
+    */
     void stop() { samples_ = 0; }
 
+    /**
+     * Stop the sequence and set the Glider's value.
+     * This will be the value that is given by both nextValue()
+     * and currentValue() until reset() is called.
+    */
     void forceValue(FT value) {
         stop();
         latestValue_ = value;
