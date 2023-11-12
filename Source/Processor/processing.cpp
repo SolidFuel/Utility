@@ -24,12 +24,23 @@ void ChanToolProcessor::prepareToPlay(double sampleRate, int samplesPerBlock) {
 
     rightGlider_.forceValue(parameters_.invertR->get());
 
-};
+}
 
 //============================================================================
 void ChanToolProcessor::processBlock(juce::AudioBuffer<float>& buffer,
-                                    juce::MidiBuffer& midiMessages) {
-    juce::ignoreUnused(midiMessages);
+                                    juce::MidiBuffer&) {
+    process_samples(buffer);
+}
+
+//============================================================================
+void ChanToolProcessor::processBlock(juce::AudioBuffer<double>& buffer,
+                                    juce::MidiBuffer&) {
+    process_samples(buffer);
+}
+
+//============================================================================
+template <class FT>
+void ChanToolProcessor::process_samples(juce::AudioBuffer<FT>& buffer) {
 
     auto num_samples = buffer.getNumSamples();
 
@@ -65,8 +76,8 @@ void ChanToolProcessor::processBlock(juce::AudioBuffer<float>& buffer,
     for (int i = 0; i < num_samples; ++i) {
         auto in0 = channel0_data[i];
         auto in1 = channel1_data[i];
-        float out0 = in0;
-        float out1 = in1;
+        auto out0 = in0;
+        auto out1 = in1;
 
         // mono
         auto val = monoGlider_.nextValue();

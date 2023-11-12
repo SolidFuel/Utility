@@ -46,6 +46,8 @@ public:
     // These are in processing.cpp
 
     void processBlock(juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
+    void processBlock(juce::AudioBuffer<double>&, juce::MidiBuffer&) override;
+    
     void prepareToPlay(double sampleRate, int samplesPerBlock) override;
 
 
@@ -62,6 +64,8 @@ private:
     BooleanGlider<float> swapGlider_ {0.f, 1.f, GLIDER_TIMING};
 
     void parseCurrentXml(const juce::XmlElement * elem);
+
+    template <class FT> void process_samples(juce::AudioBuffer<FT>&);
 
 public:
     ProcessorParameters* getChanToolParameters() { return &parameters_; }
