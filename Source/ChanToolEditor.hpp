@@ -1,8 +1,9 @@
 #pragma once
 
-#include "PluginProcessor.h"
+#include "ChanToolProcessor.hpp"
 
-#include "MainComponent.h"
+#include "EditorComponent/MainComponent.hpp"
+#include "EditorComponent/HeaderComponent.hpp"
 
 class ChanToolEditor : public juce::AudioProcessorEditor
 {
@@ -16,7 +17,9 @@ private:
     void paint(juce::Graphics&) override;
     void resized() override;
 
-    MainComponent mainComponent;
+    HeaderComponent header_component_;
+    MainComponent main_component_;
+
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ChanToolEditor)
 };
