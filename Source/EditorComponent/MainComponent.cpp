@@ -10,7 +10,9 @@
 
     mute_value_ = apvts->getParameterAsValue("mute");
 
-    stereo_mode_.set_value_ptr(apvts->getParameterAsValue("stereo_mode"));
+    auto stereo_value = apvts->getParameterAsValue("stereo_mode");
+
+    stereo_mode_.set_value_ptr(stereo_value);
 
     //==============================================
     mute_button_.setButtonText("Mute");
