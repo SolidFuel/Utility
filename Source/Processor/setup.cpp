@@ -33,6 +33,29 @@ juce::AudioProcessorEditor* ChanToolProcessor::createEditor() {
 }
 
 //============================================================================
+void ChanToolProcessor::force_gliders() {
+    
+    mute_glider_.forceValue(parameters_.mute->get());
+
+    leftGlider_.forceValue(parameters_.invertL->get());
+    rightGlider_.forceValue(parameters_.invertR->get());
+
+    swapGlider_.forceValue(parameters_.swap->get());
+    
+    const StereoMode mode = StereoMode(parameters_.stereo_mode->getIndex());
+    left_left_glider_.forceValue(mode == LeftCopy || mode == Stereo);
+    left_mid_glider_.forceValue(mode == MidSide || mode == Mono);
+    left_right_glider_.forceValue(mode == RightCopy);
+
+    right_right_glider_.forceValue(mode == RightCopy || mode == Stereo);
+    right_mid_glider_.forceValue(mode == Mono);
+    right_side_glider_.forceValue(mode == MidSide);
+    right_left_glider_.forceValue(mode == LeftCopy);
+
+}
+
+
+//============================================================================
 // Serialize Parameters for the host to save for us.
 //
 
@@ -71,9 +94,13 @@ void ChanToolProcessor::parseCurrentXml(const juce::XmlElement * elem) {
     auto *child = elem->getChildByName(parameters_.apvts->state.getType());
     if (child) {
         parameters_.apvts->replaceState(juce::ValueTree::fromXml(*child));
-        leftGlider_.forceValue(parameters_.invertL->get());
-        rightGlider_.forceValue(parameters_.invertR->get());
-        monoGlider_.forceValue(parameters_.mono->get());
+
+        // Are these forces a good idea ?
+        // If it is before prepareToPlay() - it will do the same thing
+        // If it is after  prepareToPlay() - then processBlock() has been
+        //     running. Don't we want to glide to the new values ?
+        //
+        force_gliders();
 
     }
 

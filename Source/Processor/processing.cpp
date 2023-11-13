@@ -13,16 +13,12 @@
 
 #include "../ChanToolProcessor.hpp"
 
+#include <cmath>
 
 //============================================================================
-void ChanToolProcessor::prepareToPlay(double sampleRate, int samplesPerBlock) {
-    juce::ignoreUnused(sampleRate, samplesPerBlock);
+void ChanToolProcessor::prepareToPlay(double, int) {
 
-    monoGlider_.forceValue(parameters_.mono->get());
-
-    leftGlider_.forceValue(parameters_.invertL->get());
-
-    rightGlider_.forceValue(parameters_.invertR->get());
+    force_gliders();
 
 }
 
@@ -38,23 +34,16 @@ void ChanToolProcessor::processBlock(juce::AudioBuffer<double>& buffer,
     process_samples(buffer);
 }
 
+
 //============================================================================
 template <class FT>
 void ChanToolProcessor::process_samples(juce::AudioBuffer<FT>& buffer) {
 
+    const FT sqrt2 = std::sqrt(FT(2.0));
     auto num_samples = buffer.getNumSamples();
 
     // ---- MONO parameter
-    bool mono = parameters_.mono->get();
-    monoGlider_.go(mono);
-
-#if (0)
-    // -- STEREO parameter
-    float stereo = parameters_.stereo->get() / 100.f;
-    if (stereo > 1.f) {
-        stereo = 1.f + (stereo-1.f)/2.f;
-    }
-#endif
+    const StereoMode mode = StereoMode(parameters_.stereo_mode->getIndex());
 
     // -- GAIN parameter
     float gain = powf(2.f, parameters_.gain->get() / 6.f);
@@ -69,6 +58,10 @@ void ChanToolProcessor::process_samples(juce::AudioBuffer<FT>& buffer) {
     auto swap = parameters_.swap->get();
     swapGlider_.go(swap);
 
+    // MUTE parameter
+    auto mute = parameters_.mute->get();
+    mute_glider_.go(mute);
+
 
     // --- LOOP Start
     auto* channel0_data = buffer.getWritePointer(0);
@@ -79,16 +72,39 @@ void ChanToolProcessor::process_samples(juce::AudioBuffer<FT>& buffer) {
         auto out0 = in0;
         auto out1 = in1;
 
-        // mono
-        auto val = monoGlider_.nextValue();
-        auto mid = (out0 + out1)/2.0f;
+        auto mid = (out0 + out1)/sqrt2;
+        auto side = (out0 - out1)/sqrt2;
 
-        out0 = out0 *(1.f-val) + mid * val;
-        out1 = out1 *(1.f-val) + mid * val;
 
-        // gain
-        out0 = gain * out0;
-        out1 = gain * out1;
+        // mode
+        left_left_glider_.go(mode == LeftCopy || mode == Stereo);
+        auto left_left = left_left_glider_.nextValue();
+
+        left_mid_glider_.go(mode == MidSide || mode == Mono);
+        auto left_mid = left_mid_glider_.nextValue();
+
+        left_right_glider_.go(mode == RightCopy);
+        auto left_right = left_right_glider_.nextValue();
+
+        out0 = in0 * left_left + mid * left_mid + 
+               in1 * left_right;
+
+
+        right_right_glider_.go(mode == RightCopy || mode == Stereo);
+        auto right_right = right_right_glider_.nextValue();
+
+        right_mid_glider_.go(mode == Mono);
+        auto right_mid = right_mid_glider_.nextValue();
+
+        right_side_glider_.go(mode == MidSide);
+        auto right_side = right_side_glider_.nextValue();
+
+        right_left_glider_.go(mode == LeftCopy);
+        auto right_left = right_left_glider_.nextValue();
+
+
+        out1 = in1 * right_right + mid * right_mid +
+               side * right_side + in0 * right_left;
 
         // inverting
         out0 = out0 * leftGlider_.nextValue();
@@ -96,8 +112,19 @@ void ChanToolProcessor::process_samples(juce::AudioBuffer<FT>& buffer) {
 
         // Swap the channels
         auto swapVal = swapGlider_.nextValue();
-        out0 = out0 *(1-swapVal) + out1 * swapVal;
-        out1 = out1 *(1-swapVal) + out0 * swapVal;
+        auto temp = out0;
+        out0 = out0 *(1.f-swapVal) + out1 * swapVal;
+        out1 = out1 *(1.f-swapVal) + temp * swapVal;
+
+
+        // gain
+        out0 = gain * out0;
+        out1 = gain * out1;
+
+        // mute
+        auto mute_value = mute_glider_.nextValue();
+        out0 = out0 * mute_value;
+        out1 = out1 * mute_value;
 
         // Output
         channel0_data[i] = out0;

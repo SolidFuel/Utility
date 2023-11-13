@@ -20,6 +20,10 @@ class BoxComponent : public juce::GroupComponent {
 public :
     enum Orientation { Horizontal, Vertical };
 
+    struct Margin {
+        int top, bottom, left, right;
+    };
+
     BoxComponent() {};
 
     BoxComponent(Orientation o) : orient_(o) {};
@@ -45,12 +49,27 @@ public :
         }
     }
 
+    void setMargin(const Margin &m) { 
+        margin_ = m;
+    }
+
+    void setMargin(int m) { 
+        margin_ = Margin({m, m, m, m});
+    }
+
+    void setMargin(int x, int y) {
+        margin_ = Margin({y,y,x,x});
+    }
+
+
     void paint(juce::Graphics& g) override;
 
 
 private :
     Orientation orient_ = Vertical;
     bool draw_border_ = false;
+
+    Margin margin_{0,0,0,0};
 
     juce::Array<std::pair<int, int>> insets;
 };

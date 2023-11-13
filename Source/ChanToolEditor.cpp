@@ -1,7 +1,7 @@
 #include "ChanToolProcessor.hpp"
 #include "ChanToolEditor.hpp"
 
-constexpr int WIDTH = 600;
+constexpr int WIDTH = 450;
 constexpr int HEADER_HEIGHT = 50;
 constexpr int PROPERTY_HEIGHT = 300;
 constexpr int HEIGHT = HEADER_HEIGHT + PROPERTY_HEIGHT;

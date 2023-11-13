@@ -10,38 +10,23 @@
  * in the root directory.
  ****/
 
-#include "BoxComponent.hpp"
-
+#include "ButtonGroupComponent.hpp"
 #include "../ChanTool.hpp"
 
-void BoxComponent::setTemplate(juce::Array<juce::Grid::TrackInfo> &tmpl) {
-    layoutTemplate.clearQuick();
-    layoutTemplate.addArray(tmpl);
-
-    DBGLOG("layouttemplate = ", layoutTemplate.size())
-}
-
-
-void BoxComponent::paint(juce::Graphics& g) {
-    DBGLOG("BoxComponent::paint = ", draw_border_)
+void ButtonGroupComponent::paint(juce::Graphics& g) {
+    DBGLOG("ButtonGroupComponent::paint = ", draw_border_)
     if (draw_border_) {
         getLookAndFeel().drawGroupComponentOutline (g, getWidth(), getHeight(),
                                             getText(), getTextLabelPosition(), *this);
     } else {
         g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
     }
+
 }
 
-void BoxComponent::add(juce::Component &c, int inset_x, int inset_y) {
-    addAndMakeVisible(c);
-    insets.add({inset_x, inset_y});
-    
-}
+void ButtonGroupComponent::resized() {
 
-
-void BoxComponent::resized() {
-
-    DBGLOG("BoxComponent::resized called")
+    DBGLOG("ButtonGroupComponent::resized called")
     
     juce::Grid grid;
  
@@ -53,41 +38,56 @@ void BoxComponent::resized() {
     grid.justifyContent = juce::Grid::JustifyContent::start;
     grid.justifyItems = juce::Grid::JustifyItems::start;
 
+    juce::Array<Track> layout;
+    layout.resize(getNumChildComponents());
+    layout.fill(Track(Fr(1)));
+
     if (orient_ == Horizontal) { 
-        grid.templateColumns.addArray(layoutTemplate);
+        grid.templateColumns.addArray(layout);
         grid.templateRows.add(Track (Fr (1)));
 
     } else {
-        grid.templateRows.addArray(layoutTemplate);
+        grid.templateRows.addArray(layout);
         grid.templateColumns.add(Track (Fr (1)));
     }
 
-    int index = 0;
-    for(auto *c : getChildren()) {
-        auto margin = juce::GridItem::Margin();
-        if (index < insets.size()) {
-            auto inset = insets[index];
-            margin.left = margin.right = float(inset.first);
-            margin.top = margin.bottom = float(inset.second);
+    using Conn = juce::Button::ConnectedEdgeFlags;
+    Conn first_flag;
+    Conn last_flag;
+
+    if (orient_ == Horizontal) {
+        first_flag = Conn::ConnectedOnRight;
+        last_flag = Conn::ConnectedOnLeft;
+    } else {
+        first_flag = Conn::ConnectedOnBottom;
+        last_flag = Conn::ConnectedOnTop;
+
+    }
+
+
+    for(auto *c : buttons) {
+        if (grid.items.isEmpty()) {
+            c->setConnectedEdges(first_flag);
+        } else if (grid.items.size() == buttons.size()-1) {
+            c->setConnectedEdges(last_flag);
+        } else {
+            c->setConnectedEdges( first_flag | last_flag);
         }
-        grid.items.add(GridItem(c).withMargin(margin));
+
+        grid.items.add(GridItem(c));
     }
 
     auto bounds = getLocalBounds();
     if (draw_border_) {
         bounds = bounds.reduced(5);
-        if (getText().isNotEmpty()) {
-            bounds.removeFromTop(10);
-        } else {
-            bounds.removeFromTop(5);
-        }
+        bounds.removeFromTop(10);
     }
 
     bounds.removeFromTop(margin_.top);
     bounds.removeFromBottom(margin_.bottom);
     bounds.removeFromLeft(margin_.left);
     bounds.removeFromRight(margin_.right);
-
+    
     grid.performLayout (bounds);
 
 }

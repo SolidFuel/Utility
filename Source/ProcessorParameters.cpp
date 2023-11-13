@@ -13,26 +13,34 @@
 
 #include "ProcessorParameters.hpp"
 
+const juce::StringArray mode_choices = {{
+    "Mono", "Stero", "Mid/Side", "LeftCopy", "RightCopy"
+}};
+
 ProcessorParameters::ProcessorParameters(juce::AudioProcessor& processor) {
+
+    using RangedParam = std::unique_ptr<juce::RangedAudioParameter>;
+
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
 
-    mono = new juce::AudioParameterBool({"Mono", 1}, "Mono", false);
-    layout.add(std::unique_ptr<juce::RangedAudioParameter>(mono));
+    stereo_mode = new juce::AudioParameterChoice({"stereo_mode", 1}, "Stereo Mode", 
+            mode_choices, StereoMode::Stereo );
+    layout.add(RangedParam(stereo_mode));
 
-    gain = new juce::AudioParameterFloat({"Gain", 1}, "Gain", -100.f, 40.f, 0.f);
-    layout.add(std::unique_ptr<juce::RangedAudioParameter>(gain));
+    mute = new juce::AudioParameterBool({"mute", 1}, "Mute", false);
+    layout.add(RangedParam(mute));
 
-    stereo = new juce::AudioParameterFloat({"Stereo", 1}, "Stereo", 0.f, 200.f, 100.f);
-    layout.add(std::unique_ptr<juce::RangedAudioParameter>(stereo));
+    gain = new juce::AudioParameterFloat({"gain", 1}, "Gain", -100.f, 40.f, 0.f);
+    layout.add(RangedParam(gain));
 
-    swap = new juce::AudioParameterBool({"Swap", 1}, "Swap", false);
-    layout.add(std::unique_ptr<juce::RangedAudioParameter>(swap));
+    swap = new juce::AudioParameterBool({"swap", 1}, "Swap", false);
+    layout.add(RangedParam(swap));
 
-    invertL = new juce::AudioParameterBool({"InvertL", 1}, "InvertL", false);
-    layout.add(std::unique_ptr<juce::RangedAudioParameter>(invertL));
+    invertL = new juce::AudioParameterBool({"invert_left", 1}, "InvertL", false);
+    layout.add(RangedParam(invertL));
 
-    invertR = new juce::AudioParameterBool({"InvertR", 1}, "InvertR", false);
-    layout.add(std::unique_ptr<juce::RangedAudioParameter>(invertR));
+    invertR = new juce::AudioParameterBool({"invert_right", 1}, "InvertR", false);
+    layout.add(RangedParam(invertR));
 
     apvts = std::unique_ptr<juce::AudioProcessorValueTreeState>(
         new juce::AudioProcessorValueTreeState(

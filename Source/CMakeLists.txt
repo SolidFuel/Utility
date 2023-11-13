@@ -48,11 +48,16 @@ target_sources(${BaseTargetName} PRIVATE
         ChanTool.hpp
         Glider.hpp
         ChanToolProcessor.hpp
+        ValueListener.hpp
         Processor/setup.cpp Processor/processing.cpp
         ProcessorParameters.hpp ProcessorParameters.cpp
         ChanToolEditor.hpp ChanToolEditor.cpp
         EditorComponent/BoxComponent.hpp
         EditorComponent/BoxComponent.cpp
+        EditorComponent/ButtonGroupComponent.hpp
+        EditorComponent/ButtonGroupComponent.cpp
+        EditorComponent/StereoModeComponent.hpp
+        EditorComponent/StereoModeComponent.cpp
         EditorComponent/MainComponent.hpp
         EditorComponent/MainComponent.cpp
         EditorComponent/HeaderComponent.hpp

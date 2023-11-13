@@ -13,13 +13,19 @@
 #pragma once
 
 #include <juce_audio_processors/juce_audio_processors.h>
+
+#include <memory>
  
+
+enum StereoMode {
+    Mono, Stereo, MidSide, LeftCopy, RightCopy
+};
 
 struct ProcessorParameters  {     
 
-    juce::AudioParameterBool* mono; 
+    juce::AudioParameterChoice* stereo_mode;
+    juce::AudioParameterBool* mute; 
     juce::AudioParameterFloat* gain;
-    juce::AudioParameterFloat* stereo;
     juce::AudioParameterBool* swap;
     juce::AudioParameterBool* invertL;
     juce::AudioParameterBool* invertR;

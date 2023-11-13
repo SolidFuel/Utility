@@ -41,6 +41,7 @@ public:
     void changeProgramName(int, const juce::String&) override {}
     void releaseResources() override {};
 
+    ProcessorParameters* getChanToolParameters() { return &parameters_; }
 
     //==============================================================================
     // These are in processing.cpp
@@ -56,7 +57,16 @@ private:
 
     ProcessorParameters parameters_;
 
-    BooleanGlider<float> monoGlider_{0.f, 1.f, GLIDER_TIMING};
+    BooleanGlider<float> mute_glider_{1.f, 0.f, GLIDER_TIMING};
+
+    BooleanGlider<float> left_left_glider_{0.f, 1.f, GLIDER_TIMING};
+    BooleanGlider<float> left_mid_glider_{0.f, 1.f, GLIDER_TIMING};
+    BooleanGlider<float> left_right_glider_{0.f, 1.f, GLIDER_TIMING};
+
+    BooleanGlider<float> right_right_glider_{0.f, 1.f, GLIDER_TIMING};
+    BooleanGlider<float> right_mid_glider_{0.f, 1.f, GLIDER_TIMING};
+    BooleanGlider<float> right_side_glider_{0.f, 1.f, GLIDER_TIMING};
+    BooleanGlider<float> right_left_glider_{0.f, 1.f, GLIDER_TIMING};
 
     BooleanGlider<float> leftGlider_ {1.f, -1.f, GLIDER_TIMING};
     BooleanGlider<float> rightGlider_ {1.f, -1.f, GLIDER_TIMING};
@@ -65,10 +75,11 @@ private:
 
     void parseCurrentXml(const juce::XmlElement * elem);
 
+    // in processing.cpp
     template <class FT> void process_samples(juce::AudioBuffer<FT>&);
 
-public:
-    ProcessorParameters* getChanToolParameters() { return &parameters_; }
+    // in setup.cpp
+    void force_gliders();
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ChanToolProcessor)
