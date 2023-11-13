@@ -46,7 +46,7 @@ void ChanToolProcessor::process_samples(juce::AudioBuffer<FT>& buffer) {
     const StereoMode mode = StereoMode(parameters_.stereo_mode->getIndex());
 
     // -- GAIN parameter
-    float gain = powf(2.f, parameters_.gain->get() / 6.f);
+    float gain = std::powf(10.f, parameters_.gain->get() / 20.f);
 
     // INVERTL parameter
     leftGlider_.go(parameters_.invertL->get()); 
