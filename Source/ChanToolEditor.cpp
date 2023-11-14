@@ -8,10 +8,13 @@ constexpr int HEIGHT = HEADER_HEIGHT + PROPERTY_HEIGHT;
 constexpr int MARGIN = 5;
 
 
+//==============================================================================
 ChanToolEditor::ChanToolEditor(ChanToolProcessor& p) :
      AudioProcessorEditor(&p), proc_(p),
     main_component_(p.getChanToolParameters())
 {
+
+    tooltipWindow = std::make_unique<juce::TooltipWindow>(this);
 
     addAndMakeVisible (header_component_);
     addAndMakeVisible (main_component_);

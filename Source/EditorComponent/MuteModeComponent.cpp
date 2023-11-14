@@ -20,18 +20,21 @@ MuteModeComponent::MuteModeComponent() {
     left_mute_button_.setButtonText ("L");
     left_mute_button_.setConnectedEdges(Conn::ConnectedOnRight);
     left_mute_button_.setClickingTogglesState(true);
+    left_mute_button_.setTooltip("Mute the Left channel of the output.");
     left_listener_.onChange = [this](juce::Value &v) { update_mode(bool(v.getValue()), MuteLeft); };
     left_mute_button_.getToggleStateValue().addListener(&left_listener_);
 
     both_mute_button_.setButtonText ("Mute");
     both_mute_button_.setConnectedEdges(Conn::ConnectedOnLeft | Conn::ConnectedOnRight);
     both_mute_button_.setClickingTogglesState(true);
+    both_mute_button_.setTooltip("Mute both channels of the output");
     both_listener_.onChange = [this](juce::Value &v) { update_mode(bool(v.getValue()), MuteBoth); };
     both_mute_button_.getToggleStateValue().addListener(&both_listener_);
 
     right_mute_button_.setButtonText ("R");
     right_mute_button_.setConnectedEdges(Conn::ConnectedOnLeft);
     right_mute_button_.setClickingTogglesState(true);
+    right_mute_button_.setTooltip("Mute the right channel of the output");
     right_listener_.onChange = [this](juce::Value &v) { update_mode(bool(v.getValue()), MuteRight); };
     right_mute_button_.getToggleStateValue().addListener(&right_listener_);
 

@@ -34,7 +34,7 @@ private:
     StereoModeComponent stereo_mode_;
 
     // -- Swap
-    juce::ToggleButton swapButton;
+    juce::ToggleButton swap_button_;
     std::unique_ptr<ButtonAttachment> swapAttachment;
 
     BoxComponent swap_box_{BCO::Vertical, true};
@@ -56,7 +56,7 @@ private:
 
     //++++++ Gain box
 
-    juce::Slider gainSlider;
+    juce::Slider gain_slider_;
     std::unique_ptr<SliderAttachment> gainAttachment;
 
     BoxComponent gain_box_{BCO::Vertical, true};

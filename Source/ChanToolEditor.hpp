@@ -5,6 +5,8 @@
 #include "EditorComponent/MainComponent.hpp"
 #include "EditorComponent/HeaderComponent.hpp"
 
+#include <memory>
+
 class ChanToolEditor : public juce::AudioProcessorEditor
 {
 public:
@@ -13,6 +15,8 @@ public:
 private:
 
     ChanToolProcessor& proc_;
+
+    std::unique_ptr<juce::TooltipWindow> tooltipWindow;
 
     void paint(juce::Graphics&) override;
     void resized() override;

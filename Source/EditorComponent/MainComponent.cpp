@@ -19,17 +19,20 @@
     left_box_.add(stereo_mode_);
 
     //==============================================
-    swapButton.setButtonText ("Swap");
-    swapAttachment.reset (new ButtonAttachment (*apvts, "swap", swapButton));
-    swap_box_.add(swapButton);
+    swap_button_.setButtonText("Swap");
+    swap_button_.setTooltip("Swap the output channels");
+    swapAttachment.reset (new ButtonAttachment (*apvts, "swap", swap_button_));
+    swap_box_.add(swap_button_);
 
     left_box_.add(swap_box_, 5, 0);
 
     //==============================================
     rightInvertButton.setButtonText ("Right");
+    rightInvertButton.setTooltip("Invert the polarity of the right output channel");
     rightInvertAttachment.reset (new ButtonAttachment (*apvts, "invert_right", rightInvertButton));
 
     leftInvertButton.setButtonText ("Left");
+    leftInvertButton.setTooltip("Invert the polarity of the left output channel");
     leftInvertAttachment.reset (new ButtonAttachment (*apvts, "invert_left", leftInvertButton));
 
     invert_box_.setText("Invert");
@@ -45,13 +48,14 @@
     left_box_.setGap(5);
 
     //==============================================
-    gainSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    gain_slider_.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
     // 80 and 20 are the defaults baked into the slider pimpl code.
-    gainSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, 80, 20);
-    gainSlider.setTextValueSuffix(" dB");
-    gainAttachment.reset (new SliderAttachment (*apvts, "gain", gainSlider));
+    gain_slider_.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, 80, 20);
+    gain_slider_.setTextValueSuffix(" dB");
+    gain_slider_.setTooltip("Adjust the gain of the output");
+    gainAttachment.reset (new SliderAttachment (*apvts, "gain", gain_slider_));
 
-    gain_box_.add(gainSlider);
+    gain_box_.add(gain_slider_);
     gain_box_.setText("Gain");
     gain_box_.setMargin({0, 6, 0, 0});
 
