@@ -2,16 +2,47 @@
 
 Simple DAW Channel Utility
 
-These are listed in the order they are applied to the signal.
+![ChanTool UI](docs/chantool-ui.png)
 
-- Mono
-  Sums the two sides and then sends the sum to both channels.
-- Volume
-- Channel Phase Invert
-  - Note that this is done before the channel swap
-  - However, it is done AFTER mono - so you can get a really wide signal by
-    turning on mono and then inverting one side.
-- Channel Swap
+## Building
+
+Build should work for Windows and Linux. There is tooling for MacOS, but I don't
+think it works.
+
+```sh
+git clone https://github.com/SolidFuel/ChanTool.git
+cd ChanTool
+cmake -S. -Bbuild
+cmake --build build
+```
+
+## Install From Release
+
+These instructions assume you are installing from the provided release builds.
+If you build it yourself, the instruction will be similar. The needed files will
+under the `${BUILD}/Source/ChanTool_artefacts/Release/VST3`
+
+### Windows
+
+_Note_ The release builds only work on 64bit windows.
+
+Unzip the file ChanTool-win-vx.x.x.zip. Place the resulting `ChanTool.vst3` file into
+`C:\Program Files\Common Files\VST3`
+
+### Linux
+
+_Note_ The release builds only work on x86_64 architecture.
+
+Unzip the file ChanTool-linux-vx.x.x.zip. Place the resulting `ChanTool.vst3`
+directory into `~/.vst3`
+
+This can also be placed in `/usr/local/lib/vst3` for system-wide use. You will
+need superuser privileges to do so.
+
+### MacOS
+
+Work in Progress
+
 
 ## License/Copyright
 
