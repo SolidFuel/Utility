@@ -61,6 +61,10 @@ public :
         margin_ = Margin({y,y,x,x});
     }
 
+    void setGap(int g) {
+        gap_ = g;
+    }
+
 
     void paint(juce::Graphics& g) override;
 
@@ -68,6 +72,7 @@ public :
 private :
     Orientation orient_ = Vertical;
     bool draw_border_ = false;
+    int gap_ = 0;
 
     Margin margin_{0,0,0,0};
 

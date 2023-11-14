@@ -53,6 +53,8 @@ void BoxComponent::resized() {
     grid.justifyContent = juce::Grid::JustifyContent::start;
     grid.justifyItems = juce::Grid::JustifyItems::start;
 
+    grid.setGap(juce::Grid::Px(gap_));
+
     if (orient_ == Horizontal) { 
         grid.templateColumns.addArray(layoutTemplate);
         grid.templateRows.add(Track (Fr (1)));

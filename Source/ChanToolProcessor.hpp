@@ -57,7 +57,8 @@ private:
 
     ProcessorParameters parameters_;
 
-    BooleanGlider<float> mute_glider_{1.f, 0.f, GLIDER_TIMING};
+    BooleanGlider<float> left_mute_glider_{1.f, 0.f, GLIDER_TIMING};
+    BooleanGlider<float> right_mute_glider_{1.f, 0.f, GLIDER_TIMING};
 
     BooleanGlider<float> left_left_glider_{0.f, 1.f, GLIDER_TIMING};
     BooleanGlider<float> left_mid_glider_{0.f, 1.f, GLIDER_TIMING};

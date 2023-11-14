@@ -6,6 +6,7 @@
 #include "BoxComponent.hpp"
 #include "ButtonGroupComponent.hpp"
 #include "StereoModeComponent.hpp"
+#include "MuteModeComponent.hpp"
 
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <juce_audio_processors/juce_audio_processors.h>
@@ -25,21 +26,20 @@ public:
 private:
 
     using BCO = BoxComponent::Orientation;
-    static constexpr int STEREO_MODE_GROUP_ID = 1001;
 
     ProcessorParameters* params_;
 
-    juce::TextButton mute_button_;
-    juce::Value mute_value_;
-    ValueListener mute_listener_;
-
+    // ++++++ Things in the left box
+    // -- Stero Mode
     StereoModeComponent stereo_mode_;
 
+    // -- Swap
     juce::ToggleButton swapButton;
     std::unique_ptr<ButtonAttachment> swapAttachment;
 
     BoxComponent swap_box_{BCO::Vertical, true};
 
+    // -- Invert
     juce::ToggleButton leftInvertButton;
     std::unique_ptr<ButtonAttachment> leftInvertAttachment;
 
@@ -48,15 +48,21 @@ private:
 
     BoxComponent invert_box_{BCO::Vertical, true};
 
+    // -- Mute
+    MuteModeComponent mute_mode_;
+
+    // -- Left box itself
     BoxComponent left_box_{BCO::Vertical};
 
+    //++++++ Gain box
 
     juce::Slider gainSlider;
     std::unique_ptr<SliderAttachment> gainAttachment;
 
     BoxComponent gain_box_{BCO::Vertical, true};
 
-    void update_mute();
+    //++++++ 
+
 
     // ===================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)

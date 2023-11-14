@@ -10,8 +10,6 @@
  * in the root directory.
  ****/
 
-#include "../ProcessorParameters.hpp"
-
 #include "StereoModeComponent.hpp"
 
 constexpr int MODE_GROUP_ID = 1100;

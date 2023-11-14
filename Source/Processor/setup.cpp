@@ -34,8 +34,11 @@ juce::AudioProcessorEditor* ChanToolProcessor::createEditor() {
 
 //============================================================================
 void ChanToolProcessor::force_gliders() {
-    
-    mute_glider_.forceValue(parameters_.mute->get());
+
+    const MuteMode mute_mode = MuteMode(parameters_.mute->getIndex());
+    left_mute_glider_.forceValue(mute_mode == MuteBoth || mute_mode == MuteLeft);
+    right_mute_glider_.forceValue(mute_mode == MuteBoth || mute_mode == MuteRight);
+
 
     leftGlider_.forceValue(parameters_.invertL->get());
     rightGlider_.forceValue(parameters_.invertR->get());

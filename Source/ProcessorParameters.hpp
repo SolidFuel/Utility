@@ -21,10 +21,14 @@ enum StereoMode {
     Mono, Stereo, MidSide, LeftCopy, RightCopy
 };
 
+enum MuteMode {
+    MuteOff, MuteBoth, MuteLeft, MuteRight
+};
+
 struct ProcessorParameters  {     
 
     juce::AudioParameterChoice* stereo_mode;
-    juce::AudioParameterBool* mute; 
+    juce::AudioParameterChoice* mute; 
     juce::AudioParameterFloat* gain;
     juce::AudioParameterBool* swap;
     juce::AudioParameterBool* invertL;

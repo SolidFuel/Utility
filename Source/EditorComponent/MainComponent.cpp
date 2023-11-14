@@ -8,30 +8,15 @@
     DBGLOG("Setting up MainComponent");
     auto apvts = params->apvts.get();
 
-    mute_value_ = apvts->getParameterAsValue("mute");
-
     auto stereo_value = apvts->getParameterAsValue("stereo_mode");
-
     stereo_mode_.set_value_ptr(stereo_value);
 
-    //==============================================
-    mute_button_.setButtonText("Mute");
-    mute_button_.setClickingTogglesState(true);
-
-    update_mute();
-    mute_button_.onClick = [this]() {update_mute(); };
-    mute_listener_.onChange = [this](juce::Value &v) {
-        auto state = bool(v.getValue());
-        mute_button_.setToggleState(state, juce::sendNotification);
-    };
-
-    mute_value_.addListener(&mute_listener_);
-
-    left_box_.add(mute_button_, 8, 3);
+    auto mute_value_ = apvts->getParameterAsValue("mute");
+    mute_mode_.set_value_ptr(mute_value_);
 
     //==============================================
     
-    left_box_.add(stereo_mode_, 0, 3);
+    left_box_.add(stereo_mode_);
 
     //==============================================
     swapButton.setButtonText ("Swap");
@@ -51,7 +36,13 @@
     invert_box_.add(rightInvertButton);
     invert_box_.add(leftInvertButton);
 
-    left_box_.add(invert_box_, 5, 0);
+    left_box_.add(invert_box_, 5, 3);
+
+    //==============================================
+    left_box_.add(mute_mode_, 0, 10);
+
+    left_box_.setMargin(0, 5);
+    left_box_.setGap(5);
 
     //==============================================
     gainSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
@@ -69,13 +60,6 @@
     addAndMakeVisible(gain_box_);
 
  }
-
- //============================================================================
-void MainComponent::update_mute() {
-    auto state = mute_button_.getToggleState();
-    mute_button_.setButtonText(state ? "Unmute" : "Mute");
-    mute_value_ = state;
-}
 
 
 //============================================================================
@@ -104,12 +88,12 @@ void MainComponent::resized()
     invert_box_.layoutTemplate = { Track(Fr(1)), Track(Fr(1))};
     swap_box_.layoutTemplate = { Track(Fr(1)) };
     left_box_.layoutTemplate =  {
-        Track(Fr(10)), // Mute
         Track(Fr(30)), // Mode 
         Track(Fr(12)), // Swap
         Track(Fr(20)), // Invert
+        Track(Fr(10)), // Mute
         };
-    grid.items.add(GridItem(left_box_).withMargin({9, 5, 8, 0 }));
+    grid.items.add(GridItem(left_box_).withMargin({0, 5, 10, 0 }));
 
     gain_box_.layoutTemplate = { Track(Fr(1))};
     grid.items.add(GridItem(gain_box_).withMargin({3, 5, 10, 2 }));
