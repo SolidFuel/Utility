@@ -131,6 +131,8 @@ void StereoModeComponent::resized()
 
     grid.items.add(GridItem(midside_button_).withArea(Span(1), Span(3)));
 
+    auto bounds = getLocalBounds();
+    bounds.removeFromTop(8);
 
-    grid.performLayout (getLocalBounds());
+    grid.performLayout (bounds);
 }

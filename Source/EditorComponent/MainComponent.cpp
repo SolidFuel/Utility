@@ -30,7 +30,8 @@
     left_box_.add(mute_button_, 8, 3);
 
     //==============================================
-    left_box_.add(stereo_mode_);
+    
+    left_box_.add(stereo_mode_, 0, 3);
 
     //==============================================
     swapButton.setButtonText ("Swap");
@@ -96,6 +97,7 @@ void MainComponent::resized()
     grid.justifyContent = juce::Grid::JustifyContent::start;
     grid.justifyItems = juce::Grid::JustifyItems::start;
     grid.templateColumns = { Track (Fr (1)), Track (Fr (2)) };
+    grid.rowGap = juce::Grid::Px(5);
 
     grid.templateRows.add(Track (Fr (1)));
 
@@ -106,12 +108,11 @@ void MainComponent::resized()
         Track(Fr(30)), // Mode 
         Track(Fr(12)), // Swap
         Track(Fr(20)), // Invert
-        Track(Fr( 8)), // SPACER
         };
-    grid.items.add(GridItem(left_box_));
+    grid.items.add(GridItem(left_box_).withMargin({9, 5, 8, 0 }));
 
     gain_box_.layoutTemplate = { Track(Fr(1))};
-    grid.items.add(GridItem(gain_box_));
+    grid.items.add(GridItem(gain_box_).withMargin({3, 5, 10, 2 }));
 
 
     grid.performLayout (getLocalBounds());
