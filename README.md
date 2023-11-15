@@ -1,6 +1,6 @@
 # ChanTool
 
-Simple DAW Channel Utility
+Versatile VST3 Channel Utility for Digital Audio Workstations
 
 ![ChanTool UI](docs/chantool-ui.png)
 
@@ -43,6 +43,9 @@ need superuser privileges to do so.
 
 Work in Progress
 
+## Technology
+
+- [JUCE](https://juce.com/)
 
 ## License/Copyright
 
