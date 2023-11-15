@@ -4,6 +4,10 @@ Versatile VST3 Channel Utility for Digital Audio Workstations
 
 ![ChanTool UI](docs/chantool-ui.png)
 
+## Using
+
+See the [User Manual](docs/USER_MANUAL.md).
+
 ## Building
 
 Build should work for Windows and Linux. There is tooling for MacOS, but I don't
