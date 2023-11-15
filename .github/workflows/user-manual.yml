@@ -21,7 +21,7 @@ jobs :
         run : sudo npm install -g markdown-pdf
 
       - name : convert
-        run : markdown-pdf -o ${{env.OUTPUT_FILE}}  docs/USER_MANUAL.md
+        run : markdown-pdf -o build/${{env.OUTPUT_FILE}} docs/USER_MANUAL.md
 
       - name: Upload
         uses: actions/upload-artifact@v3
