@@ -63,8 +63,7 @@ jobs:
       working-directory: ${{github.workspace}}/build/Source/${{vars.SF_PLUGIN_NAME}}_artefacts/Release/VST3
       run : |
         cd ${{matrix.artifact_path}}
-        Compress-Archive -Path ${{matrix.file}} -CompressionLevel Optimal \
-          -Destination ${{github.workspace}}/build/${{env.PLUGIN_PREFIX}}-${{matrix.artifact_name}}-vst3.zip        
+        Compress-Archive -Path ${{matrix.file}} -CompressionLevel Optimal -Destination ${{github.workspace}}/build/${{env.PLUGIN_PREFIX}}-${{matrix.artifact_name}}-vst3.zip        
 
     - name: Upload plugin
       uses: actions/upload-artifact@v3
