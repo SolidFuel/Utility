@@ -21,10 +21,11 @@ jobs :
         run : sudo npm install -g markdown-pdf
 
       - name : convert
-        run : markdown-pdf -o build/${{env.OUTPUT_FILE}} docs/USER_MANUAL.md
+        working-directory: ${{github.workspace}}/docs
+        run : markdown-pdf -o ${{github.workspace}}/build/${{env.OUTPUT_FILE}} USER_MANUAL.md
 
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
-          name: ${{vars.SF_PLUGIN_NAME}}-VX.X.X-MANUAL.pdf
+          name: ${{env.OUTPUT_FILE}}
           path: ${{github.workspace}}/build/${{env.OUTPUT_FILE}}
