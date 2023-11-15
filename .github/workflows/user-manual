@@ -1,0 +1,21 @@
+name: User Manual to PDF
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs :
+  build :
+    runs-on : ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name : install markdown-pdf
+        run : sudo npm install -g markdown-pdf
+
+      - name : convert
+        run : markdown-pdf -o ${{vars.SF_PLUGIN_NAME}}-VX.X.X-MANUAL.pdf docs/USER_MANUAL.md
