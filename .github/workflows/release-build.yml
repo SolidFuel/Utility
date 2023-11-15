@@ -8,6 +8,7 @@ on:
 
 env:
   BUILD_TYPE: Release
+  PLUGIN_PREFIX : ${{vars.SF_PLUGIN_NAME}}-VX.X.X
 
 
 jobs:
@@ -19,16 +20,16 @@ jobs:
           - os : windows-latest
             artifact_path : "${{vars.SF_PLUGIN_NAME}}.vst3/Contents/x86_64-win"
             file : ${{vars.SF_PLUGIN_NAME}}.vst3
-            artifact_name : ${{vars.SF_PLUGIN_NAME}}-win64
+            artifact_name : win64
           # macos is seg faulting when running juce_vst3_helper
           #- os : macos-latest
           #  artifact_path : "${{vars.SF_PLUGIN_NAME}}.vst3/Contents/MacOS"
           #  file : ${{vars.SF_PLUGIN_NAME}}
-          #  artifact_name : ${{vars.SF_PLUGIN_NAME}}-macos
+          #  artifact_name : macos
           - os : ubuntu-latest
             artifact_path : "."
             file : ${{vars.SF_PLUGIN_NAME}}.vst3
-            artifact_name : ${{vars.SF_PLUGIN_NAME}}-linux
+            artifact_name : linux
     
     runs-on: ${{ matrix.os }}
 
@@ -55,17 +56,18 @@ jobs:
       working-directory: ${{github.workspace}}/build/Source/${{vars.SF_PLUGIN_NAME}}_artefacts/Release/VST3
       run : |
         cd ${{matrix.artifact_path}}
-        zip -9 -r ${{github.workspace}}/build/${{matrix.artifact_name}}-vst3.zip ${{matrix.file}}
+        zip -9 -r ${{github.workspace}}/build/${{env.PLUGIN_PREFIX}}-${{matrix.artifact_name}}-vst3.zip ${{matrix.file}}
 
     - name: Compress plugin win
       if : matrix.os == 'windows-latest'
       working-directory: ${{github.workspace}}/build/Source/${{vars.SF_PLUGIN_NAME}}_artefacts/Release/VST3
       run : |
         cd ${{matrix.artifact_path}}
-        Compress-Archive -Path ${{matrix.file}} -CompressionLevel Optimal -Destination ${{github.workspace}}/build/${{matrix.artifact_name}}-vst3.zip        
+        Compress-Archive -Path ${{matrix.file}} -CompressionLevel Optimal \
+          -Destination ${{github.workspace}}/build/${{env.PLUGIN_PREFIX}}-${{matrix.artifact_name}}-vst3.zip        
 
     - name: Upload plugin
       uses: actions/upload-artifact@v3
       with:
-        name: ${{matrix.artifact_name}}-vst3.zip
-        path: ${{github.workspace}}/build/${{matrix.artifact_name}}-vst3.zip
+        name: ${{env.PLUGIN_PREFIX}}-${{matrix.artifact_name}}-vst3.zip
+        path: ${{github.workspace}}/build/${{env.PLUGIN_PREFIX}}-${{matrix.artifact_name}}-vst3.zip
