@@ -53,7 +53,7 @@ void ChanToolProcessor::process_samples(juce::AudioBuffer<FT>& buffer) {
     right_left_glider_.go(mode == LeftCopy);
 
     // -- GAIN parameter
-    float gain = std::powf(10.f, parameters_.gain->get() / 20.f);
+    float gain = std::pow(10.f, parameters_.gain->get() / 20.f);
 
     // INVERTL parameter
     leftGlider_.go(parameters_.invertL->get()); 

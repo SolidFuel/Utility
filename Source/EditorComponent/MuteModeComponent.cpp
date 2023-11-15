@@ -41,7 +41,7 @@ MuteModeComponent::MuteModeComponent() {
 
 
     mute_mode_listener_.onChange = [this](juce::Value &v) {
-        StereoMode new_mode = StereoMode(int(v.getValue()));
+        MuteMode new_mode = MuteMode(int(v.getValue()));
         DBGLOG("mute_mode_listener_.onChange call new_mode = ", new_mode);
         working.set(true);
         DBGLOG("  -- mml Left")
@@ -103,7 +103,6 @@ void MuteModeComponent::resized()
     using Track = juce::Grid::TrackInfo;
     using Fr = juce::Grid::Fr;
     using GridItem = juce::GridItem;
-    using Span = GridItem::Span;
 
     grid.alignItems = juce::Grid::AlignItems::center;
     grid.justifyContent = juce::Grid::JustifyContent::center;
