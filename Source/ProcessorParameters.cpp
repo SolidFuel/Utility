@@ -1,5 +1,5 @@
 /****
- * ChanTool - Simple DAW Channel Utility 
+ * Chantool - Versatile VST3 Channel Utility for Digital Audio Workstations 
  * Copyright (C) 2023 Solid Fuel
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the 
@@ -17,6 +17,10 @@ const juce::StringArray mode_choices = {{
     "Mono", "Stero", "Mid/Side", "LeftCopy", "RightCopy"
 }};
 
+const juce::StringArray mute_choices = {{
+    "Off", "Both", "Left", "Right"
+}};
+
 ProcessorParameters::ProcessorParameters(juce::AudioProcessor& processor) {
 
     using RangedParam = std::unique_ptr<juce::RangedAudioParameter>;
@@ -27,7 +31,7 @@ ProcessorParameters::ProcessorParameters(juce::AudioProcessor& processor) {
             mode_choices, StereoMode::Stereo );
     layout.add(RangedParam(stereo_mode));
 
-    mute = new juce::AudioParameterBool({"mute", 1}, "Mute", false);
+    mute = new juce::AudioParameterChoice({"mute", 1}, "Mute", mute_choices, MuteOff);
     layout.add(RangedParam(mute));
 
     gain = new juce::AudioParameterFloat({"gain", 1}, "Gain", -100.f, 40.f, 0.f);

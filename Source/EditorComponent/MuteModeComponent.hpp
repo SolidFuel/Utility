@@ -17,11 +17,11 @@
 
 #include <juce_gui_basics/juce_gui_basics.h>
 
-class StereoModeComponent : public juce::Component {
+class MuteModeComponent : public juce::Component {
 
 public:
 
-    StereoModeComponent();
+    MuteModeComponent();
 
     void set_value_ptr(juce::Value &v);
 
@@ -32,18 +32,22 @@ private:
 
     juce::Value value_;
 
-    ValueListener stereo_mode_listener_;
+    ValueListener mute_mode_listener_;
 
-    juce::TextButton mono_button_;
-    juce::TextButton stereo_button_;
-    juce::TextButton left_button_;
-    juce::TextButton right_button_;
-    juce::TextButton midside_button_;
+    juce::TextButton left_mute_button_;
+    ValueListener left_listener_;
+    juce::TextButton both_mute_button_;
+    ValueListener both_listener_;
+    juce::TextButton right_mute_button_;
+    ValueListener right_listener_;
 
+    juce::Atomic<bool> working = false;
 
-    void update_mode(StereoMode mode);
+    void update_mode(bool state, MuteMode mode);
+
+    bool all_off();
 
 
     // ===================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(StereoModeComponent)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MuteModeComponent)
 };

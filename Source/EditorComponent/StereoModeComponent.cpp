@@ -1,5 +1,5 @@
 /****
- * ChanTool - Simple DAW Channel Utility 
+ * Chantool - Versatile VST3 Channel Utility for Digital Audio Workstations 
  * Copyright (C) 2023 Solid Fuel
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the 
@@ -9,8 +9,6 @@
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the LICENSE file
  * in the root directory.
  ****/
-
-#include "../ProcessorParameters.hpp"
 
 #include "StereoModeComponent.hpp"
 
@@ -25,30 +23,35 @@ StereoModeComponent::StereoModeComponent() {
     mono_button_.setConnectedEdges(Conn::ConnectedOnBottom);
     mono_button_.setClickingTogglesState(true);
     mono_button_.setRadioGroupId(MODE_GROUP_ID);
+    mono_button_.setTooltip("Sum the two input channels and send to both output channels.");
     mono_button_.onClick = [this]() { update_mode(Mono); };
 
     stereo_button_.setButtonText ("Stereo");
     stereo_button_.setConnectedEdges(Conn::ConnectedOnTop | Conn::ConnectedOnBottom);
     stereo_button_.setClickingTogglesState(true);
     stereo_button_.setRadioGroupId(MODE_GROUP_ID);
+    stereo_button_.setTooltip("'Normal' stereo mode.");
     stereo_button_.onClick = [this]() { update_mode(Stereo); };
 
     left_button_.setButtonText ("L");
     left_button_.setConnectedEdges(Conn::ConnectedOnTop | Conn::ConnectedOnBottom);
     left_button_.setClickingTogglesState(true);
     left_button_.setRadioGroupId(MODE_GROUP_ID);
+    left_button_.setTooltip("Send the left input channel to both output channels");
     left_button_.onClick = [this]() { update_mode(LeftCopy); };
 
     right_button_.setButtonText ("R");
     right_button_.setConnectedEdges(Conn::ConnectedOnTop | Conn::ConnectedOnBottom);
     right_button_.setClickingTogglesState(true);
     right_button_.setRadioGroupId(MODE_GROUP_ID);
+    right_button_.setTooltip("Send the right input channel to both output channels");
     right_button_.onClick = [this]() { update_mode(RightCopy); };
 
     midside_button_.setButtonText ("M/S");
+    midside_button_.setConnectedEdges(Conn::ConnectedOnTop);
     midside_button_.setClickingTogglesState(true);
     midside_button_.setRadioGroupId(MODE_GROUP_ID);
-    midside_button_.setConnectedEdges(Conn::ConnectedOnTop);
+    midside_button_.setTooltip("Compute mid and side channels. Send mid to left and side to right.");
     midside_button_.onClick = [this]() { update_mode(MidSide); };
 
 
@@ -131,6 +134,8 @@ void StereoModeComponent::resized()
 
     grid.items.add(GridItem(midside_button_).withArea(Span(1), Span(3)));
 
+    auto bounds = getLocalBounds();
+    bounds.removeFromTop(8);
 
-    grid.performLayout (getLocalBounds());
+    grid.performLayout (bounds);
 }

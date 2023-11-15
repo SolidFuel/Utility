@@ -1,5 +1,5 @@
 /****
- * ChanTool - Simple DAW Channel Utility 
+ * Chantool - Versatile VST3 Channel Utility for Digital Audio Workstations 
  * Copyright (C) 2023 Solid Fuel
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the 
@@ -34,8 +34,11 @@ juce::AudioProcessorEditor* ChanToolProcessor::createEditor() {
 
 //============================================================================
 void ChanToolProcessor::force_gliders() {
-    
-    mute_glider_.forceValue(parameters_.mute->get());
+
+    const MuteMode mute_mode = MuteMode(parameters_.mute->getIndex());
+    left_mute_glider_.forceValue(mute_mode == MuteBoth || mute_mode == MuteLeft);
+    right_mute_glider_.forceValue(mute_mode == MuteBoth || mute_mode == MuteRight);
+
 
     leftGlider_.forceValue(parameters_.invertL->get());
     rightGlider_.forceValue(parameters_.invertR->get());

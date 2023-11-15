@@ -1,6 +1,6 @@
 /****
- * Starp - Stable Random Arpeggiator Plugin 
- * Copyright (C) 2023 Mark Hollomon
+ * Chantool - Versatile VST3 Channel Utility for Digital Audio Workstations 
+ * Copyright (C) 2023 Solid Fuel
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the 
  * Free Software Foundation, either version 3 of the License, or (at your 
@@ -52,6 +52,8 @@ void BoxComponent::resized() {
     grid.alignItems = juce::Grid::AlignItems::center;
     grid.justifyContent = juce::Grid::JustifyContent::start;
     grid.justifyItems = juce::Grid::JustifyItems::start;
+
+    grid.setGap(juce::Grid::Px(gap_));
 
     if (orient_ == Horizontal) { 
         grid.templateColumns.addArray(layoutTemplate);

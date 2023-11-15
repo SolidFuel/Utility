@@ -1,3 +1,15 @@
+/****
+ * Chantool - Versatile VST3 Channel Utility for Digital Audio Workstations 
+ * Copyright (C) 2023 Solid Fuel
+ * This program is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the 
+ * Free Software Foundation, either version 3 of the License, or (at your 
+ * option) any later version. This program is distributed in the hope that it 
+ * will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the LICENSE file
+ * in the root directory.
+ ****/
+
 #include "MainComponent.hpp"
 
 
@@ -8,58 +20,54 @@
     DBGLOG("Setting up MainComponent");
     auto apvts = params->apvts.get();
 
-    mute_value_ = apvts->getParameterAsValue("mute");
-
     auto stereo_value = apvts->getParameterAsValue("stereo_mode");
-
     stereo_mode_.set_value_ptr(stereo_value);
 
-    //==============================================
-    mute_button_.setButtonText("Mute");
-    mute_button_.setClickingTogglesState(true);
-
-    update_mute();
-    mute_button_.onClick = [this]() {update_mute(); };
-    mute_listener_.onChange = [this](juce::Value &v) {
-        auto state = bool(v.getValue());
-        mute_button_.setToggleState(state, juce::sendNotification);
-    };
-
-    mute_value_.addListener(&mute_listener_);
-
-    left_box_.add(mute_button_, 8, 3);
+    auto mute_value_ = apvts->getParameterAsValue("mute");
+    mute_mode_.set_value_ptr(mute_value_);
 
     //==============================================
+    
     left_box_.add(stereo_mode_);
 
     //==============================================
-    swapButton.setButtonText ("Swap");
-    swapAttachment.reset (new ButtonAttachment (*apvts, "swap", swapButton));
-    swap_box_.add(swapButton);
+    swap_button_.setButtonText("Swap");
+    swap_button_.setTooltip("Swap the output channels");
+    swapAttachment.reset (new ButtonAttachment (*apvts, "swap", swap_button_));
+    swap_box_.add(swap_button_);
 
     left_box_.add(swap_box_, 5, 0);
 
     //==============================================
     rightInvertButton.setButtonText ("Right");
+    rightInvertButton.setTooltip("Invert the polarity of the right output channel");
     rightInvertAttachment.reset (new ButtonAttachment (*apvts, "invert_right", rightInvertButton));
 
     leftInvertButton.setButtonText ("Left");
+    leftInvertButton.setTooltip("Invert the polarity of the left output channel");
     leftInvertAttachment.reset (new ButtonAttachment (*apvts, "invert_left", leftInvertButton));
 
     invert_box_.setText("Invert");
     invert_box_.add(rightInvertButton);
     invert_box_.add(leftInvertButton);
 
-    left_box_.add(invert_box_, 5, 0);
+    left_box_.add(invert_box_, 5, 3);
 
     //==============================================
-    gainSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-    // 80 and 20 are the defaults baked into the slider pimpl code.
-    gainSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, 80, 20);
-    gainSlider.setTextValueSuffix(" dB");
-    gainAttachment.reset (new SliderAttachment (*apvts, "gain", gainSlider));
+    left_box_.add(mute_mode_, 0, 10);
 
-    gain_box_.add(gainSlider);
+    left_box_.setMargin(0, 5);
+    left_box_.setGap(5);
+
+    //==============================================
+    gain_slider_.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    // 80 and 20 are the defaults baked into the slider pimpl code.
+    gain_slider_.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, 80, 20);
+    gain_slider_.setTextValueSuffix(" dB");
+    gain_slider_.setTooltip("Adjust the gain of the output");
+    gainAttachment.reset (new SliderAttachment (*apvts, "gain", gain_slider_));
+
+    gain_box_.add(gain_slider_);
     gain_box_.setText("Gain");
     gain_box_.setMargin({0, 6, 0, 0});
 
@@ -68,13 +76,6 @@
     addAndMakeVisible(gain_box_);
 
  }
-
- //============================================================================
-void MainComponent::update_mute() {
-    auto state = mute_button_.getToggleState();
-    mute_button_.setButtonText(state ? "Unmute" : "Mute");
-    mute_value_ = state;
-}
 
 
 //============================================================================
@@ -96,22 +97,22 @@ void MainComponent::resized()
     grid.justifyContent = juce::Grid::JustifyContent::start;
     grid.justifyItems = juce::Grid::JustifyItems::start;
     grid.templateColumns = { Track (Fr (1)), Track (Fr (2)) };
+    grid.rowGap = juce::Grid::Px(5);
 
     grid.templateRows.add(Track (Fr (1)));
 
     invert_box_.layoutTemplate = { Track(Fr(1)), Track(Fr(1))};
     swap_box_.layoutTemplate = { Track(Fr(1)) };
     left_box_.layoutTemplate =  {
-        Track(Fr(10)), // Mute
         Track(Fr(30)), // Mode 
         Track(Fr(12)), // Swap
         Track(Fr(20)), // Invert
-        Track(Fr( 8)), // SPACER
+        Track(Fr(10)), // Mute
         };
-    grid.items.add(GridItem(left_box_));
+    grid.items.add(GridItem(left_box_).withMargin({0, 5, 10, 0 }));
 
     gain_box_.layoutTemplate = { Track(Fr(1))};
-    grid.items.add(GridItem(gain_box_));
+    grid.items.add(GridItem(gain_box_).withMargin({3, 5, 10, 2 }));
 
 
     grid.performLayout (getLocalBounds());

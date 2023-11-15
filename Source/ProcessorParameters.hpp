@@ -1,5 +1,5 @@
 /****
- * ChanTool - Simple DAW Channel Utility 
+ * Chantool - Versatile VST3 Channel Utility for Digital Audio Workstations 
  * Copyright (C) 2023 Solid Fuel
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the 
@@ -21,10 +21,14 @@ enum StereoMode {
     Mono, Stereo, MidSide, LeftCopy, RightCopy
 };
 
+enum MuteMode {
+    MuteOff, MuteBoth, MuteLeft, MuteRight
+};
+
 struct ProcessorParameters  {     
 
     juce::AudioParameterChoice* stereo_mode;
-    juce::AudioParameterBool* mute; 
+    juce::AudioParameterChoice* mute; 
     juce::AudioParameterFloat* gain;
     juce::AudioParameterBool* swap;
     juce::AudioParameterBool* invertL;

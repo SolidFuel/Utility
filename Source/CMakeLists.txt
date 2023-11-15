@@ -58,6 +58,8 @@ target_sources(${BaseTargetName} PRIVATE
         EditorComponent/ButtonGroupComponent.cpp
         EditorComponent/StereoModeComponent.hpp
         EditorComponent/StereoModeComponent.cpp
+        EditorComponent/MuteModeComponent.hpp
+        EditorComponent/MuteModeComponent.cpp
         EditorComponent/MainComponent.hpp
         EditorComponent/MainComponent.cpp
         EditorComponent/HeaderComponent.hpp

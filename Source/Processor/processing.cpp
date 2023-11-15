@@ -1,5 +1,5 @@
 /****
- * ChanTool - Simple DAW Channel Utility 
+ * Chantool - Versatile VST3 Channel Utility for Digital Audio Workstations 
  * Copyright (C) 2023 Solid Fuel
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the 
@@ -42,11 +42,18 @@ void ChanToolProcessor::process_samples(juce::AudioBuffer<FT>& buffer) {
     const FT sqrt2 = std::sqrt(FT(2.0));
     auto num_samples = buffer.getNumSamples();
 
-    // ---- MONO parameter
+    // ---- Stero Mode parameter
     const StereoMode mode = StereoMode(parameters_.stereo_mode->getIndex());
+    left_left_glider_.go(mode == LeftCopy || mode == Stereo);
+    left_mid_glider_.go(mode == MidSide || mode == Mono);
+    left_right_glider_.go(mode == RightCopy);
+    right_right_glider_.go(mode == RightCopy || mode == Stereo);
+    right_mid_glider_.go(mode == Mono);
+    right_side_glider_.go(mode == MidSide);
+    right_left_glider_.go(mode == LeftCopy);
 
     // -- GAIN parameter
-    float gain = powf(2.f, parameters_.gain->get() / 6.f);
+    float gain = std::pow(10.f, parameters_.gain->get() / 20.f);
 
     // INVERTL parameter
     leftGlider_.go(parameters_.invertL->get()); 
@@ -59,8 +66,9 @@ void ChanToolProcessor::process_samples(juce::AudioBuffer<FT>& buffer) {
     swapGlider_.go(swap);
 
     // MUTE parameter
-    auto mute = parameters_.mute->get();
-    mute_glider_.go(mute);
+    const auto mute = MuteMode(parameters_.mute->getIndex());
+    left_mute_glider_.go(mute == MuteBoth || mute == MuteLeft);
+    right_mute_glider_.go(mute == MuteBoth || mute == MuteRight);
 
 
     // --- LOOP Start
@@ -76,32 +84,18 @@ void ChanToolProcessor::process_samples(juce::AudioBuffer<FT>& buffer) {
         auto side = (out0 - out1)/sqrt2;
 
 
-        // mode
-        left_left_glider_.go(mode == LeftCopy || mode == Stereo);
+        // stereo mode
         auto left_left = left_left_glider_.nextValue();
-
-        left_mid_glider_.go(mode == MidSide || mode == Mono);
         auto left_mid = left_mid_glider_.nextValue();
-
-        left_right_glider_.go(mode == RightCopy);
         auto left_right = left_right_glider_.nextValue();
 
         out0 = in0 * left_left + mid * left_mid + 
                in1 * left_right;
 
-
-        right_right_glider_.go(mode == RightCopy || mode == Stereo);
         auto right_right = right_right_glider_.nextValue();
-
-        right_mid_glider_.go(mode == Mono);
         auto right_mid = right_mid_glider_.nextValue();
-
-        right_side_glider_.go(mode == MidSide);
         auto right_side = right_side_glider_.nextValue();
-
-        right_left_glider_.go(mode == LeftCopy);
         auto right_left = right_left_glider_.nextValue();
-
 
         out1 = in1 * right_right + mid * right_mid +
                side * right_side + in0 * right_left;
@@ -111,10 +105,10 @@ void ChanToolProcessor::process_samples(juce::AudioBuffer<FT>& buffer) {
         out1 = out1 * rightGlider_.nextValue();
 
         // Swap the channels
-        auto swapVal = swapGlider_.nextValue();
+        auto swap_value = swapGlider_.nextValue();
         auto temp = out0;
-        out0 = out0 *(1.f-swapVal) + out1 * swapVal;
-        out1 = out1 *(1.f-swapVal) + temp * swapVal;
+        out0 = out0 *(1.f-swap_value) + out1 * swap_value;
+        out1 = out1 *(1.f-swap_value) + temp * swap_value;
 
 
         // gain
@@ -122,9 +116,11 @@ void ChanToolProcessor::process_samples(juce::AudioBuffer<FT>& buffer) {
         out1 = gain * out1;
 
         // mute
-        auto mute_value = mute_glider_.nextValue();
-        out0 = out0 * mute_value;
-        out1 = out1 * mute_value;
+        auto left_mute_value = left_mute_glider_.nextValue();
+        auto right_mute_value = right_mute_glider_.nextValue();
+
+        out0 = out0 * left_mute_value;
+        out1 = out1 * right_mute_value;
 
         // Output
         channel0_data[i] = out0;
