@@ -1,6 +1,6 @@
 /****
- * Starp - Stable Random Arpeggiator Plugin 
- * Copyright (C) 2023 Mark Hollomon
+ * Chantool - Versatile VST3 Channel Utility for Digital Audio Workstations 
+ * Copyright (C) 2023 Solid Fuel
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the 
  * Free Software Foundation, either version 3 of the License, or (at your 
@@ -61,6 +61,10 @@ public :
         margin_ = Margin({y,y,x,x});
     }
 
+    void setGap(int g) {
+        gap_ = g;
+    }
+
 
     void paint(juce::Graphics& g) override;
 
@@ -68,6 +72,7 @@ public :
 private :
     Orientation orient_ = Vertical;
     bool draw_border_ = false;
+    int gap_ = 0;
 
     Margin margin_{0,0,0,0};
 

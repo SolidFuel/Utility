@@ -1,3 +1,15 @@
+/****
+ * Chantool - Versatile VST3 Channel Utility for Digital Audio Workstations 
+ * Copyright (C) 2023 Solid Fuel
+ * This program is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the 
+ * Free Software Foundation, either version 3 of the License, or (at your 
+ * option) any later version. This program is distributed in the hope that it 
+ * will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the LICENSE file
+ * in the root directory.
+ ****/
+
 #pragma once
 
 #include "ProcessorParameters.hpp"
@@ -57,7 +69,8 @@ private:
 
     ProcessorParameters parameters_;
 
-    BooleanGlider<float> mute_glider_{1.f, 0.f, GLIDER_TIMING};
+    BooleanGlider<float> left_mute_glider_{1.f, 0.f, GLIDER_TIMING};
+    BooleanGlider<float> right_mute_glider_{1.f, 0.f, GLIDER_TIMING};
 
     BooleanGlider<float> left_left_glider_{0.f, 1.f, GLIDER_TIMING};
     BooleanGlider<float> left_mid_glider_{0.f, 1.f, GLIDER_TIMING};
