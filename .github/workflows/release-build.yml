@@ -82,6 +82,14 @@ jobs:
         path: ${{github.workspace}}/build/${{env.SF_PROJECT}}-${{env.SF_VERSION}}-${{matrix.artifact_name}}-vst3.zip
 
     - name: Build .deb
+      id: build_deb
       if : matrix.os == 'ubuntu-latest'
       working-directory: ${{github.workspace}}/build
       run : bash -x ../packaging/create-deb
+
+    - name: Upload deb
+      if : matrix.os == 'ubuntu-latest'
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{steps.build_deb.outputs.deb_file}}
+        path: ${{github.workspace}}/build/${{steps.build_deb.outputs.deb_file}}

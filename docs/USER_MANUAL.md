@@ -1,4 +1,4 @@
-# ChanTool _V0.2.0_
+# ChanTool _V0.3.0_
 
 ChanTool is a versatile channel utility plug-in for Digital Audio Workstations.
 It is compatible with all DAWs that support the VST3 plug-in format.

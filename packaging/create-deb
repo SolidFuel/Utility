@@ -53,3 +53,6 @@ cp ${PKG_SRC}/debian/copyright ${DIR}/usr/share/doc/${PKG}/copyright
 
 # CREATE
 dpkg-deb --root-owner-group --build ${DIR}
+
+# Output
+echo "deb_file=${DIR}.deb" >> ${GITHUB_OUTPUT}
