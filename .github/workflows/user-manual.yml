@@ -6,8 +6,6 @@ on:
   pull_request:
     branches: [ "main" ]
 
-env :
-  OUTPUT_FILE : ${{vars.SF_PLUGIN_NAME}}-VX.X.X-MANUAL.pdf
 
 jobs :
   build :
@@ -20,12 +18,19 @@ jobs :
       - name : install markdown-pdf
         run : sudo npm install -g markdown-pdf
 
+      - name: Get Config Info
+        working-directory: ${{github.workspace}}/build
+        shell : bash
+        run : |
+          bash ../scripts/project_vars > CONFIG.sh
+          cat CONFIG.sh >> "$GITHUB_ENV"
+  
       - name : convert
         working-directory: ${{github.workspace}}/docs
-        run : markdown-pdf -o ${{github.workspace}}/build/${{env.OUTPUT_FILE}} USER_MANUAL.md
+        run : markdown-pdf -o ${{github.workspace}}/build/USER_MANUAL.pdf USER_MANUAL.md
 
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
-          name: ${{env.OUTPUT_FILE}}
-          path: ${{github.workspace}}/build/${{env.OUTPUT_FILE}}
+          name: ${{env.SF_PROJECT}}-${{env.SF_VERSION}}-MANUAL.pdf
+          path: ${{github.workspace}}/build/USER_MANUAL.pdf

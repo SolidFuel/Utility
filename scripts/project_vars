@@ -7,7 +7,7 @@ CML=$1
 if [ -z "$CML" ]; then
     if [ -f "CMakeLists.txt" ]; then
         CML="CMakeLists.txt"
-    elif [ -f "../CMakeLists.txt"]; then
+    elif [ -f "../CMakeLists.txt" ]; then
             CML=../CMakeLists.txt
     else
         echo "Could not find Cmake file"
