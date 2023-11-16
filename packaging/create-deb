@@ -1,0 +1,55 @@
+#!/usr/bin/bash
+
+# Assume we are sitting build
+
+SRC=..
+
+project_line=`grep '^project(' ../CMakeLists.txt | sed 's/[()]/ /g'`
+PROJ=`echo "${project_line}" | awk '{ print $2; }'`
+VERSION=`echo "${project_line}" | awk '{ print $4; }'`
+PKG=${PROJ,,}
+
+PKG_SRC=${SRC}/packaging
+
+DIR=${PKG}_${VERSION}_linux-amd64
+
+rm -rf ${DIR}
+mkdir ${DIR}
+
+# VST3
+mkdir -p ${DIR}/usr/lib/vst3
+cp -R Source/${PROJ}_artefacts/Release/VST3/* ${DIR}/usr/lib/vst3
+
+# Control file
+mkdir ${DIR}/DEBIAN
+cp ${PKG_SRC}/debian/control ${DIR}/DEBIAN/control
+
+mkdir -p ${DIR}/usr/share/doc/${PKG}
+
+# changelog
+# place holder until I can come up with something better
+CHNG=${DIR}/usr/share/doc/${PKG}/changelog
+
+cat <<_END_ > ${CHNG}
+${PKG} (${VERSION}) stable; urgency=low
+
+  [ SolidFuel ]
+_END_
+git log --pretty=format:%s `git tag --sort=-committerdate | \
+    head -1`...`git tag --sort=-committerdate | head -2 | \
+    awk '{split($0, tags, "\n")} END {print tags[1]}'` | \
+    awk '{ print "  * ", $0 }' | grep -v "Merge pull request" >>  ${CHNG}
+
+DATE=`date -R`
+cat <<_OUTRO_ >> ${CHNG}
+
+ -- SolidFuel <solidfuelplugins@gmail.com>  ${DATE}
+_OUTRO_
+
+gzip --best --no-name ${DIR}/usr/share/doc/${PKG}/changelog
+
+# copyright
+cp ${PKG_SRC}/debian/copyright ${DIR}/usr/share/doc/${PKG}/copyright
+
+# CREATE
+dpkg-deb --root-owner-group --build ${DIR}
