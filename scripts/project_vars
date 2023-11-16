@@ -17,10 +17,10 @@ fi
 
 
 project_line=`grep '^project(' $CML | sed 's/[()]/ /g'`
-SF_PROJECT=`echo "${project_line}" | awk '{ print $2; }'`
-SF_VERSION=`echo "${project_line}" | awk '{ print $4; }'`
+PROJ=`echo "${project_line}" | awk '{ print $2; }'`
+VERSION=`echo "${project_line}" | awk '{ print $4; }'`
 
 cat <<_HERE_
-PROJ="$PROJ"
-VERSION="$VERSION"
+SF_PROJECT="$PROJ"
+SF_VERSION="$VERSION"
 _HERE_
