@@ -38,7 +38,9 @@ jobs:
 
     - name: Configure ubuntu
       if : matrix.os == 'ubuntu-latest'
-      run : sudo apt install xorg-dev libasound2-dev libgl1-mesa-dev  libcurl4-openssl-dev
+      run : |
+       sudo apt install xorg-dev libasound2-dev libgl1-mesa-dev  \
+            libcurl4-openssl-dev libwebkit2gtk-4.0-dev
 
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
@@ -72,14 +74,14 @@ jobs:
       working-directory: ${{github.workspace}}/build
       run : |
         cd Source/${env:SF_PROJECT}_artefacts/Release/VST3/${{matrix.artifact_path}}
-        $ZIPNAME="${env:SF_PROJECT}-${env:SF_VERSION}-${{matrix.artifact_name}}-vst3.zip"
+        $ZIPNAME="${env:SF_PROJECT}-V${env:SF_VERSION}-${{matrix.artifact_name}}-vst3.zip"
         Compress-Archive -Path ${{matrix.file}} -CompressionLevel Optimal -Destination ${{github.workspace}}/build/${ZIPNAME}     
 
     - name: Upload plugin
       uses: actions/upload-artifact@v3
       with:
-        name: ${{env.SF_PROJECT}}-${{env.SF_VERSION}}-${{matrix.artifact_name}}-vst3.zip
-        path: ${{github.workspace}}/build/${{env.SF_PROJECT}}-${{env.SF_VERSION}}-${{matrix.artifact_name}}-vst3.zip
+        name: ${{env.SF_PROJECT}}-V${{env.SF_VERSION}}-${{matrix.artifact_name}}-vst3.zip
+        path: ${{github.workspace}}/build/${{env.SF_PROJECT}}-V${{env.SF_VERSION}}-${{matrix.artifact_name}}-vst3.zip
 
     - name: Build .deb
       id: build_deb
