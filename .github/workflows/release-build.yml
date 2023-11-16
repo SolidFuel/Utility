@@ -8,7 +8,6 @@ on:
 
 env:
   BUILD_TYPE: Release
-  PLUGIN_PREFIX : ${{vars.SF_PLUGIN_NAME}}-VX.X.X
 
 
 jobs:
@@ -39,7 +38,7 @@ jobs:
 
     - name: Configure ubuntu
       if : matrix.os == 'ubuntu-latest'
-      run : sudo apt install xorg-dev libasound2-dev libgl1-mesa-dev
+      run : sudo apt install xorg-dev libasound2-dev libgl1-mesa-dev  libcurl4-openssl-dev
 
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
@@ -47,26 +46,40 @@ jobs:
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} -v
 
+    - name: Get Config Info
+      working-directory: ${{github.workspace}}/build
+      shell : bash
+      run : |
+        bash ../scripts/project_vars > CONFIG.sh
+        cat CONFIG.sh >> "$GITHUB_ENV"
+
     - name: Test
       working-directory: ${{github.workspace}}/build
       run: ctest -C ${{env.BUILD_TYPE}}
 
     - name: Compress plugin not-win
       if : matrix.os != 'windows-latest'
-      working-directory: ${{github.workspace}}/build/Source/${{vars.SF_PLUGIN_NAME}}_artefacts/Release/VST3
+      working-directory: ${{github.workspace}}/build/Source/${SF_PROJECT}_artefacts/Release/VST3
       run : |
+        ZIPNAME=${SF_PROJECT}-${SF_VERSION}-${{matrix.artifact_name}}-vst3.zip
         cd ${{matrix.artifact_path}}
-        zip -9 -r ${{github.workspace}}/build/${{env.PLUGIN_PREFIX}}-${{matrix.artifact_name}}-vst3.zip ${{matrix.file}}
+        zip -9 -r ${{github.workspace}}/build/${ZIPNAME} ${{matrix.file}}
 
     - name: Compress plugin win
       if : matrix.os == 'windows-latest'
-      working-directory: ${{github.workspace}}/build/Source/${{vars.SF_PLUGIN_NAME}}_artefacts/Release/VST3
+      working-directory: ${{github.workspace}}/build/Source/${SF_PROJECT}_artefacts/Release/VST3
       run : |
         cd ${{matrix.artifact_path}}
-        Compress-Archive -Path ${{matrix.file}} -CompressionLevel Optimal -Destination ${{github.workspace}}/build/${{env.PLUGIN_PREFIX}}-${{matrix.artifact_name}}-vst3.zip        
+        $ZIPNAME=${env:SF_PROJECT}-${env:SF_VERSION}-${{matrix.artifact_name}}-vst3.zip
+        Compress-Archive -Path ${{matrix.file}} -CompressionLevel Optimal -Destination ${{github.workspace}}/build/${ZIPNAME}     
 
     - name: Upload plugin
       uses: actions/upload-artifact@v3
       with:
-        name: ${{env.PLUGIN_PREFIX}}-${{matrix.artifact_name}}-vst3.zip
-        path: ${{github.workspace}}/build/${{env.PLUGIN_PREFIX}}-${{matrix.artifact_name}}-vst3.zip
+        name: ${{env.SF_PROJECT}}-${{env.SF_VERSION}}-${{matrix.artifact_name}}-vst3.zip
+        path: ${{github.workspace}}/build/${{env.SF_PROJECT}}-${{env.SF_VERSION}}-${{matrix.artifact_name}}-vst3.zip
+
+    - name: Build .deb
+      if : matrix.os == 'ubuntu-latest'
+      working-directory: ${{github.workspace}}/build
+      run : bash -x ../packaging/create-deb

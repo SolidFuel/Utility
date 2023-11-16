@@ -1,0 +1,26 @@
+#!/usr/bin/bash
+
+###
+# $1 needs to point to the toplevel CMakeLists.txt
+#
+CML=$1
+if [ -z "$CML" ]; then
+    if [ -f "CMakeLists.txt" ]; then
+        CML="CMakeLists.txt"
+    elif [-f "../CMakeLists.txt"]; then
+            CML=../CMakeLists.txt
+    else
+        echo "Could not find Cmake file"
+        exit 1
+    fi
+fi
+
+
+project_line=`grep '^project(' $CML | sed 's/[()]/ /g'`
+SF_PROJECT=`echo "${project_line}" | awk '{ print $2; }'`
+SF_VERSION=`echo "${project_line}" | awk '{ print $4; }'`
+
+cat <<_HERE_
+PROJ="$PROJ"
+VERSION="$VERSION"
+_HERE_
