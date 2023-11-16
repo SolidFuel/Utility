@@ -37,5 +37,5 @@ jobs :
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
-          name: ${{steps.config_info.outputs.SF_PROJECT}}-${{steps.config_info.outputs.SF_VERSION}}-MANUAL.pdf
+          name: ${{env.SF_PROJECT}}-${{env.SF_VERSION}}-MANUAL.pdf
           path: ${{github.workspace}}/build/USER_MANUAL.pdf

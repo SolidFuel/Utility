@@ -21,6 +21,6 @@ PROJ=`echo "${project_line}" | awk '{ print $2; }'`
 VERSION=`echo "${project_line}" | awk '{ print $4; }'`
 
 cat <<_HERE_
-SF_PROJECT="$PROJ"
-SF_VERSION="$VERSION"
+SF_PROJECT=${PROJ}
+SF_VERSION=${VERSION}
 _HERE_
