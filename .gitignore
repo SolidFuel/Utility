@@ -10,3 +10,6 @@ out/
 build/
 # vscode configuration directory
 .vscode/
+
+#Vim tempfile
+.swp
