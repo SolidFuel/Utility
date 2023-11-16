@@ -59,17 +59,17 @@ jobs:
 
     - name: Compress plugin not-win
       if : matrix.os != 'windows-latest'
-      working-directory: ${{github.workspace}}/build/Source/${SF_PROJECT}_artefacts/Release/VST3
+      working-directory: ${{github.workspace}}/build
       run : |
+        cd Source/${SF_PROJECT}_artefacts/Release/VST3/${{matrix.artifact_path}}
         ZIPNAME=${SF_PROJECT}-${SF_VERSION}-${{matrix.artifact_name}}-vst3.zip
-        cd ${{matrix.artifact_path}}
         zip -9 -r ${{github.workspace}}/build/${ZIPNAME} ${{matrix.file}}
 
     - name: Compress plugin win
       if : matrix.os == 'windows-latest'
-      working-directory: ${{github.workspace}}/build/Source/${SF_PROJECT}_artefacts/Release/VST3
+      working-directory: ${{github.workspace}}/build
       run : |
-        cd ${{matrix.artifact_path}}
+        cd Source/${env:SF_PROJECT}_artefacts/Release/VST3/${{matrix.artifact_path}}
         $ZIPNAME=${env:SF_PROJECT}-${env:SF_VERSION}-${{matrix.artifact_name}}-vst3.zip
         Compress-Archive -Path ${{matrix.file}} -CompressionLevel Optimal -Destination ${{github.workspace}}/build/${ZIPNAME}     
 

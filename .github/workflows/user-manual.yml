@@ -19,10 +19,12 @@ jobs :
         run : sudo npm install -g markdown-pdf
 
       - name: Get Config Info
-        working-directory: ${{github.workspace}}/build
+        working-directory: ${{github.workspace}}
         shell : bash
         run : |
-          bash ../scripts/project_vars > CONFIG.sh
+          mkdir build
+          cd build
+          ../scripts/project_vars > CONFIG.sh
           cat CONFIG.sh >> "$GITHUB_ENV"
   
       - name : convert
