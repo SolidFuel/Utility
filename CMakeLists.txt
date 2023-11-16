@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(ChanTool VERSION 0.2.0)
+project(ChanTool VERSION 0.3.0)
 
 #First, we'll add the CMake folder, in case we'll need to find_package later:
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake")
