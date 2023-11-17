@@ -95,3 +95,17 @@ jobs:
       with:
         name: ${{steps.build_deb.outputs.deb_file}}
         path: ${{github.workspace}}/build/${{steps.build_deb.outputs.deb_file}}
+    
+    - name : build windows installer
+      if : matrix.os == 'windows-latest'
+      working-directory: ${{github.workspace}}
+      run: iscc /Dsrcdir="$pwd" .\packaging\windows\chantool.iss
+
+    - name: Upload windows installer
+      if : matrix.os == 'windows-latest'
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{env.SF_PROJECT}}-V${{env.SF_VERSION}}-${{matrix.artifact_name}}-install.exe
+        path: ${{github.workspace}}/build/${{env.SF_PROJ_LOWER}}.exe
+
+

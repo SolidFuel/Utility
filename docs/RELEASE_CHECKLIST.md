@@ -4,6 +4,7 @@
 - CMakeLists.txt
 - USER_MANUAL.md
 - packaging/debian/control
+- packaging/windows/chantool.iss
 
 ## Create the tag
 
@@ -11,7 +12,9 @@
 - Ubuntu
   - vst3 zip
   - deb
-- Windows vst3
+- Windows
+  - vst3 zip
+  - installer
 - Manual
 
 ## Create release
