@@ -1,11 +1,20 @@
 #!/usr/bin/bash
-
-set -x
-
-###
-# $1 needs to point to the PLUGIN_CONFIG file
 #
+# Calculate the project variables and place shell lines
+# on stdout to define them
+# 
+# project_vars [config file] [exports]
+#
+# config file : (optional) Path and name of the PLUGIN_CONFIG file to use.
+#       If this is not given (or is empty), it will try to find it by looking
+#       up the directory heirarchy
+#
+# exports : (optional) If present, the script will generate export statements 
+#       as well.
+
 cfg_file=$1
+do_export=$2
+
 if [ -z "$cfg_file" ]; then
     cfg_file="PLUGIN_CONFIG"
     for file in "${cfg_file}" "../${cfg_file}"
@@ -17,17 +26,28 @@ if [ -z "$cfg_file" ]; then
     done
 
     if [ ! -f "${cfg_file}" ]; then
-        echo "Could not file CONFIG file"
+        echo "ERROR: Could not find CONFIG file"
         exit 1
     fi
+elif [ ! -f "$cfg_file" ]; then
+    echo "ERROR: file '${cfg_file}' does not exist."
+    exit 1
 fi
 
-#source "${cfg_file}"
+if [ "$do_export" ]; then
+    EXP="export "
+else
+    EXP=""
+fi
+
+while read -r line
+do
+    echo "${EXP}${line}"
+done < ${cfg_file}
+
+# Create derived variable
+source "${cfg_file}"
 
 PROJ_LOWER=${SF_PROJECT,,}
 
-cat <<_HERE_
-SF_PROJECT=${SF_PROJECT}
-SF_PROJ_LOWER=${PROJ_LOWER}
-SF_VERSION=${SF_PROJECT}
-_HERE_
+echo "${EXP}SF_PROJ_LOWER=${PROJ_LOWER}";

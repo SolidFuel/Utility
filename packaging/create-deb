@@ -1,16 +1,14 @@
 #!/usr/bin/bash -x
 
-# Assume we are sitting build
+# Assume we are sitting in build
 TOP=$1
 [ -z "$TOP" ] && TOP=..
 
 if [ -z "$SF_PROJECT" ]; then
-  project_line=`grep '^project(' ${TOP}/CMakeLists.txt | sed 's/[()]/ /g'`
-  SF_PROJECT=`echo "${project_line}" | awk '{ print $2; }'`
-  SF_VERSION=`echo "${project_line}" | awk '{ print $4; }'`
+  eval $(${TOP}/scripts/project_vars "" 1)
 fi
 
-PKG=${SF_PROJECT,,}
+PKG=${SF_PROJ_LOWER}
 PKG_SRC=${TOP}/packaging
 
 DIR=${PKG}_${SF_VERSION}_linux-amd64
@@ -24,7 +22,7 @@ cp -R Source/${SF_PROJECT}_artefacts/Release/VST3/* ${DIR}/usr/lib/vst3
 
 # Control file
 mkdir ${DIR}/DEBIAN
-cp ${PKG_SRC}/debian/control ${DIR}/DEBIAN/control
+${TOP}/scripts/expand_file ${PKG_SRC}/debian/control > ${DIR}/DEBIAN/control
 
 mkdir -p ${DIR}/usr/share/doc/${PKG}
 
@@ -51,10 +49,10 @@ _OUTRO_
 gzip --best --no-name ${DIR}/usr/share/doc/${PKG}/changelog
 
 # copyright
-cp ${PKG_SRC}/debian/copyright ${DIR}/usr/share/doc/${PKG}/copyright
+${TOP}/scripts/expand_file ${PKG_SRC}/debian/copyright > ${DIR}/usr/share/doc/${PKG}/copyright
 
 # CREATE
 dpkg-deb --root-owner-group --build ${DIR}
 
 # Output
-echo "deb_file=${DIR}.deb" >> ${GITHUB_OUTPUT}
+[ -n "${GITHUB_OUTPUT}" ] && echo "deb_file=${DIR}.deb" >> ${GITHUB_OUTPUT}

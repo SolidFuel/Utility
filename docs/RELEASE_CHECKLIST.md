@@ -1,10 +1,12 @@
 # Procedure
 
 ## Version updates
-- CMakeLists.txt
+- PLUGIN_CONFIG : automatically picked up by:
+  - CMakeLists.txt
+  - packaging/debian/control
+  - packaging/debian/copyright
+  - packaging/windows/plugin.iss
 - USER_MANUAL.md
-- packaging/debian/control
-- packaging/windows/chantool.iss
 
 ## Create the tag
 
@@ -20,9 +22,6 @@
 ## Create release
 
 # Improvements
-- can we update version only in CMake and
-  everyone else inherits ?
-
 - script to pull ?
 
 - script to actually create ?

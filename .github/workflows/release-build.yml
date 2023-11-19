@@ -49,6 +49,7 @@ jobs:
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} -v
 
     - name: Get Config Info
+      id: config-info
       working-directory: ${{github.workspace}}/build
       shell : bash
       run : |
@@ -99,7 +100,7 @@ jobs:
     - name : build windows installer
       if : matrix.os == 'windows-latest'
       working-directory: ${{github.workspace}}
-      run: iscc /Dsrcdir="$pwd" .\packaging\windows\chantool.iss
+      run: iscc /Dsrcdir="$pwd" .\packaging\windows\plugin.iss
 
     - name: Upload windows installer
       if : matrix.os == 'windows-latest'

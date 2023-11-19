@@ -1,5 +1,5 @@
-Package: chantool
-Version: 0.3.0
+Package: ${SF_PROJ_LOWER}
+Version: ${SF_VERSION}
 Section: sound
 Priority: optional
 Architecture: amd64

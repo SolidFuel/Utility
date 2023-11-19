@@ -1,15 +1,15 @@
-# ChanTool _V0.3.0_
+# solidUtility _V0.3.0_
 
-ChanTool is a versatile channel utility plug-in for Digital Audio Workstations.
+solidUtility is a versatile channel utility plug-in for Digital Audio Workstations.
 It is compatible with all DAWs that support the VST3 plug-in format.
 
 It is currently supported on Windows 64 bit platforms and all Linux 64 bit distributions.
 
-This user's manual will walk you through each of the controls on the _ChanTool_ interface.
+This user's manual will walk you through each of the controls on the _solidUtility_ interface.
 
 ## Header
 
-![ChanTool's Header](chantool-header.png)
+![solidUtility's Header](chantool-header.png)
 
 The `menu` button on the left contains the `about` menu option to display
 version, copyright, and other information about the software.
@@ -21,7 +21,7 @@ version, copyright, and other information about the software.
 This set of controls allows you to configure what information is output.
 This may then be further modified by the other controls.
 
-![Chantool Channel Mode Selectors](chantool-stereo-mode.png)
+![solidUtility Channel Mode Selectors](chantool-stereo-mode.png)
 
 - Mono : Sums the two input channels a places that sum on both outputs.
 - Stereo : 'Normal mode' THe left input is placed on the left output and the 
@@ -71,7 +71,7 @@ The signal flows through the controls in the following order (mostly top-to-bott
 
 ### Host Automatable parameters
 
-This table gives the names of the paramters that _ChanTool_ makes available
+This table gives the names of the paramters that _solidUtility_ makes available
 to the host and which control on the UI it corresponds to.
 
 |Parameter Name|UI Control|
