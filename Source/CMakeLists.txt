@@ -1,7 +1,6 @@
+set (BaseTargetName "${SF_PROJECT}")
 
-set (BaseTargetName ChanTool)
-
-add_compile_definitions("$<$<CONFIG:Release>:STARP_DEBUG=0>")
+add_compile_definitions("$<$<CONFIG:Release>:SF_DEBUG=0>")
 
 include(GetGitRevisionDescription)
 
@@ -15,13 +14,13 @@ message("GIT_REF = " ${GIT_REF})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-string(TOUPPER "${CMAKE_BUILD_TYPE}" chantool_build_type)
-if(${chantool_build_type} STREQUAL "RELEASE")
-        set(PLUGIN_PRODUCT_NAME "ChanTool")
-        set(PLUGIN_PRODUCT_CODE "Chnt" )
+string(TOUPPER "${CMAKE_BUILD_TYPE}" upper_build_type)
+if(${upper_build_type} STREQUAL "RELEASE")
+        set(PLUGIN_PRODUCT_NAME "${SF_PROJECT}")
+        set(PLUGIN_PRODUCT_CODE "Sfut" )
 else()
-        set(PLUGIN_PRODUCT_NAME "ChanToolDev")
-        set(PLUGIN_PRODUCT_CODE "ChnD")
+        set(PLUGIN_PRODUCT_NAME "${SF_PROJECT}Dev")
+        set(PLUGIN_PRODUCT_CODE "SfuD")
 endif()
 
 string(TOUPPER "${PLUGIN_PRODUCT_NAME}" PLUGIN_NAME_UPPER)
@@ -45,7 +44,7 @@ juce_add_plugin("${BaseTargetName}"
         PRODUCT_NAME ${PLUGIN_PRODUCT_NAME})
 
 target_sources(${BaseTargetName} PRIVATE
-        ChanTool.hpp
+        Debug.hpp
         Glider.hpp
         ChanToolProcessor.hpp
         ValueListener.hpp

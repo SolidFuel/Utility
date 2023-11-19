@@ -16,7 +16,7 @@
 
 #include "functional"
 
-#include "ChanTool.hpp"
+#include "Debug.hpp"
 
 class ValueListener : public juce::Value::Listener {
     void valueChanged(juce::Value &v) { 

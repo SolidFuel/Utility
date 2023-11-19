@@ -1,28 +1,33 @@
 #!/usr/bin/bash
 
+set -x
+
 ###
-# $1 needs to point to the toplevel CMakeLists.txt
+# $1 needs to point to the PLUGIN_CONFIG file
 #
-CML=$1
-if [ -z "$CML" ]; then
-    if [ -f "CMakeLists.txt" ]; then
-        CML="CMakeLists.txt"
-    elif [ -f "../CMakeLists.txt" ]; then
-            CML=../CMakeLists.txt
-    else
-        echo "Could not find Cmake file"
+cfg_file=$1
+if [ -z "$cfg_file" ]; then
+    cfg_file="PLUGIN_CONFIG"
+    for file in "${cfg_file}" "../${cfg_file}"
+    do
+        if [ -e "$file" ]; then
+            cfg_file=$file
+            break
+        fi
+    done
+
+    if [ ! -f "${cfg_file}" ]; then
+        echo "Could not file CONFIG file"
         exit 1
     fi
 fi
 
+#source "${cfg_file}"
 
-project_line=`grep '^project(' $CML | sed 's/[()]/ /g'`
-PROJ=`echo "${project_line}" | awk '{ print $2; }'`
-VERSION=`echo "${project_line}" | awk '{ print $4; }'`
-PROJ_LOWER=${PROJ,,}
+PROJ_LOWER=${SF_PROJECT,,}
 
 cat <<_HERE_
-SF_PROJECT=${PROJ}
+SF_PROJECT=${SF_PROJECT}
 SF_PROJ_LOWER=${PROJ_LOWER}
-SF_VERSION=${VERSION}
+SF_VERSION=${SF_PROJECT}
 _HERE_

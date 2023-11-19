@@ -12,7 +12,7 @@
 
 #include "BoxComponent.hpp"
 
-#include "../ChanTool.hpp"
+#include "../Debug.hpp"
 
 void BoxComponent::setTemplate(juce::Array<juce::Grid::TrackInfo> &tmpl) {
     layoutTemplate.clearQuick();

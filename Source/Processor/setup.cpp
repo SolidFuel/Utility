@@ -13,9 +13,9 @@
 
 #include "../ChanToolProcessor.hpp"
 #include "../ChanToolEditor.hpp"
-#include "../ChanTool.hpp"
+#include "../Debug.hpp"
 
-#if CHANTOOL_DEBUG
+#if SF_DEBUG
     std::unique_ptr<juce::FileLogger> dbgout = 
         std::unique_ptr<juce::FileLogger>(juce::FileLogger::createDateStampedLogger("ChanTool", "ChanToolLogFile", ".txt", "--------V1--------"));
 #endif

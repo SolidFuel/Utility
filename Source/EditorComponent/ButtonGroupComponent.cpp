@@ -11,7 +11,7 @@
  ****/
 
 #include "ButtonGroupComponent.hpp"
-#include "../ChanTool.hpp"
+#include "../Debug.hpp"
 
 void ButtonGroupComponent::paint(juce::Graphics& g) {
     DBGLOG("ButtonGroupComponent::paint = ", draw_border_)

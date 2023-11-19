@@ -14,8 +14,8 @@
 
 #include <juce_core/juce_core.h>
 
-#if !defined(CHANTOOL_DEBUG)
- #define CHANTOOL_DEBUG 1
+#if !defined(SF_DEBUG)
+ #define SF_DEBUG 1
 #endif
 
 #include <string>
@@ -32,7 +32,7 @@ std::string concat(Args&&... args) {
 
 
 
-#if CHANTOOL_DEBUG
+#if SF_DEBUG
     extern std::unique_ptr<juce::FileLogger> dbgout;
     #define DBGLOG(...) dbgout->logMessage(concat(__VA_ARGS__));
 #else

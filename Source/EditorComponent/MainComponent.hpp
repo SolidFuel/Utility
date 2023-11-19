@@ -13,7 +13,7 @@
 #pragma once
 
 #include "../ProcessorParameters.hpp"
-#include "../ChanTool.hpp"
+#include "../Debug.hpp"
 #include "../ValueListener.hpp"
 #include "BoxComponent.hpp"
 #include "ButtonGroupComponent.hpp"
