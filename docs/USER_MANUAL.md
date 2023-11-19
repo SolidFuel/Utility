@@ -9,7 +9,7 @@ This user's manual will walk you through each of the controls on the _solidUtili
 
 ## Header
 
-![solidUtility's Header](chantool-header.png)
+![solidUtility's Header](utility-header.png)
 
 The `menu` button on the left contains the `about` menu option to display
 version, copyright, and other information about the software.
@@ -21,7 +21,7 @@ version, copyright, and other information about the software.
 This set of controls allows you to configure what information is output.
 This may then be further modified by the other controls.
 
-![solidUtility Channel Mode Selectors](chantool-stereo-mode.png)
+![solidUtility Channel Mode Selectors](stereo-mode.png)
 
 - Mono : Sums the two input channels a places that sum on both outputs.
 - Stereo : 'Normal mode' THe left input is placed on the left output and the 

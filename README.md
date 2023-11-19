@@ -2,7 +2,7 @@
 
 Versatile VST3 Channel Utility for Digital Audio Workstations
 
-![ChanTool UI](docs/chantool-ui.png)
+![Utility UI](docs/utility-ui.png)
 
 ## Using
 
