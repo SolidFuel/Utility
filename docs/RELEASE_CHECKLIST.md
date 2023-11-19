@@ -1,12 +1,12 @@
 # Procedure
 
 ## Version updates
+- USER_MANUAL.md
 - PLUGIN_CONFIG : automatically picked up by:
   - CMakeLists.txt
   - packaging/debian/control
   - packaging/debian/copyright
   - packaging/windows/plugin.iss
-- USER_MANUAL.md
 
 ## Create the tag
 
@@ -18,6 +18,8 @@
   - vst3 zip
   - installer
 - Manual
+  - user manual
+  - install guide
 
 ## Create release
 

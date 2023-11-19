@@ -32,10 +32,19 @@ jobs :
   
       - name : convert
         working-directory: ${{github.workspace}}/docs
-        run : markdown-pdf -o ${{github.workspace}}/build/USER_MANUAL.pdf USER_MANUAL.md
+        run : |
+          markdown-pdf -o ${{github.workspace}}/build/USER_MANUAL.pdf USER_MANUAL.md
+          markdown-pdf -o ${{github.workspace}}/build/INSTALLATION_GUIDE.pdf INSTALLATION_GUIDE.md
 
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
           name: ${{env.SF_PROJECT}}-${{env.SF_VERSION}}-MANUAL.pdf
           path: ${{github.workspace}}/build/USER_MANUAL.pdf
+
+
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{env.SF_PROJECT}}-INSTALLATION-GUIDE.pdf
+          path: ${{github.workspace}}/build/INSTALLATION_GUIDE.pdf
