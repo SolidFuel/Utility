@@ -109,10 +109,10 @@ void MainComponent::resized()
         Track(Fr(20)), // Invert
         Track(Fr(10)), // Mute
         };
-    grid.items.add(GridItem(left_box_).withMargin({0, 5, 10, 0 }));
+    grid.items.add(GridItem(left_box_).withMargin({0, 5, 7, 0 }));
 
     gain_box_.layoutTemplate = { Track(Fr(1))};
-    grid.items.add(GridItem(gain_box_).withMargin({3, 5, 10, 2 }));
+    grid.items.add(GridItem(gain_box_).withMargin({5, 5, 10, 2 }));
 
 
     grid.performLayout (getLocalBounds());

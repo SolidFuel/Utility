@@ -45,11 +45,13 @@ void PluginProcessor::process_samples(juce::AudioBuffer<FT>& buffer) {
     // ---- Stero Mode parameter
     const StereoMode mode = StereoMode(parameters_.stereo_mode->getIndex());
     left_left_glider_.go(mode == LeftCopy || mode == Stereo);
-    left_mid_glider_.go(mode == MidSide || mode == Mono);
+    left_mid_glider_.go(mode == MidSide || mode == Mono || mode == MidCopy);
+    left_side_glider_.go(mode == SideCopy);
     left_right_glider_.go(mode == RightCopy);
+
     right_right_glider_.go(mode == RightCopy || mode == Stereo);
-    right_mid_glider_.go(mode == Mono);
-    right_side_glider_.go(mode == MidSide);
+    right_mid_glider_.go(mode == Mono || mode == MidCopy);
+    right_side_glider_.go(mode == MidSide || mode == SideCopy);
     right_left_glider_.go(mode == LeftCopy);
 
     // -- GAIN parameter
@@ -87,10 +89,11 @@ void PluginProcessor::process_samples(juce::AudioBuffer<FT>& buffer) {
         // stereo mode
         auto left_left = left_left_glider_.nextValue();
         auto left_mid = left_mid_glider_.nextValue();
+        auto left_side = left_side_glider_.nextValue();
         auto left_right = left_right_glider_.nextValue();
 
         out0 = in0 * left_left + mid * left_mid + 
-               in1 * left_right;
+               in1 * left_right + side * left_side;
 
         auto right_right = right_right_glider_.nextValue();
         auto right_mid = right_mid_glider_.nextValue();
@@ -98,7 +101,7 @@ void PluginProcessor::process_samples(juce::AudioBuffer<FT>& buffer) {
         auto right_left = right_left_glider_.nextValue();
 
         out1 = in1 * right_right + mid * right_mid +
-               side * right_side + in0 * right_left;
+               in0 * right_left + side * right_side;
 
         // inverting
         out0 = out0 * leftGlider_.nextValue();

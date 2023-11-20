@@ -108,6 +108,6 @@ void HeaderComponent::resized() {
     menuButton_.changeWidthToFitText(int(menu_height));
     menuButton_.setTopLeftPosition({MARGIN, int(menu_height / 2.0f)});
 
-    nameLabel_.setSize(200, component_height-MARGIN);
+    nameLabel_.setSize(220, component_height-MARGIN);
     nameLabel_.setCentreRelative(0.5f, 0.5f);
 }

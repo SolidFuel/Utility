@@ -48,12 +48,13 @@ void PluginProcessor::force_gliders() {
     
     const StereoMode mode = StereoMode(parameters_.stereo_mode->getIndex());
     left_left_glider_.forceValue(mode == LeftCopy || mode == Stereo);
-    left_mid_glider_.forceValue(mode == MidSide || mode == Mono);
+    left_mid_glider_.forceValue(mode == MidSide || mode == Mono || mode == MidCopy);
+    left_side_glider_.forceValue(mode == SideCopy);
     left_right_glider_.forceValue(mode == RightCopy);
 
     right_right_glider_.forceValue(mode == RightCopy || mode == Stereo);
-    right_mid_glider_.forceValue(mode == Mono);
-    right_side_glider_.forceValue(mode == MidSide);
+    right_mid_glider_.forceValue(mode == Mono || mode == MidCopy);
+    right_side_glider_.forceValue(mode == MidSide || mode == SideCopy);
     right_left_glider_.forceValue(mode == LeftCopy);
 
 }

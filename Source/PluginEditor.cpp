@@ -23,7 +23,7 @@ constexpr int MARGIN = 5;
 //==============================================================================
 PluginEditor::PluginEditor(PluginProcessor& p) :
      AudioProcessorEditor(&p), proc_(p),
-    main_component_(p.getChanToolParameters())
+    main_component_(p.getParameters())
 {
 
     tooltipWindow = std::make_unique<juce::TooltipWindow>(this);

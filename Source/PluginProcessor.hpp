@@ -52,7 +52,7 @@ public:
     void changeProgramName(int, const juce::String&) override {}
     void releaseResources() override {};
 
-    ProcessorParameters* getChanToolParameters() { return &parameters_; }
+    ProcessorParameters* getParameters() { return &parameters_; }
 
     //==============================================================================
     // These are in processing.cpp
@@ -73,6 +73,7 @@ private:
 
     BooleanGlider<float> left_left_glider_{0.f, 1.f, GLIDER_TIMING};
     BooleanGlider<float> left_mid_glider_{0.f, 1.f, GLIDER_TIMING};
+    BooleanGlider<float> left_side_glider_{0.f, 1.f, GLIDER_TIMING};
     BooleanGlider<float> left_right_glider_{0.f, 1.f, GLIDER_TIMING};
 
     BooleanGlider<float> right_right_glider_{0.f, 1.f, GLIDER_TIMING};

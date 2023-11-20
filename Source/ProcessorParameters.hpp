@@ -17,8 +17,10 @@
 #include <memory>
  
 
+// If adding to this, be sure mode_choices in ProcessorParameters.cpp stay
+// in synch.
 enum StereoMode {
-    Mono, Stereo, MidSide, LeftCopy, RightCopy
+    Mono, Stereo, MidSide, LeftCopy, RightCopy, MidCopy, SideCopy
 };
 
 enum MuteMode {

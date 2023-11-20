@@ -39,6 +39,8 @@ private:
     juce::TextButton left_button_;
     juce::TextButton right_button_;
     juce::TextButton midside_button_;
+    juce::TextButton mid_button_;
+    juce::TextButton side_button_;
 
 
     void update_mode(StereoMode mode);

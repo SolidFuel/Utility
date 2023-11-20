@@ -14,7 +14,7 @@
 #include "ProcessorParameters.hpp"
 
 const juce::StringArray mode_choices = {{
-    "Mono", "Stero", "Mid/Side", "LeftCopy", "RightCopy"
+    "Mono", "Stero", "Mid/Side", "LeftCopy", "RightCopy", "MidCopy", "SideCopy"
 }};
 
 const juce::StringArray mute_choices = {{
