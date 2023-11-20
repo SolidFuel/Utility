@@ -28,10 +28,14 @@ private:
 
     PluginProcessor& proc_;
 
-    std::unique_ptr<juce::TooltipWindow> tooltipWindow;
+    juce::Value tooltip_value_{juce::var{true}};
+    ValueListener tooltip_listener_;
+    std::unique_ptr<juce::TooltipWindow> tooltip_window_;
 
     void paint(juce::Graphics&) override;
     void resized() override;
+
+    void set_tooltips(juce::Value &v);
 
     HeaderComponent header_component_;
     MainComponent main_component_;

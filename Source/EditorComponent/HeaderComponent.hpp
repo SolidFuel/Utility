@@ -12,6 +12,8 @@
 
 #pragma once
 
+#include "../ProcessorParameters.hpp"
+#include "../ValueListener.hpp"
 #include <juce_gui_basics/juce_gui_basics.h>
 
 
@@ -19,7 +21,7 @@ class HeaderComponent : public juce::Component {
 
 public:
 
-    HeaderComponent();
+    HeaderComponent(ProcessorParameters *params);
 
     void paint(juce::Graphics&) override;
     void resized() override;
@@ -29,9 +31,12 @@ private:
 
     juce::TextButton menuButton_;
 
-    void showMenu_();
-    void processMenu_(int results);
-    void showAboutBox_();
+    juce::Value tooltip_value_{juce::var{true}};
+
+    void show_menu_();
+    void process_menu_(int results);
+    void show_about_box_();
+    void toggle_tooltips_();
 
 //==========================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(HeaderComponent)

@@ -38,5 +38,7 @@ struct ProcessorParameters  {
 
     std::unique_ptr<juce::AudioProcessorValueTreeState> apvts;
 
+    juce::Value show_tooltips{juce::var{true}};
+
     ProcessorParameters(juce::AudioProcessor& processor); 
 };

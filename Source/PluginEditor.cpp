@@ -22,17 +22,37 @@ constexpr int MARGIN = 5;
 
 //==============================================================================
 PluginEditor::PluginEditor(PluginProcessor& p) :
-     AudioProcessorEditor(&p), proc_(p),
-    main_component_(p.getParameters())
+    AudioProcessorEditor(&p), proc_(p),
+    main_component_(p.getParameters()), 
+    header_component_(p.getParameters())
 {
 
-    tooltipWindow = std::make_unique<juce::TooltipWindow>(this);
+    // use a local copy so we don't need to worry about clean up
+    // of listeners.
+    tooltip_value_.referTo(proc_.getParameters()->show_tooltips);
+    tooltip_listener_.onChange = [this](juce::Value &v) { set_tooltips(v); };
+    set_tooltips(tooltip_value_);
+    tooltip_value_.addListener(&tooltip_listener_);
 
     addAndMakeVisible (header_component_);
     addAndMakeVisible (main_component_);
 
     setSize(WIDTH, HEIGHT);
 }
+
+//==============================================================================
+void PluginEditor::set_tooltips(juce::Value &v) {
+    auto show = bool(v.getValue());
+
+    if (show) {
+        if (! tooltip_window_) {
+            tooltip_window_ = std::make_unique<juce::TooltipWindow>(this);
+        }
+    }  else {
+        tooltip_window_.reset();
+    }
+}
+
 
 //==============================================================================
 void PluginEditor::paint(juce::Graphics& g)

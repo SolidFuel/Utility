@@ -79,10 +79,14 @@ void PluginProcessor::getStateInformation(juce::MemoryBlock& destData) {
 
     //--------------------------------------
     auto state = parameters_.apvts->copyState();
-    auto apvts_xml =state.createXml();
+    auto apvts_xml = state.createXml();
     // createXml gives back a unqiue_ptr. So we need to unwrap it.
     xml->addChildElement(apvts_xml.release());
     DBGLOG("  Wrote ValueTree")
+
+    //--------------------------------------
+    auto child = xml->createNewChildElement("GUI-Parameters");
+    child->setAttribute("show_tooltips", bool(parameters_.show_tooltips.getValue()));
 
     //--------------------------------------
     DBGLOG("XML out =", xml->toString());
@@ -106,10 +110,18 @@ void PluginProcessor::parseCurrentXml(const juce::XmlElement * elem) {
         //     running. Don't we want to glide to the new values ?
         //
         force_gliders();
+    }
+    DBGLOG(" -- apvts  done")
 
+    child = elem->getChildByName("GUI-Parameters");
+    if (child) {
+        parameters_.show_tooltips = child->getBoolAttribute("show_tooltips", 
+            bool(parameters_.show_tooltips.getValue()));
     }
 
-    DBGLOG(" -- apvts  done")
+    DBGLOG(" -- others done")
+
+
 
 }
 
