@@ -51,9 +51,6 @@ add_compile_definitions("$<$<CONFIG:Release>:SF_DEBUG=0>")
 #CMake/Findjuce.cmake, where you can see how JUCE is brought in/configured
 find_package(juce REQUIRED)
 
-#adding any custom modules you might have:
-add_subdirectory(Modules)
-
 add_subdirectory(Source)
 
 #optionally, we're also adding the unit tests:

@@ -51,10 +51,6 @@ target_sources(${BaseTargetName} PRIVATE
         Processor/setup.cpp Processor/processing.cpp
         ProcessorParameters.hpp ProcessorParameters.cpp
         ChanToolEditor.hpp ChanToolEditor.cpp
-        EditorComponent/BoxComponent.hpp
-        EditorComponent/BoxComponent.cpp
-        EditorComponent/ButtonGroupComponent.hpp
-        EditorComponent/ButtonGroupComponent.cpp
         EditorComponent/StereoModeComponent.hpp
         EditorComponent/StereoModeComponent.cpp
         EditorComponent/MuteModeComponent.hpp
@@ -73,8 +69,10 @@ target_compile_definitions(${BaseTargetName}
         JUCE_DISPLAY_SPLASH_SCREEN=0
         JUCE_VST3_CAN_REPLACE_VST2=0)
 
+CPMAddPackage("gh:SolidFuel/CommonComponents#v0.2.0")
+
 target_link_libraries(${BaseTargetName} PRIVATE
-        shared_plugin_helpers
+        solidfuel
         juce_recommended_config_flags
         juce_recommended_lto_flags
         juce_recommended_warning_flags)

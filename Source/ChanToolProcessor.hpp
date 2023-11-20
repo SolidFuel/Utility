@@ -13,7 +13,6 @@
 #pragma once
 
 #include "ProcessorParameters.hpp"
-#include <shared_plugin_helpers/shared_plugin_helpers.h>
 
 #include "Glider.hpp"
 

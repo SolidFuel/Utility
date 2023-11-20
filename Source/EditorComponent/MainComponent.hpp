@@ -15,16 +15,17 @@
 #include "../ProcessorParameters.hpp"
 #include "../Debug.hpp"
 #include "../ValueListener.hpp"
-#include "BoxComponent.hpp"
-#include "ButtonGroupComponent.hpp"
 #include "StereoModeComponent.hpp"
 #include "MuteModeComponent.hpp"
 
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <juce_audio_processors/juce_audio_processors.h>
+#include <solidfuel/solidfuel.hpp>
 
 using  SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
 using  ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
+
+using namespace solidfuel;
 
 class MainComponent : public juce::Component {
 
