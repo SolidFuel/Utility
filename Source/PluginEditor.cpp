@@ -10,8 +10,8 @@
  * in the root directory.
  ****/
 
-#include "ChanToolProcessor.hpp"
-#include "ChanToolEditor.hpp"
+#include "PluginProcessor.hpp"
+#include "PluginEditor.hpp"
 
 constexpr int WIDTH = 450;
 constexpr int HEADER_HEIGHT = 50;
@@ -21,7 +21,7 @@ constexpr int MARGIN = 5;
 
 
 //==============================================================================
-ChanToolEditor::ChanToolEditor(ChanToolProcessor& p) :
+PluginEditor::PluginEditor(PluginProcessor& p) :
      AudioProcessorEditor(&p), proc_(p),
     main_component_(p.getChanToolParameters())
 {
@@ -35,13 +35,13 @@ ChanToolEditor::ChanToolEditor(ChanToolProcessor& p) :
 }
 
 //==============================================================================
-void ChanToolEditor::paint(juce::Graphics& g)
+void PluginEditor::paint(juce::Graphics& g)
 {
     g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
 }
 
 //==============================================================================
-void ChanToolEditor::resized()
+void PluginEditor::resized()
 {
     using FlexItem = juce::FlexItem;
     juce::FlexBox box;

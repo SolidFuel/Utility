@@ -11,29 +11,30 @@
  ****/
 
 
-#include "../ChanToolProcessor.hpp"
-#include "../ChanToolEditor.hpp"
+#include "../PluginProcessor.hpp"
+#include "../PluginEditor.hpp"
 #include "../Debug.hpp"
 
 #if SF_DEBUG
     std::unique_ptr<juce::FileLogger> dbgout = 
-        std::unique_ptr<juce::FileLogger>(juce::FileLogger::createDateStampedLogger("ChanTool", "ChanToolLogFile", ".txt", "--------V1--------"));
+        std::unique_ptr<juce::FileLogger>
+            (juce::FileLogger::createDateStampedLogger(JucePlugin_Name, "LogFile", ".txt", "--------V1--------"));
 #endif
 
 
 //============================================================================
-ChanToolProcessor::ChanToolProcessor() : parameters_(*this){
+PluginProcessor::PluginProcessor() : parameters_(*this){
 }
 
 //============================================================================
-juce::AudioProcessorEditor* ChanToolProcessor::createEditor() {
+juce::AudioProcessorEditor* PluginProcessor::createEditor() {
 
     DBGLOG("------- Setting Up Editor -----------");
-    return new ChanToolEditor (*this);
+    return new PluginEditor (*this);
 }
 
 //============================================================================
-void ChanToolProcessor::force_gliders() {
+void PluginProcessor::force_gliders() {
 
     const MuteMode mute_mode = MuteMode(parameters_.mute->getIndex());
     left_mute_glider_.forceValue(mute_mode == MuteBoth || mute_mode == MuteLeft);
@@ -65,7 +66,7 @@ void ChanToolProcessor::force_gliders() {
 constexpr int CURRENT_STATE_VERSION = 1;
 const juce::String XML_TOP_TAG = "ChanTool-Preset";
 
-void ChanToolProcessor::getStateInformation(juce::MemoryBlock& destData) {
+void PluginProcessor::getStateInformation(juce::MemoryBlock& destData) {
 
     DBGLOG("GET STATE called");
 
@@ -90,9 +91,9 @@ void ChanToolProcessor::getStateInformation(juce::MemoryBlock& destData) {
 }
 
 //============================================================================
-void ChanToolProcessor::parseCurrentXml(const juce::XmlElement * elem) {
+void PluginProcessor::parseCurrentXml(const juce::XmlElement * elem) {
 
-    DBGLOG("ChanToolProcessor::parseCurrentXml called")
+    DBGLOG("PluginProcessor::parseCurrentXml called")
 
     auto *child = elem->getChildByName(parameters_.apvts->state.getType());
     if (child) {
@@ -114,7 +115,7 @@ void ChanToolProcessor::parseCurrentXml(const juce::XmlElement * elem) {
 //============================================================================
 // Read Serialize Parameters from the host and set our state.
 //
-void ChanToolProcessor::setStateInformation (const void* data, int sizeInBytes) {
+void PluginProcessor::setStateInformation (const void* data, int sizeInBytes) {
     DBGLOG("SET STATE called");
 
     auto xml = getXmlFromBinary(data, sizeInBytes);
@@ -142,5 +143,5 @@ void ChanToolProcessor::setStateInformation (const void* data, int sizeInBytes) 
 
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new ChanToolProcessor();
+    return new PluginProcessor();
 }

@@ -12,21 +12,21 @@
 
 #pragma once
 
-#include "ChanToolProcessor.hpp"
+#include "PluginProcessor.hpp"
 
 #include "EditorComponent/MainComponent.hpp"
 #include "EditorComponent/HeaderComponent.hpp"
 
 #include <memory>
 
-class ChanToolEditor : public juce::AudioProcessorEditor
+class PluginEditor : public juce::AudioProcessorEditor
 {
 public:
-    explicit ChanToolEditor(ChanToolProcessor&);
+    explicit PluginEditor(PluginProcessor&);
 
 private:
 
-    ChanToolProcessor& proc_;
+    PluginProcessor& proc_;
 
     std::unique_ptr<juce::TooltipWindow> tooltipWindow;
 
@@ -37,5 +37,5 @@ private:
     MainComponent main_component_;
 
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ChanToolEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginEditor)
 };

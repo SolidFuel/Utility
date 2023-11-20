@@ -18,13 +18,13 @@
 
 const long GLIDER_TIMING = 3000; // in samples
 
-class ChanToolProcessor : public juce::AudioProcessor {
+class PluginProcessor : public juce::AudioProcessor {
 public:
 
     //==============================================================================
     // These are in setup.cpp
 
-    ChanToolProcessor();
+    PluginProcessor();
 
     juce::AudioProcessorEditor* createEditor() override;
     bool hasEditor() const override { return true; };
@@ -94,5 +94,5 @@ private:
     void force_gliders();
 
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ChanToolProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginProcessor)
 };

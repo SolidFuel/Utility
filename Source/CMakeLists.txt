@@ -46,11 +46,11 @@ juce_add_plugin("${BaseTargetName}"
 target_sources(${BaseTargetName} PRIVATE
         Debug.hpp
         Glider.hpp
-        ChanToolProcessor.hpp
+        PluginProcessor.hpp
         ValueListener.hpp
         Processor/setup.cpp Processor/processing.cpp
         ProcessorParameters.hpp ProcessorParameters.cpp
-        ChanToolEditor.hpp ChanToolEditor.cpp
+        PluginEditor.hpp PluginEditor.cpp
         EditorComponent/StereoModeComponent.hpp
         EditorComponent/StereoModeComponent.cpp
         EditorComponent/MuteModeComponent.hpp

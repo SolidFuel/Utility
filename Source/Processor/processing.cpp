@@ -11,25 +11,25 @@
  ****/
 
 
-#include "../ChanToolProcessor.hpp"
+#include "../PluginProcessor.hpp"
 
 #include <cmath>
 
 //============================================================================
-void ChanToolProcessor::prepareToPlay(double, int) {
+void PluginProcessor::prepareToPlay(double, int) {
 
     force_gliders();
 
 }
 
 //============================================================================
-void ChanToolProcessor::processBlock(juce::AudioBuffer<float>& buffer,
+void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer,
                                     juce::MidiBuffer&) {
     process_samples(buffer);
 }
 
 //============================================================================
-void ChanToolProcessor::processBlock(juce::AudioBuffer<double>& buffer,
+void PluginProcessor::processBlock(juce::AudioBuffer<double>& buffer,
                                     juce::MidiBuffer&) {
     process_samples(buffer);
 }
@@ -37,7 +37,7 @@ void ChanToolProcessor::processBlock(juce::AudioBuffer<double>& buffer,
 
 //============================================================================
 template <class FT>
-void ChanToolProcessor::process_samples(juce::AudioBuffer<FT>& buffer) {
+void PluginProcessor::process_samples(juce::AudioBuffer<FT>& buffer) {
 
     const FT sqrt2 = std::sqrt(FT(2.0));
     auto num_samples = buffer.getNumSamples();
