@@ -14,17 +14,16 @@ jobs:
   build:
     strategy :
       matrix :
-        os : [ windows-latest, ubuntu-latest]
+        os : [ windows-latest, ubuntu-latest, macos-latest]
         include :
           - os : windows-latest
             artifact_path : "${{vars.SF_PLUGIN_NAME}}.vst3/Contents/x86_64-win"
             file : ${{vars.SF_PLUGIN_NAME}}.vst3
             artifact_name : win64
-          # macos is seg faulting when running juce_vst3_helper
-          #- os : macos-latest
-          #  artifact_path : "${{vars.SF_PLUGIN_NAME}}.vst3/Contents/MacOS"
-          #  file : ${{vars.SF_PLUGIN_NAME}}
-          #  artifact_name : macos
+          - os : macos-latest
+            artifact_path : "${{vars.SF_PLUGIN_NAME}}.vst3/Contents/MacOS"
+            file : ${{vars.SF_PLUGIN_NAME}}
+            artifact_name : macos
           - os : ubuntu-latest
             artifact_path : "."
             file : ${{vars.SF_PLUGIN_NAME}}.vst3

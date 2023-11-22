@@ -27,6 +27,11 @@ string(TOUPPER "${PLUGIN_PRODUCT_NAME}" PLUGIN_NAME_UPPER)
 
 configure_file(version.hpp.in version.hpp @ONLY)
 
+set(VST_manifest TRUE)
+if(APPLE)
+        set(VST_manifest FALSE)
+endif()
+
 juce_add_plugin("${BaseTargetName}"
         # VERSION ...                               # Set this if the plugin version is different to the project version
         # ICON_BIG ...                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
@@ -41,6 +46,7 @@ juce_add_plugin("${BaseTargetName}"
         PLUGIN_MANUFACTURER_CODE "Sdfl"
         PLUGIN_CODE ${PLUGIN_PRODUCT_CODE}
         FORMATS VST3
+        VST3_AUTO_MANIFEST ${VST_manifest}
         PRODUCT_NAME ${PLUGIN_PRODUCT_NAME})
 
 target_sources(${BaseTargetName} PRIVATE
