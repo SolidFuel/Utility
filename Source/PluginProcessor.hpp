@@ -32,11 +32,13 @@ public:
     void getStateInformation(juce::MemoryBlock& destData) override;
     void setStateInformation(const void* data, int sizeInBytes) override;
 
+    bool isBusesLayoutSupported(const BusesLayout&) const override;
+
+
 
     //==============================================================================
     // in-line
 
-    bool isBusesLayoutSupported (const BusesLayout&) const override { return true; }
 
     const juce::String getName() const override {return JucePlugin_Name;}
 

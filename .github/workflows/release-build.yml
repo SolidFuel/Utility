@@ -62,6 +62,32 @@ jobs:
       working-directory: ${{github.workspace}}/build
       run: ctest -C ${{env.BUILD_TYPE}}
 
+    - name: Pluginval MacOS
+      working-directory: ${{github.workspace}}/build
+      if: matrix.os == 'macos-latest'
+      run: |
+        curl -L "https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_macOS.zip" -o pluginval.zip
+        unzip pluginval
+        pluginval.app/Contents/MacOS/pluginval --strictness-level 5 --validate-in-process --output-dir "." "Source/${SF_PROJECT}_artefacts/Release/VST3/${{matrix.artifact_path}}" || exit 1
+
+    - name: Pluginval Linux
+      working-directory: ${{github.workspace}}/build
+      if: matrix.os == 'linux-latest'
+      run: |
+        curl -L "https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_Linux.zip" -o pluginval.zip
+        unzip pluginval
+        ./pluginval --validate-in-process --strictness-level 5 --output-dir "." "Source/${SF_PROJECT}_artefacts/Release/VST3/${{matrix.artifact_path}}" || exit 1
+
+    - name: Pluginval Linux
+      working-directory: ${{github.workspace}}/build
+      if: matrix.os == 'windows-latest'
+      run: |
+        "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_Windows.zip -OutFile pluginval.zip"
+        "Expand-Archive pluginval.zip -DestinationPath ."
+        pluginval.exe --validate-in-process --strictness-level 5 --output-dir "." "Source/${SF_PROJECT}_artefacts/Release/VST3/${{matrix.artifact_path}}"
+        if %ERRORLEVEL% neq 0 exit /b 1
+  
+
     - name: Compress plugin not-win
       if : matrix.os != 'windows-latest'
       working-directory: ${{github.workspace}}/build

@@ -23,8 +23,24 @@
 
 
 //============================================================================
-PluginProcessor::PluginProcessor() : parameters_(*this){
+PluginProcessor::PluginProcessor() : parameters_(*this), 
+    AudioProcessor(BusesProperties()
+            .withInput("Input", juce::AudioChannelSet::stereo(), true)
+            .withOutput("Output", juce::AudioChannelSet::stereo(), true))
+{
+
 }
+
+bool PluginProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const {
+    if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo() ||
+        layouts.getMainInputChannelSet() != juce::AudioChannelSet::stereo()) {
+
+        return false;
+    }
+
+    return true;
+}
+
 
 //============================================================================
 juce::AudioProcessorEditor* PluginProcessor::createEditor() {
