@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 #
 # Calculate the project variables and place shell lines
 # on stdout to define them
