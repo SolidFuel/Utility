@@ -40,9 +40,8 @@ else
     EXP=""
 fi
 
-if ( -z "$OS_TAG" ); then
+if [ -z "$OS_TAG" ]; then
     uname=`uname`
-    echo "INFO: uname = '${uname}'"
     case ${uname} in
     "Darwin")
         OS_TAG="macos"
@@ -53,7 +52,8 @@ if ( -z "$OS_TAG" ); then
     *)
         OS_TAG="win64"
         ;;
-    esac 
+    esac
+fi
 
 while read -r line
 do
@@ -63,7 +63,7 @@ done < ${cfg_file}
 # Create derived variable
 source "${cfg_file}"
 
-PROJ_LOWER=${SF_PROJECT,,}
+PROJ_LOWER=$(echo "$SF_PROJECT" | tr '[:upper:]' '[:lower:]')
 
 case "$OS_TAG" in
 "macos")
