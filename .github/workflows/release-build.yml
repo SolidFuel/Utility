@@ -38,6 +38,7 @@ jobs:
     - name: Configure ubuntu
       if : matrix.os == 'ubuntu-latest'
       run : |
+       sudo apt-get update
        sudo apt install xorg-dev libasound2-dev libgl1-mesa-dev  \
             libcurl4-openssl-dev libwebkit2gtk-4.0-dev
 
