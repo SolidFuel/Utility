@@ -126,11 +126,17 @@ jobs:
       with:
         name: ${{steps.build_deb.outputs.deb_file}}
         path: ${{github.workspace}}/build/${{steps.build_deb.outputs.deb_file}}
+
+    - name : setup windows installer file
+      if : matrix.os == 'windows-latest'
+      working-directory: ${{github.workspace}}
+      shell : bash
+      run : ./scripts/expand_file .\packaging\windows\plugin.iss > ./build/plugin.iss
     
     - name : build windows installer
       if : matrix.os == 'windows-latest'
       working-directory: ${{github.workspace}}
-      run: iscc /Dsrcdir="$pwd" .\packaging\windows\plugin.iss
+      run: iscc /Dsrcdir="$pwd" .\build\plugin.iss
 
     - name: Upload windows installer
       if : matrix.os == 'windows-latest'
