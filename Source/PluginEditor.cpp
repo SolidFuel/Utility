@@ -23,8 +23,8 @@ constexpr int MARGIN = 5;
 //==============================================================================
 PluginEditor::PluginEditor(PluginProcessor& p) :
     AudioProcessorEditor(&p), proc_(p),
-    main_component_(p.getParameters()), 
-    header_component_(p.getParameters())
+    header_component_(p.getParameters()),
+    main_component_(p.getParameters())
 {
 
     // use a local copy so we don't need to worry about clean up
