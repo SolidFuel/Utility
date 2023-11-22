@@ -40,6 +40,21 @@ else
     EXP=""
 fi
 
+if ( -z "$OS_TAG" ); then
+    uname=`uname`
+    echo "INFO: uname = '${uname}'"
+    case ${uname} in
+    "Darwin")
+        OS_TAG="macos"
+        ;;
+    "Linux")
+        OS_TAG="linux"
+        ;;
+    *)
+        OS_TAG="win64"
+        ;;
+    esac 
+
 while read -r line
 do
     echo "${EXP}${line}"
@@ -50,4 +65,26 @@ source "${cfg_file}"
 
 PROJ_LOWER=${SF_PROJECT,,}
 
+case "$OS_TAG" in
+"macos")
+    ARTIFACT_PATH="."
+    BUILD_FILE=${SF_PROJECT}.vst3
+    ;;
+"linux")
+    ARTIFACT_PATH="."
+    BUILD_FILE=${SF_PROJECT}.vst3
+    ;;
+"win64")
+    ARTIFACT_PATH="${SF_PROJECT}.vst3/Contents/x86_64-win"
+    BUILD_FILE=${SF_PROJECT}}.vst3
+    ;;
+*)
+    echo "ERROR: unknown OS_TAG = '$OS_TAG'"
+    exit 1
+    ;;
+esac
+
+
 echo "${EXP}SF_PROJ_LOWER=${PROJ_LOWER}";
+echo "${EXP}SF_ARTIFACT_PATH=${ARTIFACT_PATH}";
+echo "${EXP}SF_BUILD_FILE=${BUILD_FILE}";

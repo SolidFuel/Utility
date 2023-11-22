@@ -28,9 +28,9 @@ string(TOUPPER "${PLUGIN_PRODUCT_NAME}" PLUGIN_NAME_UPPER)
 configure_file(version.hpp.in version.hpp @ONLY)
 
 set(VST_manifest TRUE)
-if(APPLE)
-        set(VST_manifest FALSE)
-endif()
+#if(APPLE)
+#        set(VST_manifest FALSE)
+#endif()
 
 juce_add_plugin("${BaseTargetName}"
         # VERSION ...                               # Set this if the plugin version is different to the project version
