@@ -27,7 +27,7 @@ jobs:
 
     - name: Get Config Info
       id: config-info
-      working-directory: ${{github.workspace}}/build
+      working-directory: ${{github.workspace}}
       shell : bash
       run : |
         ../scripts/project_vars > CONFIG.sh
