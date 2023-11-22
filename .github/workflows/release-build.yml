@@ -8,6 +8,11 @@ on:
 
 env:
   BUILD_TYPE: Release
+  # Just to make vscode happy. These will be set for real
+  # in the config-info step
+  SF_PROJECT : ""
+  SF_VERSION : ""
+  SF_PROJ_LOWER : ""
 
 
 jobs:
@@ -72,7 +77,7 @@ jobs:
 
     - name: Pluginval Linux
       working-directory: ${{github.workspace}}/build
-      if: matrix.os == 'linux-latest'
+      if: matrix.os == 'ubuntu-latest'
       run: |
         curl -L "https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_Linux.zip" -o pluginval.zip
         unzip pluginval
@@ -85,7 +90,6 @@ jobs:
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_Windows.zip -OutFile pluginval.zip
         Expand-Archive pluginval.zip -DestinationPath .
         .\pluginval.exe --validate-in-process --strictness-level 5 --output-dir "." "Source\${env:SF_PROJECT}_artefacts\Release\VST3\${{matrix.artifact_path}}\${{matrix.file}}"
-        if ($LASTEIXTCODE -ne 0) { write-host "It failed somehow"; exit 1} else { write-host "It worked" }
   
 
     - name: Compress plugin not-win

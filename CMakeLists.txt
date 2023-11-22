@@ -45,7 +45,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     add_compile_options("$<$<CONFIG:Release>:/O2>")
 endif()
 
-add_compile_definitions("$<$<CONFIG:Release>:SF_DEBUG=0>")
+add_compile_definitions("$<$<CONFIG:Debug>:SF_DEBUG=1>")
 
 #We 'require' that we need juce. If JUCE isn't found, it will revert to what's in
 #CMake/Findjuce.cmake, where you can see how JUCE is brought in/configured

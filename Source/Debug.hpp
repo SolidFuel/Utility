@@ -15,7 +15,7 @@
 #include <juce_core/juce_core.h>
 
 #if !defined(SF_DEBUG)
- #define SF_DEBUG 1
+ #define SF_DEBUG 0
 #endif
 
 #include <string>
