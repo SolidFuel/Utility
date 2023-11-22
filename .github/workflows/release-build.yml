@@ -78,13 +78,13 @@ jobs:
         unzip pluginval
         ./pluginval --validate-in-process --strictness-level 5 --output-dir "." "Source/${SF_PROJECT}_artefacts/Release/VST3/${{matrix.artifact_path}}" || exit 1
 
-    - name: Pluginval Widnows
+    - name: Pluginval Windows
       working-directory: ${{github.workspace}}/build
       if: matrix.os == 'windows-latest'
       run: |
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_Windows.zip -OutFile pluginval.zip
         Expand-Archive pluginval.zip -DestinationPath .
-        pluginval.exe --validate-in-process --strictness-level 5 --output-dir "." "Source/${SF_PROJECT}_artefacts/Release/VST3/${{matrix.artifact_path}}"
+        .\pluginval.exe --validate-in-process --strictness-level 5 --output-dir "." "Source/${env:SF_PROJECT}_artefacts/Release/VST3/${{matrix.artifact_path}}"
         if($LASTEXITCODE -ne 0) { exit 1 }
   
 
