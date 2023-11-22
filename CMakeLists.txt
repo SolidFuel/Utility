@@ -41,7 +41,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "AppleClang")
     endif ()
 endif ()
 
-option(UniversalBinary "Build universal binary for mac" OFF)
+option(UniversalBinary "Build universal binary for mac" ON)
 
 if (UniversalBinary)
     set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE INTERNAL "")
