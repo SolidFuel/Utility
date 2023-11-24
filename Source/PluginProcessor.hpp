@@ -27,7 +27,7 @@ public:
     PluginProcessor();
 
     juce::AudioProcessorEditor* createEditor() override;
-    bool hasEditor() const override { return true; };
+    bool hasEditor() const override { return true; }
 
     void getStateInformation(juce::MemoryBlock& destData) override;
     void setStateInformation(const void* data, int sizeInBytes) override;
@@ -52,7 +52,7 @@ public:
     void setCurrentProgram(int) override {}
     const juce::String getProgramName(int) override { return {}; }
     void changeProgramName(int, const juce::String&) override {}
-    void releaseResources() override {};
+    void releaseResources() override {}
 
     ProcessorParameters* getParameters() { return &parameters_; }
 

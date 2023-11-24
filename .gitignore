@@ -14,5 +14,8 @@ build/
 #Vim tempfile
 .swp
 
+# Macs
+.DS_store
+
 # other builds
 build-*/
