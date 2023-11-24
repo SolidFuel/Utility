@@ -13,7 +13,14 @@
 
 #include "../PluginProcessor.hpp"
 
+#include "../Debug.hpp"
+
 #include <cmath>
+
+
+#if NANCHECK
+std::unique_ptr<juce::FileLogger> nan_dbgout;
+#endif
 
 //============================================================================
 void PluginProcessor::prepareToPlay(double, int) {
@@ -125,9 +132,39 @@ void PluginProcessor::process_samples(juce::AudioBuffer<FT>& buffer) {
         out0 = out0 * left_mute_value;
         out1 = out1 * right_mute_value;
 
-        // Output
+        // --- OUTPUT ---
         channel0_data[i] = out0;
         channel1_data[i] = out1;
+
+    #if NANCHECK
+        if (std::isnan(out0) || std::isnan(out1)) {
+            if (! nan_dbgout) {
+                nan_dbgout = 
+                    std::unique_ptr<juce::FileLogger>
+                        (juce::FileLogger::createDateStampedLogger(JucePlugin_Name, "NANCHECK", ".txt", "--------NANCHECK--------"));
+            }
+
+            nan_dbgout->logMessage(concat(
+                "in0 = ", in0,
+                "; in1 = ", in1,
+                "; out0 = ", out0,
+                "; out1 = ", out1,
+                "; mid = ", mid,
+                "; side = ", side,
+                "\n mode = ", mode,
+                "; raw gain = ", parameters_.gain->get(),
+                "; comp gain = ", gain,
+                "\n :MODE 0: ll = ", left_left, 
+                "; lr = ", left_right,
+                "; lm = ", left_mid,
+                "; ls = ", left_side,
+                "\n :MODE 1: rl = ", right_left, 
+                "; rr = ", right_right,
+                "; rm = ", right_mid,
+                "; rs = ", right_side
+            ));
+        }
+    #endif
 
     }
 }

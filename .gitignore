@@ -13,3 +13,6 @@ build/
 
 #Vim tempfile
 .swp
+
+# other builds
+build-*/

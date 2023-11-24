@@ -75,7 +75,7 @@ target_compile_definitions(${BaseTargetName}
         JUCE_DISPLAY_SPLASH_SCREEN=0
         JUCE_VST3_CAN_REPLACE_VST2=0)
 
-CPMAddPackage("gh:SolidFuel/CommonComponents#v0.2.0")
+CPMAddPackage("gh:SolidFuel/CommonComponents#v0.3.1")
 
 target_link_libraries(${BaseTargetName} PRIVATE
         solidfuel

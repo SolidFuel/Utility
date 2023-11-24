@@ -15,10 +15,12 @@ project("${SF_PROJECT}" VERSION "${SF_VERSION}")
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 
 set(default_build_type "Release")
-if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+if(NOT CMAKE_BUILD_TYPE)
   message(STATUS "Setting build type to '${default_build_type}' as none was specified.")
   set(CMAKE_BUILD_TYPE "${default_build_type}" CACHE
       STRING "Choose the type of build." FORCE)
+else()
+    message(STATUS "Build Type = ${CMAKE_BUILD_TYPE}")
 endif()
 
 #Minimum MacOS target, set globally
@@ -46,6 +48,13 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 endif()
 
 add_compile_definitions("$<$<CONFIG:Debug>:SF_DEBUG=1>")
+
+option(NANCHECK "Build NaN checking" OFF)
+
+if (NANCHECK)
+    message(STATUS "Compiling in NANCHECK" )
+    add_compile_definitions("NANCHECK=1")
+endif()
 
 #We 'require' that we need juce. If JUCE isn't found, it will revert to what's in
 #CMake/Findjuce.cmake, where you can see how JUCE is brought in/configured

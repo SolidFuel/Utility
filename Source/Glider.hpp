@@ -46,13 +46,13 @@ public :
     }
 
     bool in_progress() const {
-        return samples_ > 0;
+        return samples_.get() > 0;
     }
 
     FT nextValue() { 
-        latestValue_ += (delta_ * in_progress() );
+        latestValue_ = latestValue_.get() + delta_.get() * in_progress();
         samples_ -= in_progress();
-        return latestValue_;
+        return latestValue_.get();
     }
 
     /**
@@ -71,12 +71,12 @@ public :
         latestValue_ = value;
     }
 
-    FT currentValue() const { return latestValue_; }
+    FT currentValue() const { return latestValue_.get(); }
 
 private :
-    long samples_;
-    FT delta_;
-    FT latestValue_;
+    juce::Atomic<long> samples_;
+    juce::Atomic<FT> delta_;
+    juce::Atomic<FT> latestValue_;
 };
 
 
@@ -100,12 +100,12 @@ public:
     }
 
     void stop() { 
-        glider_.forceValue(currentBoolValue_ ? trueValue_ : falseValue_ );
+        glider_.forceValue(currentBoolValue_.get() ? trueValue_ : falseValue_ );
     }
 
     void go(bool value) {
-        if (value != currentBoolValue_) {
-            glider_.restart(glider_.currentValue(),  value ? trueValue_ : falseValue_, steps_);
+        if (currentBoolValue_.compareAndSetBool(value, !value)) {
+            glider_.restart(glider_.currentValue(),  value ? trueValue_ : falseValue_, steps_.get());
             currentBoolValue_ = value;
         }
     }
@@ -120,8 +120,8 @@ private:
     Glider<FT> glider_;
     FT falseValue_ { 0 };
     FT trueValue_ { 1 };
-    bool currentBoolValue_ = false;
-    long steps_;
+    juce::Atomic<bool> currentBoolValue_ = false;
+    juce::Atomic<long> steps_;
 
 
 };
