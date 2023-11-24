@@ -16,3 +16,6 @@ build/
 
 # Macs
 .DS_store
+
+# other builds
+build-*/
