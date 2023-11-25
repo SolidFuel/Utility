@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -x
-
 dir=${1:-"."}
 count=${2:-100}
 
@@ -31,8 +29,9 @@ fi
 
 while [[ $count > 0 ]]
 do
-    pluginval.app/Contents/MacOS/pluginval --strictness-level 5 --validate-in-process \ 
+    echo "---------- COUNT = ${count} ------------"
+    pluginval.app/Contents/MacOS/pluginval --strictness-level 5 --validate-in-process \
         --output-dir "${LOGDIR}" \
         "Source/${SF_PROJECT}_artefacts/Release/VST3/${SF_ARTIFACT_PATH}/${SF_BUILD_FILE}" || exit 1
-    $count -= 1
+    count=$((${count} - 1))
 done

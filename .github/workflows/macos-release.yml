@@ -50,18 +50,22 @@ jobs:
       run: |
         curl -L "https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_macOS.zip" -o pluginval.zip
         unzip pluginval
-        pluginval.app/Contents/MacOS/pluginval --strictness-level 5 --validate-in-process --output-dir "." "Source/${SF_PROJECT}_artefacts/Release/VST3/${{env.SF_ARTIFACT_PATH}}/${{env.SF_BUILD_FILE}}" || exit 1
+        pluginval.app/Contents/MacOS/pluginval --strictness-level 5 --validate-in-process --output-dir "." \
+          "Source/${SF_PROJECT}_artefacts/Release/VST3/${{env.SF_ARTIFACT_PATH}}/${{env.SF_BUILD_FILE}}" || exit 1
 
-    - name: Compress plugin
+    - name: Create DMG
       working-directory: ${{github.workspace}}/build
       run : |
-        cd Source/${SF_PROJECT}_artefacts/Release/VST3/${{env.SF_ARTIFACT_PATH}}
-        ZIPNAME="${SF_PROJECT}-V${SF_VERSION}-${{env.OS_TAG}}-vst3.zip"
-        zip -9 -r ${{github.workspace}}/build/${ZIPNAME} ${{env.SF_BUILD_FILE}}
+        mkdir ${SF_PROJECT}
+        ln -s /Library/Audio/Plug-Ins/VST3 ${SF_PROJECT}/Library
+        cp -R "Source/${SF_PROJECT}_artefacts/Release/VST3/${SF_ARTIFACT_PATH}/${SF_BUILD_FILE}" ${SF_PROJECT}
+        hdiutil create -fs JHFS+ ${SF_PROJECT}-V${SF_VERSION}-${{env.OS_TAG}}-universal.dmg \
+          -srcfolder $SF_PROJECT \
+          -ov -format UDZO
 
     - name: Upload plugin
       uses: actions/upload-artifact@v3
       with:
-        name: ${{env.SF_PROJECT}}-V${{env.SF_VERSION}}-${{env.OS_TAG}}-vst3.zip
-        path: ${{github.workspace}}/build/${{env.SF_PROJECT}}-V${{env.SF_VERSION}}-${{env.OS_TAG}}-vst3.zip
+        name: ${{env.SF_PROJECT}}-V${{env.SF_VERSION}}-${{env.OS_TAG}}-universal.dmg
+        path: ${{github.workspace}}/build/${{env.SF_PROJECT}}-V${{env.SF_VERSION}}-${{env.OS_TAG}}-universal.dmg
 
