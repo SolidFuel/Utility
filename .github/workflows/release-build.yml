@@ -25,10 +25,6 @@ jobs:
             artifact_path : "${{vars.SF_PLUGIN_NAME}}.vst3/Contents/x86_64-win"
             file : ${{vars.SF_PLUGIN_NAME}}.vst3
             artifact_name : win64
-          - os : macos-latest
-            artifact_path : "${{vars.SF_PLUGIN_NAME}}.vst3/Contents/MacOS"
-            file : ${{vars.SF_PLUGIN_NAME}}
-            artifact_name : macos
           - os : ubuntu-latest
             artifact_path : "."
             file : ${{vars.SF_PLUGIN_NAME}}.vst3
@@ -66,14 +62,6 @@ jobs:
     - name: Test
       working-directory: ${{github.workspace}}/build
       run: ctest -C ${{env.BUILD_TYPE}}
-
-    - name: Pluginval MacOS
-      working-directory: ${{github.workspace}}/build
-      if: matrix.os == 'macos-latest'
-      run: |
-        curl -L "https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_macOS.zip" -o pluginval.zip
-        unzip pluginval
-        pluginval.app/Contents/MacOS/pluginval --strictness-level 5 --validate-in-process --output-dir "." "Source/${SF_PROJECT}_artefacts/Release/VST3/${{matrix.artifact_path}}/${{matrix.file}}" || exit 1
 
     - name: Pluginval Linux
       working-directory: ${{github.workspace}}/build

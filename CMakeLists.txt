@@ -9,6 +9,12 @@ include("ReadConfig")
 message("SF_PROJECT = " ${SF_PROJECT})
 message("SF_VERSION = " ${SF_VERSION})
 
+option(UniversalBinary "Build universal binary for mac" ON)
+
+if (UniversalBinary)
+    set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE INTERNAL "")
+endif()
+
 project("${SF_PROJECT}" VERSION "${SF_VERSION}")
 
 #Compile commands, useful for some IDEs like VS-Code
@@ -42,12 +48,6 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "AppleClang")
         set(CMAKE_EXE_LINKER_FLAGS "-Wl,-ld_classic" CACHE INTERNAL "")
     endif ()
 endif ()
-
-option(UniversalBinary "Build universal binary for mac" OFF)
-
-if (UniversalBinary)
-    set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE INTERNAL "")
-endif()
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     #static linking in Windows
