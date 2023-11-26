@@ -46,7 +46,7 @@ jobs:
               run: |
                 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_Windows.zip -OutFile pluginval.zip
                 Expand-Archive pluginval.zip -DestinationPath .
-                .\pluginval.exe --validate-in-process --strictness-level 5 --output-dir "." ${env:SF_VST3_BUILD_PATH}/${env:SF_ARTIFACT_PATH}/${env:SF_BUILD_FILE}
+                .\pluginval.exe --validate-in-process --strictness-level 5 --output-dir "." ${env:SF_VST3_BUILD_PATH}/${env:SF_ARTIFACT_PATH}/${env:SF_BUILD_FILE} | Out-Host
                 if ($LASTEXITCODE -ne 0 ) { Write-Error "FAILED!!!"; exit 1; }
                 
             - name: Compress plugin win
