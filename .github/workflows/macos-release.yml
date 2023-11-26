@@ -54,14 +54,8 @@ jobs:
           "Source/${SF_PROJECT}_artefacts/Release/VST3/${{env.SF_ARTIFACT_PATH}}/${{env.SF_BUILD_FILE}}" || exit 1
 
     - name: Create DMG
-      working-directory: ${{github.workspace}}/build
-      run : |
-        mkdir ${SF_PROJECT}
-        ln -s /Library/Audio/Plug-Ins/VST3 ${SF_PROJECT}/Library
-        cp -R "Source/${SF_PROJECT}_artefacts/Release/VST3/${SF_ARTIFACT_PATH}/${SF_BUILD_FILE}" ${SF_PROJECT}
-        hdiutil create -fs JHFS+ ${SF_PROJECT}-V${SF_VERSION}-${{env.OS_TAG}}-universal.dmg \
-          -srcfolder $SF_PROJECT \
-          -ov -format UDZO
+      working-directory: ${{github.workspace}}
+      run : ./scripts/build_dmg.sh
 
     - name: Upload plugin
       uses: actions/upload-artifact@v3

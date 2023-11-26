@@ -1,4 +1,7 @@
-eval $(scripts/project_vars.sh "" 1)
+
+if [ -z "SF_BUILD_FILE" ]; then
+    eval $(scripts/project_vars.sh "" 1)
+fi
 
 TOP=$(pwd)
 
