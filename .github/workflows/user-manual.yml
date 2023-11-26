@@ -6,6 +6,18 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  BUILD_TYPE: Release
+  OS_TAG : linux
+  # Just to make vscode happy. These will be set for real
+  # in the config-info step
+  SF_PROJECT : ""
+  SF_VERSION : ""
+  SF_PROJ_LOWER : ""
+  SF_ARTIFACT_PATH : ""
+  SF_BUILD_FILE : ""
+  SF_VST3_BUILD_PATH : ""
+    
 
 jobs :
   manual :
@@ -25,7 +37,7 @@ jobs :
         run : |
           mkdir build
           cd build
-          ../scripts/project_vars > CONFIG.sh
+          ../scripts/project_vars.sh > CONFIG.sh
           cat CONFIG.sh
           cat CONFIG.sh >> $GITHUB_ENV
           cat CONFIG.sh >> $GITHUB_OUTPUT

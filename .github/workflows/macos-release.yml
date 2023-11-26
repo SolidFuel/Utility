@@ -30,7 +30,7 @@ jobs:
       working-directory: ${{github.workspace}}
       shell : bash
       run : |
-        ./scripts/project_vars > CONFIG.sh
+        ./scripts/project_vars.sh > CONFIG.sh
         cat CONFIG.sh
         cat CONFIG.sh >> $GITHUB_ENV
         cat CONFIG.sh >> $GITHUB_OUTPUT

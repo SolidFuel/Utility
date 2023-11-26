@@ -1,9 +1,13 @@
 
-param($Dir=".", $Count="100")
+param($Dir="build", $Count="100")
 
 Push-Location $Dir
 
-$SF_PROJECT = "solidUtility"
+$env:OS_TAG = "win64"
+
+$output = & bash ../scripts/project_vars.sh - ps | Out-String
+Invoke-Expression $output
+
 if (!(Test-Path "pluginval.zip")) {
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12;
     Invoke-WebRequest https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_Windows.zip -OutFile pluginval.zip
@@ -21,7 +25,7 @@ $LOOP_COUNT=$Count
 
 while ($LOOP_COUNT -gt 0 ) {
     Write-Host "---------- COUNT = $LOOP_COUNT ----------"
-    .\pluginval.exe --validate-in-process --strictness-level 5 --output-dir "val-logs" "Source\${SF_PROJECT}_artefacts\Release\VST3\${SF_PROJECT}.vst3\Contents\x86_64-win\${SF_PROJECT}.vst3" | Out-Null
+    .\pluginval.exe --validate-in-process --strictness-level 5 --output-dir "val-logs" "${env:SF_VST3_BUILD_PATH}\${env:SF_ARTIFACT_PATH}\${env:SF_BUILD_FILE}" 
     
     if ($LASTEXITCODE -ne 0 ) {
         Write-Error "FAILED!!!"

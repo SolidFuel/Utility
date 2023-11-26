@@ -5,7 +5,7 @@ TOP=$1
 [ -z "$TOP" ] && TOP=..
 
 if [ -z "$SF_PROJECT" ]; then
-  eval $(${TOP}/scripts/project_vars "" 1)
+  eval $(${TOP}/scripts/project_vars.sh "" 1)
 fi
 
 PKG=${SF_PROJ_LOWER}
@@ -22,7 +22,7 @@ cp -R Source/${SF_PROJECT}_artefacts/Release/VST3/* ${DIR}/usr/lib/vst3
 
 # Control file
 mkdir ${DIR}/DEBIAN
-${TOP}/scripts/expand_file ${PKG_SRC}/debian/control > ${DIR}/DEBIAN/control
+${TOP}/scripts/expand_file.sh ${PKG_SRC}/debian/control > ${DIR}/DEBIAN/control
 
 mkdir -p ${DIR}/usr/share/doc/${PKG}
 
@@ -49,7 +49,7 @@ _OUTRO_
 gzip --best --no-name ${DIR}/usr/share/doc/${PKG}/changelog
 
 # copyright
-${TOP}/scripts/expand_file ${PKG_SRC}/debian/copyright > ${DIR}/usr/share/doc/${PKG}/copyright
+${TOP}/scripts/expand_file.sh ${PKG_SRC}/debian/copyright > ${DIR}/usr/share/doc/${PKG}/copyright
 
 # CREATE
 dpkg-deb --root-owner-group --build ${DIR}
