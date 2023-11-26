@@ -9,11 +9,12 @@ TOP=$(pwd)
 
 cd build
 
-dmg_file="${SF_PROJECT}-V${SF_VERSION}-macos-installer.dmg"
+dmg_file="${SF_PROJECT}-V${SF_VERSION}-${OS_TAG}-universal.dmg"
 lib_path="/Library/Audio/Plug-Ins/VST3"
 
 [ -f "$dmg_file" ] && rm -f ${dmg_file}
 
+# This should only happen on the github runners
 [[ -n "$SUDO" && ! -d "$lib_path" ]] && ${SUDO} mkdir -p "${lib_path}"
 
 ${SUDO} ${TOP}/extern/create-dmg/create-dmg \
