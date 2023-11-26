@@ -64,7 +64,7 @@ do
     if [ $line == "#*" ]; then
         continue
     fi
-    if [[ "$OS_TAG" == "win64" && "$export" == "env" ]]; then
+    if [[ "$export" == "\$env:" ]]; then
         IFS="=" read -r key value <<< "$line"
         echo "${export}${key}=\"$value\""
     else 
@@ -100,8 +100,13 @@ case "$OS_TAG" in
     ;;
 esac
 
+Q=""
 
-echo "${export}SF_PROJ_LOWER=\"${PROJ_LOWER}\"";
-echo "${export}SF_ARTIFACT_PATH=\"${ARTIFACT_PATH}\"";
-echo "${export}SF_BUILD_FILE=\"${BUILD_FILE}\"";
-echo "${export}SF_VST3_BUILD_PATH=\"${VST3_BUILD_PATH}\"";
+if [[ "$export" == "\$env:" ]]; then
+    Q='"'
+fi
+
+echo "${export}SF_PROJ_LOWER=$Q${PROJ_LOWER}$Q";
+echo "${export}SF_ARTIFACT_PATH=$Q${ARTIFACT_PATH}$Q";
+echo "${export}SF_BUILD_FILE=$Q${BUILD_FILE}$Q";
+echo "${export}SF_VST3_BUILD_PATH=$Q${VST3_BUILD_PATH}$Q";
