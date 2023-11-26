@@ -39,19 +39,20 @@ jobs:
               run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
             - name: Build
-              run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} -v
+              run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
         
             - name: Pluginval Windows
               working-directory: ${{github.workspace}}/build
               run: |
                 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_Windows.zip -OutFile pluginval.zip
                 Expand-Archive pluginval.zip -DestinationPath .
-                .\pluginval.exe --validate-in-process --strictness-level 5 --output-dir "." "${env:SF_VST3_BUILD_PATH}\${env:SF_ARTIFACT_PATH}\${env:SF_BUILD_FILE}"
+                .\pluginval.exe --validate-in-process --strictness-level 5 --output-dir "." ${env:SF_VST3_BUILD_PATH}/${env:SF_ARTIFACT_PATH}/${env:SF_BUILD_FILE}
+                if ($LASTEXITCODE -ne 0 ) { Write-Error "FAILED!!!"; exit 1; }
                 
             - name: Compress plugin win
               working-directory: ${{github.workspace}}/build
               run : |
-                  Set-Location ${env:SF_VST3_BUILD_PATH}\${env:SF_ARTIFACT_PATH}
+                  Set-Location ${env:SF_VST3_BUILD_PATH}/${env:SF_ARTIFACT_PATH}
                   $ZIPNAME="${env:SF_PROJECT}-V${env:SF_VERSION}-${env:OS_TAG}-vst3.zip"
                   Compress-Archive -Path ${env:SF_BUILD_FILE} -CompressionLevel Optimal -Destination ${{github.workspace}}/build/${ZIPNAME}     
           
