@@ -1,5 +1,5 @@
 
-SUDO="sudo "
+SUDO="sudo"
 if [ -z "SF_BUILD_FILE" ]; then
     SUDO=""
     eval $(scripts/project_vars.sh "" 1)
@@ -10,8 +10,11 @@ TOP=$(pwd)
 cd build
 
 dmg_file="${SF_PROJECT}-V${SF_VERSION}-macos-installer.dmg"
+lib_path="/Library/Audio/Plug-Ins/VST3"
 
 [ -f "$dmg_file" ] && rm -f ${dmg_file}
+
+[[ -n "$SUDO" && ! -d "$lib_path" ]] && ${SUDO} mkdir -p "${lib_path}"
 
 ${SUDO} ${TOP}/extern/create-dmg/create-dmg \
     --volname "solidUtility Installer" \
@@ -20,6 +23,6 @@ ${SUDO} ${TOP}/extern/create-dmg/create-dmg \
     --window-size 800 400 \
     --icon-size 100 \
     --icon "$SF_BUILD_FILE" 200 190 \
-    --add-drop-link /Library/Audio/Plug-Ins/VST3 Library 600 185 \
+    --add-drop-link "${lib_path}" Library 600 185 \
     $dmg_file \
     "${SF_VST3_BUILD_PATH}/${SF_BUILD_FILE}"
