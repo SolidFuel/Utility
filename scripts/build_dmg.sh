@@ -1,14 +1,20 @@
-eval $(scripts/project_vars "" 1)
+eval $(scripts/project_vars.sh "" 1)
+
+TOP=$(pwd)
 
 cd build
 
-[ -d "${SF_PROJECT}" ] && rm -rf ${SF_PROJECT}
-mkdir ${SF_PROJECT}
+dmg_file="${SF_PROJECT}-V${SF_VERSION}-macos-installer.dmg"
 
-ln -s /Library/Audio/Plug-Ins/VST3 ${SF_PROJECT}/Library
+[ -f "$dmg_file" ] && rm -f ${dmg_file}
 
-cp -R "Source/${SF_PROJECT}_artefacts/Release/VST3/${SF_ARTIFACT_PATH}/${SF_BUILD_FILE}" ${SF_PROJECT}
-
-hdiutil create -fs JHFS+ ${SF_PROJECT}-V${SF_VERSION}-${OS_TAG}-universal.dmg \
-    -srcfolder $SF_PROJECT -volname $SF_PROJECT \
-    -ov -format UDZO
+${TOP}/extern/create-dmg/create-dmg \
+    --volname "solidUtility Installer" \
+    --background "${TOP}/packaging/macos/dmg_background.png" \
+    --window-pos 200 120 \
+    --window-size 800 400 \
+    --icon-size 100 \
+    --icon "$SF_BUILD_FILE" 200 190 \
+    --add-drop-link /Library/Audio/Plug-Ins/VST3 Library 600 185 \
+    $dmg_file \
+    "${SF_VST3_BUILD_PATH}/${SF_BUILD_FILE}"

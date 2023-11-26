@@ -1,0 +1,3 @@
+[submodule "extern/create-dmg"]
+	path = extern/create-dmg
+	url = https://github.com/mhhollomon/create-dmg.git
