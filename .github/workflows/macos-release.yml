@@ -24,7 +24,9 @@ jobs:
     steps:
     - name: Checkout Repo
       uses: actions/checkout@v3
-
+      with:
+        submodules: recursive
+        
     - name: Get Config Info
       id: config-info
       working-directory: ${{github.workspace}}
