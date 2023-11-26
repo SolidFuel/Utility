@@ -1,5 +1,7 @@
 
+SUDO="sudo "
 if [ -z "SF_BUILD_FILE" ]; then
+    SUDO=""
     eval $(scripts/project_vars.sh "" 1)
 fi
 
@@ -11,7 +13,7 @@ dmg_file="${SF_PROJECT}-V${SF_VERSION}-macos-installer.dmg"
 
 [ -f "$dmg_file" ] && rm -f ${dmg_file}
 
-${TOP}/extern/create-dmg/create-dmg \
+${SUDO} ${TOP}/extern/create-dmg/create-dmg \
     --volname "solidUtility Installer" \
     --background "${TOP}/packaging/macos/dmg_background.png" \
     --window-pos 200 120 \
