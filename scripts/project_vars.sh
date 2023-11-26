@@ -64,7 +64,7 @@ do
     if [ $line == "#*" ]; then
         continue
     fi
-    if [[ "$OS_TAG" == "win64" ]]; then
+    if [[ "$OS_TAG" == "win64" && "$export" == "env" ]]; then
         IFS="=" read -r key value <<< "$line"
         echo "${export}${key}=\"$value\""
     else 
