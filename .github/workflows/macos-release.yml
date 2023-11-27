@@ -14,8 +14,11 @@ env:
   SF_PROJECT : ""
   SF_VERSION : ""
   SF_PROJ_LOWER : ""
+  SF_VST3_BUILD_PATH : ""
   SF_ARTIFACT_PATH : ""
   SF_BUILD_FILE : ""
+  SF_OUTPUT_STEM: ""
+  SF_IN_RUNNER: ""
 
 
 jobs:
@@ -53,15 +56,43 @@ jobs:
         curl -L "https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_macOS.zip" -o pluginval.zip
         unzip pluginval
         pluginval.app/Contents/MacOS/pluginval --strictness-level 5 --validate-in-process --output-dir "." \
-          "Source/${SF_PROJECT}_artefacts/Release/VST3/${{env.SF_ARTIFACT_PATH}}/${{env.SF_BUILD_FILE}}" || exit 1
+          "${{env.SF_VST3_BUILD_PATH}}/${{env.SF_ARTIFACT_PATH}}/${{env.SF_BUILD_FILE}}" || exit 1
+
+    - name: Import Certificates (macOS)
+      uses: apple-actions/import-codesign-certs@v2 # only exists as a tag right now
+      with:
+        p12-file-base64: ${{ secrets.SIGN_APP_CERT }}
+        p12-password: ${{ secrets.SIGN_APP_PASSWORD }}
+
+    - name : Codesign plugin
+      working-directory : ${{github.workspace}}/build
+      run : |
+        codesign --force -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" \
+          -v "${{env.SF_VST3_BUILD_PATH}}/${{env.SF_ARTIFACT_PATH}}/${{env.SF_BUILD_FILE}}" \
+          --deep --strict --options=runtime --timestamp
 
     - name: Create DMG
+      id : create_dmg
       working-directory: ${{github.workspace}}
       run : ./scripts/build_dmg.sh
+
+    - name : Codesign DMG
+      working-directory : ${{github.workspace}}/build
+      run : |
+        codesign --force -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" \
+          -v ${{steps.create_dmg.outputs.DMG_FILE }} \
+          --deep --strict --options=runtime --timestamp
+
+        xcrun notarytool submit "${{steps.create_dmg.outputs.DMG_FILE }}" \
+          --apple-id ${{ secrets.NOTARIZATION_USERNAME }} \
+          --password ${{ secrets.NOTARIZATION_PASSWORD }} \
+          --team-id ${{ secrets.TEAM_ID }} --wait
+
+        xcrun stapler staple "${{steps.create_dmg.outputs.DMG_FILE }}"
 
     - name: Upload plugin
       uses: actions/upload-artifact@v3
       with:
-        name: ${{env.SF_PROJECT}}-V${{env.SF_VERSION}}-${{env.OS_TAG}}-universal.dmg
-        path: ${{github.workspace}}/build/${{env.SF_PROJECT}}-V${{env.SF_VERSION}}-${{env.OS_TAG}}-universal.dmg
+        name: ${{steps.create_dmg.outputs.DMG_FILE }}
+        path: ${{github.workspace}}/build/${{steps.create_dmg.outputs.DMG_FILE }}
 
