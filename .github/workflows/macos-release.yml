@@ -81,6 +81,7 @@ jobs:
       run : |
         codesign --force -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" \
           -v ${{steps.create_dmg.outputs.DMG_FILE }} \
+          -i "com.SolidFuel.${{env.SF_PROJECT}}" \
           --deep --strict --options=runtime --timestamp
 
         xcrun notarytool submit "${{steps.create_dmg.outputs.DMG_FILE }}" \
