@@ -79,17 +79,23 @@ jobs:
     - name : Codesign DMG
       working-directory : ${{github.workspace}}/build
       run : |
+
+        echo "---Signing---"
         codesign --force -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" \
           -v ${{steps.create_dmg.outputs.DMG_FILE }} \
           -i "com.SolidFuel.${{env.SF_PROJECT}}" \
           --deep --strict --options=runtime --timestamp
+        echo "---Signed----"
+        echo "---Notarize---"
 
         xcrun notarytool submit "${{steps.create_dmg.outputs.DMG_FILE }}" \
           --apple-id ${{ secrets.NOTARIZATION_USERNAME }} \
           --password ${{ secrets.NOTARIZATION_PASSWORD }} \
           --team-id ${{ secrets.TEAM_ID }} --wait
-
+        echo "---Notarized---"
+        echo "---Staple---"
         xcrun stapler staple "${{steps.create_dmg.outputs.DMG_FILE }}"
+        echo "---Stapled---"
 
     - name: Upload plugin
       uses: actions/upload-artifact@v3
