@@ -72,11 +72,13 @@ do
     fi
 done < ${cfg_file}
 
-# Create derived variable
+# --- Create derived variables
+#
 source "${cfg_file}"
 
 PROJ_LOWER=$(echo "$SF_PROJECT" | tr '[:upper:]' '[:lower:]')
 
+OUTPUT_STEM=${SF_PROJECT}-V${SF_VERSION}-${OS_TAG}
 
 case "$OS_TAG" in
 "macos")
@@ -110,3 +112,4 @@ echo "${export}SF_PROJ_LOWER=$Q${PROJ_LOWER}$Q";
 echo "${export}SF_ARTIFACT_PATH=$Q${ARTIFACT_PATH}$Q";
 echo "${export}SF_BUILD_FILE=$Q${BUILD_FILE}$Q";
 echo "${export}SF_VST3_BUILD_PATH=$Q${VST3_BUILD_PATH}$Q";
+echo "${export}SF_OUTPUT_STEM=$Q${OUTPUT_STEM}$Q";
