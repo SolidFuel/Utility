@@ -8,10 +8,6 @@ if [ -z "$SF_BUILD_FILE" ]; then
 fi
 
 top_dir=$(pwd)
-sudo=""
-if [ "$SF_IN_RUNNER" ]; then
-    sudo="sudo"
-fi
 
 dmg_file="${SF_OUTPUT_STEM}-universal.dmg"
 lib_path="/Library/Audio/Plug-Ins/VST3"
@@ -26,13 +22,13 @@ if [[ "$SF_IN_RUNNER" ]]; then
     echo "DMG_FILE=$dmg_file" >> "$GITHUB_OUTPUT"
 
     # This should only happen on the github runners
-    [[ ! -d "$lib_path" ]] && ${sudo} mkdir -p "${lib_path}"
+    [[ ! -d "$lib_path" ]] && sudo mkdir -p "${lib_path}"
 fi
 
 
 # positioning depends on the actual icon
 # These are optized for the default icons
-${sudo} ${top_dir}/extern/create-dmg/create-dmg \
+${top_dir}/extern/create-dmg/create-dmg \
     --volname "solidUtility Installer" \
     --hide-extension "$SF_BUILD_FILE" \
     --background "${top_dir}/packaging/macos/dmg_background.png" \
