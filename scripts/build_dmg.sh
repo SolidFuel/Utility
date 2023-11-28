@@ -30,7 +30,6 @@ fi
 # These are optized for the default icons
 ${top_dir}/extern/create-dmg/create-dmg \
     --volname "solidUtility Installer" \
-    --hide-extension "$SF_BUILD_FILE" \
     --background "${top_dir}/packaging/macos/dmg_background.png" \
     --window-pos 200 120 \
     --window-size 600 400 \
