@@ -82,7 +82,7 @@ jobs:
         echo "---Signing---"
         codesign --force -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" \
           -v ${{steps.create_dmg.outputs.DMG_FILE }} \
-          --timestamp
+          --strict --options=runtime --timestamp
         echo "---Signed----"
 
         echo "---Notarize---"
