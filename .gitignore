@@ -19,3 +19,7 @@ build/
 
 # other builds
 build-*/
+
+# certificates
+*.p12
+*.b64
