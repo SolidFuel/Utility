@@ -1,58 +1,60 @@
 #!/usr/bin/bash -x
 
 # Assume we are sitting in build
-TOP=$1
-[ -z "$TOP" ] && TOP=..
+top=$1
+[ -z "$top" ] && top=..
+
+scripts="${top}/scripts"
 
 if [ -z "$SF_PROJECT" ]; then
-  eval $(${TOP}/scripts/project_vars.sh "" 1)
+  eval $(${scripts}/project_vars.sh "" 1)
 fi
 
-PKG=${SF_PROJ_LOWER}
-PKG_SRC=${TOP}/packaging
+pkg=${SF_PROJ_LOWER}
+pkg_src=${top}/packaging
 
-DIR=${PKG}_${SF_VERSION}_linux-amd64
+dir=${pkg}_${SF_VERSION}_linux-amd64
 
-rm -rf ${DIR}
-mkdir ${DIR}
+rm -rf ${dir}
+mkdir ${dir}
 
 # VST3
-mkdir -p ${DIR}/usr/lib/vst3
-cp -R Source/${SF_PROJECT}_artefacts/Release/VST3/* ${DIR}/usr/lib/vst3
+mkdir -p ${dir}/usr/lib/vst3
+cp -R ${SF_VST3_BUILD_PATH}/* ${dir}/usr/lib/vst3
 
 # Control file
-mkdir ${DIR}/DEBIAN
-${TOP}/scripts/expand_file.sh ${PKG_SRC}/debian/control > ${DIR}/DEBIAN/control
+mkdir ${dir}/DEBIAN
+${scripts}/expand_file.sh ${pkg_src}/debian/control > ${dir}/DEBIAN/control
 
-mkdir -p ${DIR}/usr/share/doc/${PKG}
+mkdir -p ${dir}/usr/share/doc/${pkg}
 
 # changelog
 # place holder until I can come up with something better
-CHNG=${DIR}/usr/share/doc/${PKG}/changelog
+chng=${dir}/usr/share/doc/${pkg}/changelog
 
-cat <<_END_ > ${CHNG}
-${PKG} (${SF_VERSION}) stable; urgency=low
+cat <<_END_ > ${chng}
+${pkg} (${SF_VERSION}) stable; urgency=low
 
   [ SolidFuel ]
 _END_
 git log --pretty=format:%s `git tag --sort=-committerdate | \
     head -1`...`git tag --sort=-committerdate | head -2 | \
     awk '{split($0, tags, "\n")} END {print tags[1]}'` | \
-    awk '{ print "  * ", $0 }' | grep -v "Merge pull request" >>  ${CHNG}
+    awk '{ print "  * ", $0 }' | grep -v "Merge pull request" >>  ${chng}
 
-DATE=`date -R`
-cat <<_OUTRO_ >> ${CHNG}
+date_string=`date -R`
+cat <<_OUTRO_ >> ${chng}
 
- -- SolidFuel <solidfuelplugins@gmail.com>  ${DATE}
+ -- SolidFuel <solidfuelplugins@gmail.com>  ${date_string}
 _OUTRO_
 
-gzip --best --no-name ${DIR}/usr/share/doc/${PKG}/changelog
+gzip --best --no-name ${dir}/usr/share/doc/${pkg}/changelog
 
 # copyright
-${TOP}/scripts/expand_file.sh ${PKG_SRC}/debian/copyright > ${DIR}/usr/share/doc/${PKG}/copyright
+${scripts}/expand_file.sh ${pkg_src}/debian/copyright > ${dir}/usr/share/doc/${pkg}/copyright
 
 # CREATE
-dpkg-deb --root-owner-group --build ${DIR}
+dpkg-deb --root-owner-group --build ${dir}
 
-# Output
-[ -n "${GITHUB_OUTPUT}" ] && echo "deb_file=${DIR}.deb" >> ${GITHUB_OUTPUT}
+# Output tie file name for other steps
+[ -n "${GITHUB_OUTPUT}" ] && echo "deb_file=${dir}.deb" >> ${GITHUB_OUTPUT}

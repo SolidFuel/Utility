@@ -1,5 +1,5 @@
 
-param($Dir="build", $Count="100")
+param($Dir="build", $Count=100, $Level=5)
 
 Push-Location $Dir
 
@@ -25,7 +25,7 @@ $LOOP_COUNT=$Count
 
 while ($LOOP_COUNT -gt 0 ) {
     Write-Host "---------- COUNT = $LOOP_COUNT ----------"
-    .\pluginval.exe --validate-in-process --strictness-level 5 --output-dir "val-logs" "${env:SF_VST3_BUILD_PATH}\${env:SF_ARTIFACT_PATH}\${env:SF_BUILD_FILE}" | Out-Null
+    .\pluginval.exe --validate-in-process --strictness-level $Level --output-dir "val-logs" "${env:SF_VST3_BUILD_PATH}\${env:SF_ARTIFACT_PATH}\${env:SF_BUILD_FILE}" | Out-Null
     
     if ($LASTEXITCODE -ne 0 ) {
         Write-Error "FAILED!!!"

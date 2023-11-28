@@ -17,6 +17,7 @@ env:
   SF_ARTIFACT_PATH : ""
   SF_BUILD_FILE : ""
   SF_VST3_BUILD_PATH : ""
+  SF_OUTPUT_STEM : ""
 
 jobs:
     build:
@@ -46,21 +47,21 @@ jobs:
               run: |
                 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_Windows.zip -OutFile pluginval.zip
                 Expand-Archive pluginval.zip -DestinationPath .
-                .\pluginval.exe --validate-in-process --strictness-level 5 --output-dir "." ${env:SF_VST3_BUILD_PATH}/${env:SF_ARTIFACT_PATH}/${env:SF_BUILD_FILE} | Out-Host
+                .\pluginval.exe --validate-in-process --strictness-level 10 --output-dir "." ${env:SF_VST3_BUILD_PATH}/${env:SF_ARTIFACT_PATH}/${env:SF_BUILD_FILE} | Out-Host
                 if ($LASTEXITCODE -ne 0 ) { Write-Error "FAILED!!!"; exit 1; }
                 
             - name: Compress plugin win
               working-directory: ${{github.workspace}}/build
               run : |
                   Set-Location ${env:SF_VST3_BUILD_PATH}/${env:SF_ARTIFACT_PATH}
-                  $ZIPNAME="${env:SF_PROJECT}-V${env:SF_VERSION}-${env:OS_TAG}-vst3.zip"
+                  $ZIPNAME="${env:SF_OUTPUT_STEM}-vst3.zip"
                   Compress-Archive -Path ${env:SF_BUILD_FILE} -CompressionLevel Optimal -Destination ${{github.workspace}}/build/${ZIPNAME}     
           
             - name: Upload plugin
               uses: actions/upload-artifact@v3
               with:
-                  name: ${{env.SF_PROJECT}}-V${{env.SF_VERSION}}-${{env.OS_TAG}}-vst3.zip
-                  path: ${{github.workspace}}/build/${{env.SF_PROJECT}}-V${{env.SF_VERSION}}-${{env.OS_TAG}}-vst3.zip
+                  name: ${{env.SF_OUTPUT_STEM}}-vst3.zip
+                  path: ${{github.workspace}}/build/${{env.SF_OUTPUT_STEM}}-vst3.zip
 
             - name : setup windows installer file
               working-directory: ${{github.workspace}}
@@ -74,6 +75,6 @@ jobs:
             - name: Upload windows installer
               uses: actions/upload-artifact@v3
               with:
-                name: ${{env.SF_PROJECT}}-V${{env.SF_VERSION}}-${{env.OS_TAG}}-install.exe
+                name: ${{env.SF_OUTPUT_STEM}}-install.exe
                 path: ${{github.workspace}}/build/${{env.SF_PROJ_LOWER}}.exe
             
