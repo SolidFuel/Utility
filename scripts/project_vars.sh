@@ -102,6 +102,11 @@ case "$OS_TAG" in
     ;;
 esac
 
+IN_RUNNER=""
+if [[ -n "$GITHUB_OUTPUT" ]]; then
+    IN_RUNNER=1
+fi
+
 Q=""
 
 if [[ "$export" == "\$env:" ]]; then
@@ -113,3 +118,4 @@ echo "${export}SF_ARTIFACT_PATH=$Q${ARTIFACT_PATH}$Q";
 echo "${export}SF_BUILD_FILE=$Q${BUILD_FILE}$Q";
 echo "${export}SF_VST3_BUILD_PATH=$Q${VST3_BUILD_PATH}$Q";
 echo "${export}SF_OUTPUT_STEM=$Q${OUTPUT_STEM}$Q";
+echo "${export}SF_IN_RUNNER=$Q${IN_RUNNER}$Q";
