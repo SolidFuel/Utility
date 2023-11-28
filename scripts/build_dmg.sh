@@ -22,7 +22,7 @@ if [[ "$SF_IN_RUNNER" ]]; then
     echo "DMG_FILE=$dmg_file" >> "$GITHUB_OUTPUT"
 
     # This should only happen on the github runners
-    [[ ! -d "$lib_path" ]] && sudo mkdir -p "${lib_path}"
+    [[ ! -d "$lib_path" ]] && sudo mkdir -m 755 -p "${lib_path}"
 fi
 
 
@@ -36,6 +36,6 @@ ${top_dir}/extern/create-dmg/create-dmg \
     --window-size 600 400 \
     --icon-size 100 \
     --icon "$SF_BUILD_FILE" 160 190 \
-    --add-drop-link "${lib_path}" Library 430 190 \
+    --add-drop-link "${lib_path}" "VST3 Folder" 430 190 \
     $dmg_file \
     "${SF_VST3_BUILD_PATH}/${SF_BUILD_FILE}"
