@@ -1,6 +1,10 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
-# write to standard out a new version of the file on the input.
+# write to standard out a version of the file named on the 
+# command line
+# that has had all variables expanded.
+
+# Note that this is **insanely insecure**.
 
 FILE=`mktemp`; # Let the shell create a temporary file
 trap 'rm -f $FILE' 0 1 2 3 15;   # Clean up the temporary file 

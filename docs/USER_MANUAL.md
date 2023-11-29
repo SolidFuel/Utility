@@ -1,9 +1,9 @@
 # solidUtility _V0.3.0_
 
-solidUtility is a versatile channel utility plug-in for Digital Audio Workstations.
+**solidUtility** is a versatile channel utility plug-in for Digital Audio Workstations.
 It is compatible with all DAWs that support the VST3 plug-in format.
 
-It is currently supported on Windows 64 bit platforms and all Linux 64 bit distributions.
+It is currently supported on Windows 64-bit platforms, Linux 64-bit distributions, and MacOS versions starting at 10.15 on both arm and intel architectures.
 
 This user's manual will walk you through each of the controls on the _solidUtility_ interface.
 
@@ -11,8 +11,11 @@ This user's manual will walk you through each of the controls on the _solidUtili
 
 ![solidUtility's Header](utility-header.png)
 
-The `menu` button on the left contains the `about` menu option to display
-version, copyright, and other information about the software.
+The `menu` button on the left contains:
+
+- `tooltip` : Turn on/off the tooltips that most controls have.
+- `about`   : menu option to display version, copyright, and 
+              other information about the software.
 
 ## Main Controls
 
@@ -23,13 +26,19 @@ This may then be further modified by the other controls.
 
 ![solidUtility Channel Mode Selectors](stereo-mode.png)
 
-- Mono : Sums the two input channels a places that sum on both outputs.
-- Stereo : 'Normal mode' THe left input is placed on the left output and the 
+- **Mono** : Sums the two input channels a places that sum on both outputs.
+- **Stereo** : 'Normal mode' The left input is placed on the left output and the 
   right input is placed on the right output.
-- Left : (Labelled 'L'). The **left** input is copied to both the left and the right outputs.
-- Right : (Labelled 'R'). The **right** input is copied to both the left and the right outputs.
-- M/S : Mid-side mode. The mid channel is place on the left output and side channel is placed
-  on the right output.
+- **Left** : (Labelled 'L'). The **left** input is copied to both the left and the
+  right outputs.
+- **Right** : (Labelled 'R'). The **right** input is copied to both the left and the
+  right outputs.
+- **M/S** : Mid-side mode. The mid channel is place on the left output and side
+  channel is placed on the right output.
+- **Mid** : (Labelled 'M'). The **mid** channel is placed on both the left and right
+  output channels. (Note, this functionally equivalent to Mono mode)
+- **Side** : (Labelled 'S'). The **side** channel is placed on both the left and right
+  output channels.
 
 ### Swap
 
@@ -44,9 +53,9 @@ Switches the polarity of the input signal.
 Mute one or both outputs. Only one of the selections can be active.
 Clicking on an active button will turn it off.
 
-- Mute : Mute both outputs.
-- Left : (Labelled 'L') Mute the left output.
-- Right : (Labelled 'R' ) Mute the right output.
+- **Mute** : Mute both outputs.
+- **Left** : (Labelled 'L') Mute the left output.
+- **Right** : (Labelled 'R' ) Mute the right output.
 
 ### Gain
 
@@ -61,7 +70,7 @@ You can also click in the text box and type in a specific value.
 
 The signal flows through the controls in the following order (mostly top-to-bottom):
 
-- Channel Mode selector
+- Channel Mode Selector
 - Swap
 - Invert
 - Gain
@@ -71,14 +80,14 @@ The signal flows through the controls in the following order (mostly top-to-bott
 
 ### Host Automatable parameters
 
-This table gives the names of the paramters that _solidUtility_ makes available
+This table gives the names of the parameters that _solidUtility_ makes available
 to the host and which control on the UI it corresponds to.
 
 |Parameter Name|UI Control|
 |---|---|
-|Gain| The Gain knob|
-|InvertL| The "Left" checkbox in the Invert group|
-|InvertR| The "Right" checkbox in the Invert group|
-|Mute| The Mute Selector button set|
+|Gain       | The Gain knob|
+|InvertL    | The "Left" checkbox in the Invert group|
+|InvertR    | The "Right" checkbox in the Invert group|
+|Mute       | The Mute Selector button set|
 |Stereo Mode| The Channel Mode Selector|
-|Swap| The Swap checkbox|
+|Swap       | The Swap checkbox|

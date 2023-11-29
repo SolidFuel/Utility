@@ -2,7 +2,7 @@
 
 The latest released version of _solidUtility_ can be found on github at:
 
-https://github.com/SolidFuel/ChanTool/releases/latest
+https://github.com/SolidFuel/Utility/releases/latest
 
 There will be a few files available to help with install.
 Below are instructions for each plaform.
@@ -15,7 +15,7 @@ Download the file `solidUtility-VX.X.X-win64-install.exe`, where X.X.X will
 be the release number.
 
 **Note** Chrome browser will block the download with a warning about it
-not being "commonly downloaded". Either use another browser or click through
+not being "commonly downloaded". Click through
 the warning to download anyway.
 
 ### VST3 zip
@@ -25,7 +25,7 @@ the archive and move the `solidUtility.vst3` file to the `C:\Program Files\Commo
 directory.
 
 **Note** Chrome browser will block the download with a warning about it
-not being "commonly downloaded". Either use another browser or click through
+not being "commonly downloaded". Click through
 the warning to download anyway.
 
 ## Linux
@@ -51,3 +51,12 @@ Unzip the file solidUtility-Vx.x.x-linux-amd64.zip. Place the resulting
 
 This can also be placed in `/usr/local/lib/vst3` for system-wide use. You will
 need superuser privileges to do so.
+
+## MacOS
+
+### Installer
+A dmg style installer is provided that works for both intel and arm architectures.
+All version from 10.15 to 14.1 are supported.
+
+Download the file `solidUtility_VX.X.X_macos-universal.dmg`. Double click on the file
+and follow the directions given.

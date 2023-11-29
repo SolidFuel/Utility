@@ -2,28 +2,62 @@
 
 set -e
 
-dir=${1:-"."}
-count=${2:-100}
+# ARGUMENT Defaults
+
+# Where the script should do its work.
+dir="build"
+
+# How many times pluginval should be called.
+count=100
+
+# What severity level to pass to pluginval
+level=5
+
+# parse the command line. Argument casing was chosen to match the
+# the windows powershell version.
+#
+while [[ "$1" ]]; do
+    case "$1" in
+     -Count)
+        count=$2
+        shift; shift
+        ;;
+     -Dir)
+        dir=$2
+        shift; shift
+        ;;
+     -Level)
+        level=$2
+        shift; shift
+        ;;
+     *)
+        echo "ERROR: unknown option '$1'"
+        exit 1
+        ;;
+    esac
+done
+
 
 eval $(scripts/project_vars.sh "" 1)
 
-LOGDIR="pluginval-logs"
+log_dir="pluginval-logs"
 
 case $OS_TAG in
 "macos")
     FILE="pluginval.app"
-    FULLPATH="pluginval.app/Contents/MacOS/pluginval"
+    exec_path="pluginval.app/Contents/MacOS/pluginval"
     URL="https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_macOS.zip"
+    extra_args=""
     ;;
 "linux")
     FILE="pluginval"
-    FULLPATH="./pluginval"
+    exec_path="./pluginval"
     URL="https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_Linux.zip"
-    EXTRA_ARGS="--skip-gui-tests"
+    extra_args="--skip-gui-tests"
     ;;
 esac
 
-cd $dir
+cd "$dir"
 
 if [ ! -f "pluginval.zip" ]; then
     curl -L $URL -o pluginval.zip
@@ -33,15 +67,15 @@ if [ ! -e "${FILE}" ]; then
     unzip pluginval.zip
 fi
 
-if [ ! -d "$LOGDIR" ]; then
-    mkdir $LOGDIR
+if [ ! -d "${log_dir}" ]; then
+    mkdir -p "${log_dir}"
 fi
 
 while [[ $count > 0 ]]
 do
     echo "---------- COUNT = ${count} ------------"
-    $FULLPATH --strictness-level 5 --validate-in-process \
-        ${EXTRA_ARGS} --output-dir "${LOGDIR}" \
+    $exec_path --strictness-level $level --validate-in-process \
+        ${extra_args} --output-dir "${log_dir}" \
         "${SF_VST3_BUILD_PATH}/${SF_ARTIFACT_PATH}/${SF_BUILD_FILE}" || exit 1
     count=$((${count} - 1))
 done

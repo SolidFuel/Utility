@@ -17,6 +17,8 @@
 - Windows
   - vst3 zip
   - installer
+- MacOS
+  - dmg installer
 - Manual
   - user manual
   - install guide

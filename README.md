@@ -1,6 +1,8 @@
 # solidUtility
 
-Versatile VST3 Channel Utility for Digital Audio Workstations
+Versatile VST3 Channel Utility for Digital Audio Workstations.
+
+solidUtility can swap channels, mute channels, do mid-side encoding and decoding, phase invert and more!
 
 ![Utility UI](docs/utility-ui.png)
 
@@ -14,14 +16,18 @@ Please see the [Installation Guide](docs/INSTALLATION_GUIDE.md)
 
 ## Building
 
-Build should work for Windows and Linux. There is tooling for MacOS, but I don't
-think it works.
+Build works for Windows, Linux, and MacOS. 
 
 ```sh
-git clone https://github.com/SolidFuel/ChanTool.git
-cd ChanTool
-cmake -S. -Bbuild
-cmake --build build
+git clone https://github.com/SolidFuel/Utility.git
+cd Utility
+
+# Only needed for MacOS
+git submodule init
+git submodule update
+
+cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
+cmake --build build --config Release
 ```
 
 ## Technology
@@ -30,7 +36,7 @@ cmake --build build
 
 ## License/Copyright
 
-ChanTool - Simple DAW Channel Utility (C) 2023 Sulid Fuel
+solidUtility - Versatile VST3 Channel Utility (C) 2023 Solid Fuel
 
 This program is free software: you can redistribute it and/or modify it under
 the terms of the **GNU General Public License** as published by the Free
