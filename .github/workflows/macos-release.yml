@@ -37,8 +37,8 @@ jobs:
       run : |
         ./scripts/project_vars.sh > CONFIG.sh
         cat CONFIG.sh
-        cat CONFIG.sh >> $GITHUB_ENV
-        cat CONFIG.sh >> $GITHUB_OUTPUT
+        cat CONFIG.sh >> "$GITHUB_ENV"
+        cat CONFIG.sh >> "$GITHUB_OUTPUT"
 
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
@@ -107,7 +107,7 @@ jobs:
               --sign "${{secrets.DEVELOPER_ID_INSTALLER}}" \
             ./${{env.SF_OUTPUT_STEM}}-universal.pkg
 
-        echo "PKGNAME=./${{env.SF_OUTPUT_STEM}}-universal.pkg" >> "$GITHUB_OUT"
+        echo "PKGNAME=./${{env.SF_OUTPUT_STEM}}-universal.pkg" >> "$GITHUB_OUTPUT"
         
 
     - name : Notarize PKG

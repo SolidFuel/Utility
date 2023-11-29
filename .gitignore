@@ -17,6 +17,10 @@ build/
 # Macs
 .DS_store
 
+# safety - ignore certs
+*.p12
+*.b64
+
 # other builds
 build-*/
 
