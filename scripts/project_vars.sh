@@ -51,14 +51,21 @@ if [ -z "$OS_TAG" ]; then
         OS_TAG="macos"
         ;;
     "Linux")
-        OS_TAG="linux"
+        if [[ "$SHLVL" = "0" ]]; then
+            OS_TAG="win64"
+        else 
+            OS_TAG="linux"
+        fi
         ;;
     *)
-        OS_TAG="win64"
+        echo "Cannot determine the OS from '${uname}'"
+        exit 1
         ;;
     esac
 fi
 
+# Output Variables from the config file
+echo "${export}OS_TAG=$Q${OS_TAG}$Q";
 while read -r line
 do
     if [ $line == "#*" ]; then
@@ -113,6 +120,7 @@ if [[ "$export" == "\$env:" ]]; then
     Q='"'
 fi
 
+# OUTPUT derived variables
 echo "${export}SF_PROJ_LOWER=$Q${PROJ_LOWER}$Q";
 echo "${export}SF_ARTIFACT_PATH=$Q${ARTIFACT_PATH}$Q";
 echo "${export}SF_BUILD_FILE=$Q${BUILD_FILE}$Q";

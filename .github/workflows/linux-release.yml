@@ -61,7 +61,7 @@ jobs:
         curl -L "https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_Linux.zip" -o pluginval.zip
         unzip pluginval
         # Need to skip gui tests on linux
-        ./pluginval --validate-in-process --strictness-level 5 --skip-gui-tests \
+        ./pluginval --validate-in-process --strictness-level 10 --skip-gui-tests \
           --output-dir "." "${{env.SF_VST3_BUILD_PATH}}/${{env.SF_ARTIFACT_PATH}}/${{env.SF_BUILD_FILE}}" || exit 1
 
     - name: Compress plugin
