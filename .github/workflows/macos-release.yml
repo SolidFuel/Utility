@@ -70,7 +70,7 @@ jobs:
       with:
         create-keychain : false
         p12-file-base64: ${{ secrets.SIGN_INSTALL_CERT }}
-        p12-password: ${{ secrets.SIGN_APP_PASSWORD }}
+        p12-password: ${{ secrets.SIGN_INSTALL_PASSWORD }}
   
 
     - name : Codesign plugin
