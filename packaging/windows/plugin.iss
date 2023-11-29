@@ -38,6 +38,6 @@ WizardStyle=modern
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
-Source: "{#srcdir}\build\Source\{#MyAppName}_artefacts\Release\VST3\{#MyAppName}.vst3\Contents\x86_64-win\{#MyAppName}.vst3"; DestDir: "{autocf}\VST3"; Flags: ignoreversion
+Source: "{#srcdir}\build\Source\{#MyAppName}_artefacts\Release\VST3\{#MyAppName}.vst3\Contents\x86_64-win\{#MyAppName}.vst3"; DestDir: "{autocf}\VST3\SolidFuel"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
