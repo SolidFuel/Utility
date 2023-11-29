@@ -4,7 +4,7 @@ set -e
 set -x 
 
 if [ -z "$SF_BUILD_FILE" ]; then
-    eval $(scripts/project_vars.sh "" 1)
+    eval $(scripts/project_vars.sh -exp sh)
 fi
 
 top_dir=$(pwd)

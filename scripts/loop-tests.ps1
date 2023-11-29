@@ -5,7 +5,7 @@ Push-Location $Dir
 
 $env:OS_TAG = "win64"
 
-$output = & bash ../scripts/project_vars.sh - ps | Out-String
+$output = & bash -c "../scripts/project_vars.sh -exp ps" | Out-String
 Invoke-Expression $output
 
 if (!(Test-Path "pluginval.zip")) {

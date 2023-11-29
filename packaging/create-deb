@@ -7,7 +7,7 @@ top=$1
 scripts="${top}/scripts"
 
 if [ -z "$SF_PROJECT" ]; then
-  eval $(${scripts}/project_vars.sh "" 1)
+  eval $(${scripts}/project_vars.sh -exp sh)
 fi
 
 pkg=${SF_PROJ_LOWER}

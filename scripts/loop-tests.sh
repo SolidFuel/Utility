@@ -38,7 +38,7 @@ while [[ "$1" ]]; do
 done
 
 
-eval $(scripts/project_vars.sh "" 1)
+eval $(scripts/project_vars.sh -exp sh)
 
 log_dir="pluginval-logs"
 

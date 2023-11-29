@@ -3,7 +3,7 @@
 # Calculate the project variables and place shell lines
 # on stdout to define them
 # 
-# project_vars [config file] [exports]
+# project_vars -cfg <config file> -exp <exports>
 #
 # config file : (optional) Path and name of the PLUGIN_CONFIG file to use.
 #       If this is not given (or is empty), it will try to find it by looking
@@ -12,9 +12,33 @@
 # exports : (optional) If present, the script will generate export statements 
 #       as well.
 
-cfg_file=$1
-do_export=$2
+cfg_file=""
+do_export=""
 
+while [[ "$1" ]]; do
+    case "$1" in
+        -cfg)
+            cfg_file="$2"
+            shift; shift
+            ;;
+        -exp)
+            do_export=$2
+            shift; shift
+            ;;
+        *)
+            echo "ERROR: Unknown option '$1'"
+            exit 1
+    esac
+done
+
+if [[ $do_export == "" || $do_export == "ps" || $do_export == "sh" ]]; then
+    true
+else
+    echo "ERROR: Invalid value for -exp : '$do_export'"
+    exit 1
+fi
+
+# Find the config file if they didn't give it to us.
 if [[  -z "$cfg_file"  ||   "X${cfg_file}Z" == "X-Z"  ]]; then
     cfg_file="PLUGIN_CONFIG"
     for file in "${cfg_file}" "../${cfg_file}"
@@ -34,12 +58,10 @@ elif [ ! -f "$cfg_file" ]; then
     exit 1
 fi
 
-if [ "$do_export" ]; then
-    if [ "$do_export" == "ps" ]; then
-        export="\$env:"
-    else
-        export="export "
-    fi
+if [ "$do_export" == "ps" ]; then
+    export="\$env:"
+elif [[ $do_export == "sh" ]]; then
+    export="export "
 else
     export=""
 fi
@@ -51,17 +73,19 @@ if [ -z "$OS_TAG" ]; then
         OS_TAG="macos"
         ;;
     "Linux")
-        if [[ "$SHLVL" = "0" ]]; then
-            OS_TAG="win64"
-        else 
-            OS_TAG="linux"
-        fi
+        OS_TAG="linux"
         ;;
     *)
         echo "Cannot determine the OS from '${uname}'"
         exit 1
         ;;
     esac
+fi
+
+Q=""
+if [[ "$do_export" == "ps" ]]; then
+    # powershell values need to surrounded in quotes
+    Q='"'
 fi
 
 # Output Variables from the config file
@@ -71,7 +95,7 @@ do
     if [ $line == "#*" ]; then
         continue
     fi
-    if [[ "$export" == "\$env:" ]]; then
+    if [[ "$do_export" == "ps" ]]; then
         IFS="=" read -r key value <<< "$line"
         echo "${export}${key}=\"$value\""
     else 
@@ -114,11 +138,6 @@ if [[ -n "$GITHUB_OUTPUT" ]]; then
     IN_RUNNER=1
 fi
 
-Q=""
-
-if [[ "$export" == "\$env:" ]]; then
-    Q='"'
-fi
 
 # OUTPUT derived variables
 echo "${export}SF_PROJ_LOWER=$Q${PROJ_LOWER}$Q";
