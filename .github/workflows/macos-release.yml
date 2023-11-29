@@ -68,6 +68,7 @@ jobs:
     - name: Import Install Certificates
       uses: apple-actions/import-codesign-certs@v2
       with:
+        create-keychain : false
         p12-file-base64: ${{ secrets.SIGN_INSTALL_CERT }}
         p12-password: ${{ secrets.SIGN_APP_PASSWORD }}
   
