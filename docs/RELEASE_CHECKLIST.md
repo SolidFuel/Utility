@@ -18,7 +18,7 @@
   - vst3 zip
   - installer
 - MacOS
-  - dmg installer
+  - pkg installer
 - Manual
   - user manual
   - install guide

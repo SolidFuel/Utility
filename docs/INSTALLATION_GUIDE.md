@@ -55,8 +55,8 @@ need superuser privileges to do so.
 ## MacOS
 
 ### Installer
-A dmg style installer is provided that works for both intel and arm architectures.
+A pkg style installer is provided that works for both intel and arm architectures.
 All version from 10.15 to 14.1 are supported.
 
-Download the file `solidUtility_VX.X.X_macos-universal.dmg`. Double click on the file
+Download the file `solidUtility_VX.X.X_macos-universal.pkg`. Double click on the file
 and follow the directions given.
