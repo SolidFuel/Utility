@@ -55,50 +55,68 @@ jobs:
       run: |
         curl -L "https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_macOS.zip" -o pluginval.zip
         unzip pluginval
-        pluginval.app/Contents/MacOS/pluginval --strictness-level 5 --validate-in-process --output-dir "." \
+        pluginval.app/Contents/MacOS/pluginval --strictness-level 10 \
+          --validate-in-process --output-dir "." \
           "${{env.SF_VST3_BUILD_PATH}}/${{env.SF_ARTIFACT_PATH}}/${{env.SF_BUILD_FILE}}" || exit 1
 
-    - name: Import Certificates (macOS)
-      uses: apple-actions/import-codesign-certs@v2 # only exists as a tag right now
+    - name: Import App Certificates
+      uses: apple-actions/import-codesign-certs@v2
       with:
         p12-file-base64: ${{ secrets.SIGN_APP_CERT }}
         p12-password: ${{ secrets.SIGN_APP_PASSWORD }}
 
+    - name: Import Install Certificates
+      uses: apple-actions/import-codesign-certs@v2
+      with:
+        p12-file-base64: ${{ secrets.SIGN_INSTALL_CERT }}
+        p12-password: ${{ secrets.SIGN_APP_PASSWORD }}
+  
+
     - name : Codesign plugin
       working-directory : ${{github.workspace}}/build
       run : |
+        BINARY="${{env.SF_VST3_BUILD_PATH}}/${{env.SF_ARTIFACT_PATH}}/${{env.SF_BUILD_FILE}}/Contents/MacOS/${{env.SF_PROJECT}}"
+        codesign --force -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" \
+          -v "${BINARY}" \
+          --strict --options=runtime --timestamp
+
         codesign --force -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" \
           -v "${{env.SF_VST3_BUILD_PATH}}/${{env.SF_ARTIFACT_PATH}}/${{env.SF_BUILD_FILE}}" \
-          --deep --strict --options=runtime --timestamp
-
-    - name: Create DMG
-      id : create_dmg
-      working-directory: ${{github.workspace}}
-      run : ./scripts/build_dmg.sh
-
-    - name : Codesign DMG
+          --strict --options=runtime --timestamp
+    
+    - name : Create PKG file
+      id : create_pkg
       working-directory : ${{github.workspace}}/build
       run : |
-        echo "---Signing---"
-        codesign --force -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" \
-          -v ${{steps.create_dmg.outputs.DMG_FILE }} \
-          --strict --options=runtime --timestamp
-        echo "---Signed----"
+        sudo pkgbuild --component ${{env.SF_VST3_BUILD_PATH}}/${{env.SF_BUILD_FILE}}  \
+          --install-location /Library/Audio/Plug-Ins/VST3 \
+          --sign "${{secrets.DEVELOPER_ID_INSTALLER}}" \
+          ./${{env.SF_PROJECT}}-unsigned.pkg
 
+        sudo productbuild --package ./${{env.SF_PROJECT}}-unsigned.pkg \
+              --sign "${{secrets.DEVELOPER_ID_INSTALLER}}" \
+            ./${{env.SF_OUTPUT_STEM}}-universal.pkg
+
+        echo "PKGNAME=./${{env.SF_OUTPUT_STEM}}-universal.pkg" >> "$GITHUB_OUT"
+        
+
+    - name : Notarize PKG
+      working-directory : ${{github.workspace}}/build
+      run : |
         echo "---Notarize---"
-        xcrun notarytool submit "${{steps.create_dmg.outputs.DMG_FILE }}" \
+        xcrun notarytool submit "${{steps.create_pkg.outputs.PKGNAME }}" \
           --apple-id "${{ secrets.NOTARIZATION_USERNAME }}" \
           --password "${{ secrets.NOTARIZATION_PASSWORD }}" \
           --team-id "${{ secrets.TEAM_ID }}" --wait
         echo "---Notarized---"
 
         echo "---Staple---"
-        xcrun stapler staple "${{steps.create_dmg.outputs.DMG_FILE }}"
+        xcrun stapler staple "${{steps.create_pkg.outputs.PKGNAME }}"
         echo "---Stapled---"
 
     - name: Upload plugin
       uses: actions/upload-artifact@v3
       with:
-        name: ${{steps.create_dmg.outputs.DMG_FILE }}
-        path: ${{github.workspace}}/build/${{steps.create_dmg.outputs.DMG_FILE }}
+        name: ${{steps.create_pkg.outputs.PKGNAME }}
+        path: ${{github.workspace}}/build/${{steps.create_pkg.outputs.PKGNAME }}
 
