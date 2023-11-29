@@ -107,7 +107,7 @@ jobs:
               --sign "${{secrets.DEVELOPER_ID_INSTALLER}}" \
             ./${{env.SF_OUTPUT_STEM}}-universal.pkg
 
-        echo "PKGNAME=./${{env.SF_OUTPUT_STEM}}-universal.pkg" >> "$GITHUB_OUTPUT"
+        echo "PKGNAME=${{env.SF_OUTPUT_STEM}}-universal.pkg" >> "$GITHUB_OUTPUT"
         
 
     - name : Notarize PKG
