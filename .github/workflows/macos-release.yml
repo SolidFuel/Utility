@@ -99,7 +99,7 @@ jobs:
       working-directory : ${{github.workspace}}/build
       run : |
         pkgbuild --component ${{env.SF_VST3_BUILD_PATH}}/${{env.SF_BUILD_FILE}}  \
-          --install-location /Library/Audio/Plug-Ins/VST3 \
+          --install-location /Library/Audio/Plug-Ins/VST3/SolidFuel \
           --sign "${{secrets.DEVELOPER_ID_INSTALLER}}" \
           ./${{env.SF_PROJECT}}-unsigned.pkg
 
