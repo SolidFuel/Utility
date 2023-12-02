@@ -10,32 +10,31 @@
  * in the root directory.
  ****/
 
-#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#include <doctest/doctest.h>
+#pragma once
+
 #include <juce_core/juce_core.h>
 
-template <typename T>
-bool checkMin(T first, T second)
-{
-    return juce::exactlyEqual(juce::jmin(first, second), std::min(first, second));
+#if !defined(SF_DEBUG)
+ #define SF_DEBUG 0
+#endif
+
+#include <string>
+
+template<typename ...Args>
+std::string concat(Args&&... args) {
+    std::stringstream ss;
+
+    (ss << ... << args);
+
+    return ss.str();
+
 }
 
-template <typename T>
-bool checkMax(T first, T second)
-{
-    return juce::exactlyEqual(juce::jmax(first, second), std::max(first, second));
-}
 
-TEST_CASE("Test that juce::jmin works")
-{
-    REQUIRE(checkMin(5, 7));
-    REQUIRE(checkMin(12, 3));
-    REQUIRE(checkMin(5.31, 5.42));
-}
 
-TEST_CASE("Test that juce::jmax works")
-{
-    REQUIRE(checkMax(5, 7));
-    REQUIRE(checkMax(12, 3));
-    REQUIRE(checkMax(5.31, 5.42));
-}
+#if SF_DEBUG
+    extern std::unique_ptr<juce::FileLogger> dbgout;
+    #define DBGLOG(...) dbgout->logMessage(concat(__VA_ARGS__));
+#else
+    #define DBGLOG(...)
+#endif

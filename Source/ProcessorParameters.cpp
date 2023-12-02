@@ -1,5 +1,5 @@
 /****
- * Chantool - Versatile VST3 Channel Utility for Digital Audio Workstations 
+ * solidUtility - Versatile VST3 Channel Utility for Digital Audio Workstations 
  * Copyright (C) 2023 Solid Fuel
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the 
@@ -14,7 +14,7 @@
 #include "ProcessorParameters.hpp"
 
 const juce::StringArray mode_choices = {{
-    "Mono", "Stero", "Mid/Side", "LeftCopy", "RightCopy"
+    "Mono", "Stero", "Mid/Side", "LeftCopy", "RightCopy", "MidCopy", "SideCopy"
 }};
 
 const juce::StringArray mute_choices = {{

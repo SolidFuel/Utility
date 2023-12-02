@@ -1,5 +1,5 @@
 /****
- * Chantool - Versatile VST3 Channel Utility for Digital Audio Workstations 
+ * solidUtility - Versatile VST3 Channel Utility for Digital Audio Workstations 
  * Copyright (C) 2023 Solid Fuel
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the 
@@ -13,18 +13,19 @@
 #pragma once
 
 #include "../ProcessorParameters.hpp"
-#include "../ChanTool.hpp"
+#include "../Debug.hpp"
 #include "../ValueListener.hpp"
-#include "BoxComponent.hpp"
-#include "ButtonGroupComponent.hpp"
 #include "StereoModeComponent.hpp"
 #include "MuteModeComponent.hpp"
 
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <juce_audio_processors/juce_audio_processors.h>
+#include <solidfuel/solidfuel.hpp>
 
 using  SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
 using  ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
+
+using namespace solidfuel;
 
 class MainComponent : public juce::Component {
 

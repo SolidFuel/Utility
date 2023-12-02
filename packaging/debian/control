@@ -1,0 +1,9 @@
+Package: ${SF_PROJ_LOWER}
+Version: ${SF_VERSION}
+Section: sound
+Priority: optional
+Architecture: amd64
+Maintainer: SolidFuel <solidfuelplugins@gmail.com>
+Description: VST3 plugin channel utility.
+ Versatile VST3 format utility plugin for channel manipulation
+ and automation. Usable in any software that supports the VST3 format.

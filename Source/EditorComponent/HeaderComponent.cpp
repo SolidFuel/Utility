@@ -1,5 +1,5 @@
 /****
- * Chantool - Versatile VST3 Channel Utility for Digital Audio Workstations 
+ * solidUtility - Versatile VST3 Channel Utility for Digital Audio Workstations 
  * Copyright (C) 2023 Solid Fuel
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the 
@@ -34,7 +34,10 @@ const std::string about_text = "      " + PLUGIN_NAME_UPPER + "    \n"
     "Source Code : https://github.com/juce-framework/JUCE\n"
     ;
 
-HeaderComponent::HeaderComponent() {
+HeaderComponent::HeaderComponent(ProcessorParameters *params) {
+
+    tooltip_value_.referTo(params->show_tooltips);
+
     nameLabel_.setText (JucePlugin_Name, juce::dontSendNotification);
     nameLabel_.setFont(juce::Font(32.0f, juce::Font::bold));
     nameLabel_.setJustificationType(juce::Justification::centred);
@@ -43,7 +46,7 @@ HeaderComponent::HeaderComponent() {
     menuButton_.setButtonText("menu");
     menuButton_.changeWidthToFitText();
     menuButton_.setTriggeredOnMouseDown(true);
-    menuButton_.onClick = [this]() { showMenu_(); };
+    menuButton_.onClick = [this]() { show_menu_(); };
 
     addAndMakeVisible(menuButton_);
 
@@ -55,19 +58,21 @@ void HeaderComponent::paint (juce::Graphics& g) {
 }
 
 //==============================================================================
-void HeaderComponent::showMenu_() {
+void HeaderComponent::show_menu_() {
     menuButton_.setEnabled(false);
 
     juce::PopupMenu menu;
 
+    menu.addItem(2, "Tooltips", true, bool(tooltip_value_.getValue()));
     menu.addItem(1, "About");
 
-    menu.showMenuAsync({}, [this](int r) { processMenu_(r); });
+    menu.showMenuAsync({}, [this](int r) { process_menu_(r); });
+
 
 }
 
 //==============================================================================
-void HeaderComponent::showAboutBox_() {
+void HeaderComponent::show_about_box_() {
     auto options = juce::DialogWindow::LaunchOptions();
 
     auto* te = new juce::TextEditor();
@@ -85,11 +90,24 @@ void HeaderComponent::showAboutBox_() {
 
 }
 
+
 //==============================================================================
-void HeaderComponent::processMenu_(int results) {
+void HeaderComponent::toggle_tooltips_() {
+    auto new_value = ! bool(tooltip_value_.getValue());
+    tooltip_value_.setValue(new_value);
+
+    // set up tick mark here.
+}
+
+
+//==============================================================================
+void HeaderComponent::process_menu_(int results) {
     switch (results) {
         case 1 :
-            showAboutBox_();
+            show_about_box_();
+            break;
+        case 2 :
+            toggle_tooltips_();
             break;
         default :
             break;
@@ -108,6 +126,6 @@ void HeaderComponent::resized() {
     menuButton_.changeWidthToFitText(int(menu_height));
     menuButton_.setTopLeftPosition({MARGIN, int(menu_height / 2.0f)});
 
-    nameLabel_.setSize(200, component_height-MARGIN);
+    nameLabel_.setSize(220, component_height-MARGIN);
     nameLabel_.setCentreRelative(0.5f, 0.5f);
 }

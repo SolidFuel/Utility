@@ -1,5 +1,5 @@
 /****
- * Chantool - Versatile VST3 Channel Utility for Digital Audio Workstations 
+ * solidUtility - Versatile VST3 Channel Utility for Digital Audio Workstations 
  * Copyright (C) 2023 Solid Fuel
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the 
@@ -17,8 +17,10 @@
 #include <memory>
  
 
+// If adding to this, be sure mode_choices in ProcessorParameters.cpp stay
+// in synch.
 enum StereoMode {
-    Mono, Stereo, MidSide, LeftCopy, RightCopy
+    Mono, Stereo, MidSide, LeftCopy, RightCopy, MidCopy, SideCopy
 };
 
 enum MuteMode {
@@ -35,6 +37,8 @@ struct ProcessorParameters  {
     juce::AudioParameterBool* invertR;
 
     std::unique_ptr<juce::AudioProcessorValueTreeState> apvts;
+
+    juce::Value show_tooltips{juce::var{true}};
 
     ProcessorParameters(juce::AudioProcessor& processor); 
 };

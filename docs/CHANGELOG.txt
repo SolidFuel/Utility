@@ -1,0 +1,22 @@
+VERSION 0.3.0 2023-12-02
+
+* New Name : Change to "solidUtility"
+* Support for MacOS from 10.15 to 14.1
+* Added installers for all platforms
+    + '.pkg' installer for MacOS - Signed and notarized
+    + '.exe' installer for Windows
+    + '.deb' package for Linux
+* Added modes for working with mid and side
+    + You can now isolate the mid or side channel
+* Add ability to control tooltips
+* Greater stability through improved validation tests
+* New Install Guide available for all platform
+* Updated User Manual 
+
+VERSION 0.2.0 2023-11-15
+
+* Change to SolidFuel Organization
+* Add Mute Capabilities
+* Add Mid/SIde encoding/decoding
+* Add information on building to the README
+

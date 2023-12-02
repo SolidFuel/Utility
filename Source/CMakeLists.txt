@@ -1,7 +1,6 @@
+set (BaseTargetName "${SF_PROJECT}")
 
-set (BaseTargetName ChanTool)
-
-add_compile_definitions("$<$<CONFIG:Release>:STARP_DEBUG=0>")
+add_compile_definitions("$<$<CONFIG:Release>:SF_DEBUG=0>")
 
 include(GetGitRevisionDescription)
 
@@ -15,18 +14,23 @@ message("GIT_REF = " ${GIT_REF})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-string(TOUPPER "${CMAKE_BUILD_TYPE}" chantool_build_type)
-if(${chantool_build_type} STREQUAL "RELEASE")
-        set(PLUGIN_PRODUCT_NAME "ChanTool")
-        set(PLUGIN_PRODUCT_CODE "Chnt" )
+string(TOUPPER "${CMAKE_BUILD_TYPE}" upper_build_type)
+if(${upper_build_type} STREQUAL "RELEASE")
+        set(PLUGIN_PRODUCT_NAME "${SF_PROJECT}")
+        set(PLUGIN_PRODUCT_CODE "Sfut" )
 else()
-        set(PLUGIN_PRODUCT_NAME "ChanToolDev")
-        set(PLUGIN_PRODUCT_CODE "ChnD")
+        set(PLUGIN_PRODUCT_NAME "${SF_PROJECT}Dev")
+        set(PLUGIN_PRODUCT_CODE "SfuD")
 endif()
 
 string(TOUPPER "${PLUGIN_PRODUCT_NAME}" PLUGIN_NAME_UPPER)
 
 configure_file(version.hpp.in version.hpp @ONLY)
+
+set(VST3_manifest TRUE)
+#if(APPLE)
+#        set(VST_manifest FALSE)
+#endif()
 
 juce_add_plugin("${BaseTargetName}"
         # VERSION ...                               # Set this if the plugin version is different to the project version
@@ -42,20 +46,17 @@ juce_add_plugin("${BaseTargetName}"
         PLUGIN_MANUFACTURER_CODE "Sdfl"
         PLUGIN_CODE ${PLUGIN_PRODUCT_CODE}
         FORMATS VST3
+        VST3_AUTO_MANIFEST ${VST3_manifest}
         PRODUCT_NAME ${PLUGIN_PRODUCT_NAME})
 
 target_sources(${BaseTargetName} PRIVATE
-        ChanTool.hpp
+        Debug.hpp
         Glider.hpp
-        ChanToolProcessor.hpp
+        PluginProcessor.hpp
         ValueListener.hpp
         Processor/setup.cpp Processor/processing.cpp
         ProcessorParameters.hpp ProcessorParameters.cpp
-        ChanToolEditor.hpp ChanToolEditor.cpp
-        EditorComponent/BoxComponent.hpp
-        EditorComponent/BoxComponent.cpp
-        EditorComponent/ButtonGroupComponent.hpp
-        EditorComponent/ButtonGroupComponent.cpp
+        PluginEditor.hpp PluginEditor.cpp
         EditorComponent/StereoModeComponent.hpp
         EditorComponent/StereoModeComponent.cpp
         EditorComponent/MuteModeComponent.hpp
@@ -74,8 +75,10 @@ target_compile_definitions(${BaseTargetName}
         JUCE_DISPLAY_SPLASH_SCREEN=0
         JUCE_VST3_CAN_REPLACE_VST2=0)
 
+CPMAddPackage("gh:SolidFuel/CommonComponents#v0.3.1")
+
 target_link_libraries(${BaseTargetName} PRIVATE
-        shared_plugin_helpers
+        solidfuel
         juce_recommended_config_flags
         juce_recommended_lto_flags
         juce_recommended_warning_flags)

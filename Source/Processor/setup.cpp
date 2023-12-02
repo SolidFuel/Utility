@@ -1,5 +1,5 @@
 /****
- * Chantool - Versatile VST3 Channel Utility for Digital Audio Workstations 
+ * solidUtility - Versatile VST3 Channel Utility for Digital Audio Workstations 
  * Copyright (C) 2023 Solid Fuel
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the 
@@ -11,29 +11,47 @@
  ****/
 
 
-#include "../ChanToolProcessor.hpp"
-#include "../ChanToolEditor.hpp"
-#include "../ChanTool.hpp"
+#include "../PluginProcessor.hpp"
+#include "../PluginEditor.hpp"
+#include "../Debug.hpp"
 
-#if CHANTOOL_DEBUG
+#if SF_DEBUG
     std::unique_ptr<juce::FileLogger> dbgout = 
-        std::unique_ptr<juce::FileLogger>(juce::FileLogger::createDateStampedLogger("ChanTool", "ChanToolLogFile", ".txt", "--------V1--------"));
+        std::unique_ptr<juce::FileLogger>
+            (juce::FileLogger::createDateStampedLogger(JucePlugin_Name, "LogFile", ".txt", "--------V1--------"));
 #endif
 
 
 //============================================================================
-ChanToolProcessor::ChanToolProcessor() : parameters_(*this){
+PluginProcessor::PluginProcessor() : 
+    AudioProcessor(BusesProperties()
+            .withInput("Input", juce::AudioChannelSet::stereo(), true)
+            .withOutput("Output", juce::AudioChannelSet::stereo(), true)),
+    parameters_(*this)
+{
+
 }
 
+bool PluginProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const {
+    if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo() ||
+        layouts.getMainInputChannelSet() != juce::AudioChannelSet::stereo()) {
+
+        return false;
+    }
+
+    return true;
+}
+
+
 //============================================================================
-juce::AudioProcessorEditor* ChanToolProcessor::createEditor() {
+juce::AudioProcessorEditor* PluginProcessor::createEditor() {
 
     DBGLOG("------- Setting Up Editor -----------");
-    return new ChanToolEditor (*this);
+    return new PluginEditor (*this);
 }
 
 //============================================================================
-void ChanToolProcessor::force_gliders() {
+void PluginProcessor::force_gliders() {
 
     const MuteMode mute_mode = MuteMode(parameters_.mute->getIndex());
     left_mute_glider_.forceValue(mute_mode == MuteBoth || mute_mode == MuteLeft);
@@ -47,12 +65,13 @@ void ChanToolProcessor::force_gliders() {
     
     const StereoMode mode = StereoMode(parameters_.stereo_mode->getIndex());
     left_left_glider_.forceValue(mode == LeftCopy || mode == Stereo);
-    left_mid_glider_.forceValue(mode == MidSide || mode == Mono);
+    left_mid_glider_.forceValue(mode == MidSide || mode == Mono || mode == MidCopy);
+    left_side_glider_.forceValue(mode == SideCopy);
     left_right_glider_.forceValue(mode == RightCopy);
 
     right_right_glider_.forceValue(mode == RightCopy || mode == Stereo);
-    right_mid_glider_.forceValue(mode == Mono);
-    right_side_glider_.forceValue(mode == MidSide);
+    right_mid_glider_.forceValue(mode == Mono || mode == MidCopy);
+    right_side_glider_.forceValue(mode == MidSide || mode == SideCopy);
     right_left_glider_.forceValue(mode == LeftCopy);
 
 }
@@ -65,7 +84,7 @@ void ChanToolProcessor::force_gliders() {
 constexpr int CURRENT_STATE_VERSION = 1;
 const juce::String XML_TOP_TAG = "ChanTool-Preset";
 
-void ChanToolProcessor::getStateInformation(juce::MemoryBlock& destData) {
+void PluginProcessor::getStateInformation(juce::MemoryBlock& destData) {
 
     DBGLOG("GET STATE called");
 
@@ -77,10 +96,14 @@ void ChanToolProcessor::getStateInformation(juce::MemoryBlock& destData) {
 
     //--------------------------------------
     auto state = parameters_.apvts->copyState();
-    auto apvts_xml =state.createXml();
+    auto apvts_xml = state.createXml();
     // createXml gives back a unqiue_ptr. So we need to unwrap it.
     xml->addChildElement(apvts_xml.release());
     DBGLOG("  Wrote ValueTree")
+
+    //--------------------------------------
+    auto child = xml->createNewChildElement("GUI-Parameters");
+    child->setAttribute("show_tooltips", bool(parameters_.show_tooltips.getValue()));
 
     //--------------------------------------
     DBGLOG("XML out =", xml->toString());
@@ -90,9 +113,9 @@ void ChanToolProcessor::getStateInformation(juce::MemoryBlock& destData) {
 }
 
 //============================================================================
-void ChanToolProcessor::parseCurrentXml(const juce::XmlElement * elem) {
+void PluginProcessor::parseCurrentXml(const juce::XmlElement * elem) {
 
-    DBGLOG("ChanToolProcessor::parseCurrentXml called")
+    DBGLOG("PluginProcessor::parseCurrentXml called")
 
     auto *child = elem->getChildByName(parameters_.apvts->state.getType());
     if (child) {
@@ -104,17 +127,25 @@ void ChanToolProcessor::parseCurrentXml(const juce::XmlElement * elem) {
         //     running. Don't we want to glide to the new values ?
         //
         force_gliders();
+    }
+    DBGLOG(" -- apvts  done")
 
+    child = elem->getChildByName("GUI-Parameters");
+    if (child) {
+        parameters_.show_tooltips = child->getBoolAttribute("show_tooltips", 
+            bool(parameters_.show_tooltips.getValue()));
     }
 
-    DBGLOG(" -- apvts  done")
+    DBGLOG(" -- others done")
+
+
 
 }
 
 //============================================================================
 // Read Serialize Parameters from the host and set our state.
 //
-void ChanToolProcessor::setStateInformation (const void* data, int sizeInBytes) {
+void PluginProcessor::setStateInformation (const void* data, int sizeInBytes) {
     DBGLOG("SET STATE called");
 
     auto xml = getXmlFromBinary(data, sizeInBytes);
@@ -142,5 +173,5 @@ void ChanToolProcessor::setStateInformation (const void* data, int sizeInBytes) 
 
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new ChanToolProcessor();
+    return new PluginProcessor();
 }

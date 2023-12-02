@@ -1,5 +1,5 @@
 /****
- * Chantool - Versatile VST3 Channel Utility for Digital Audio Workstations 
+ * solidUtility - Versatile VST3 Channel Utility for Digital Audio Workstations 
  * Copyright (C) 2023 Solid Fuel
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the 
@@ -48,11 +48,26 @@ StereoModeComponent::StereoModeComponent() {
     right_button_.onClick = [this]() { update_mode(RightCopy); };
 
     midside_button_.setButtonText ("M/S");
-    midside_button_.setConnectedEdges(Conn::ConnectedOnTop);
+    midside_button_.setConnectedEdges(Conn::ConnectedOnTop | Conn::ConnectedOnRight | Conn::ConnectedOnLeft );
     midside_button_.setClickingTogglesState(true);
     midside_button_.setRadioGroupId(MODE_GROUP_ID);
     midside_button_.setTooltip("Compute mid and side channels. Send mid to left and side to right.");
     midside_button_.onClick = [this]() { update_mode(MidSide); };
+
+    mid_button_.setButtonText ("M");
+    mid_button_.setConnectedEdges(Conn::ConnectedOnTop | Conn::ConnectedOnRight);
+    mid_button_.setClickingTogglesState(true);
+    mid_button_.setRadioGroupId(MODE_GROUP_ID);
+    mid_button_.setTooltip("Send the mid channel to both output channels");
+    mid_button_.onClick = [this]() { update_mode(MidCopy); };
+
+    side_button_.setButtonText ("S");
+    side_button_.setConnectedEdges(Conn::ConnectedOnTop | Conn::ConnectedOnLeft);
+    side_button_.setClickingTogglesState(true);
+    side_button_.setRadioGroupId(MODE_GROUP_ID);
+    side_button_.setTooltip("Send the side channel to both output channels");
+    side_button_.onClick = [this]() { update_mode(SideCopy); };
+
 
 
     stereo_mode_listener_.onChange = [this](juce::Value &v) {
@@ -73,6 +88,13 @@ StereoModeComponent::StereoModeComponent() {
             case RightCopy :
                 right_button_.setToggleState(true, juce::sendNotification);
                 break;
+            case MidCopy :
+                mid_button_.setToggleState(true, juce::sendNotification);
+                break;
+            case SideCopy :
+                side_button_.setToggleState(true, juce::sendNotification);
+                break;
+
             default :
                 jassertfalse;
         }
@@ -88,6 +110,8 @@ StereoModeComponent::StereoModeComponent() {
     addAndMakeVisible(midside_button_);
     addAndMakeVisible(left_button_);
     addAndMakeVisible(right_button_);
+    addAndMakeVisible(mid_button_);
+    addAndMakeVisible(side_button_);
 
 }
 
@@ -132,7 +156,10 @@ void StereoModeComponent::resized()
     grid.items.add(GridItem(stereo_button_).withArea(Span(1), Span(1)));
     grid.items.add(GridItem(right_button_).withArea(Span(1), Span(1)));
 
-    grid.items.add(GridItem(midside_button_).withArea(Span(1), Span(3)));
+    grid.items.add(GridItem(mid_button_).withArea(Span(1), Span(1)));
+    grid.items.add(GridItem(midside_button_).withArea(Span(1), Span(1)));
+    grid.items.add(GridItem(side_button_).withArea(Span(1), Span(1)));
+
 
     auto bounds = getLocalBounds();
     bounds.removeFromTop(8);

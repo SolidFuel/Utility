@@ -12,33 +12,34 @@
 
 #pragma once
 
-#include "../ProcessorParameters.hpp"
-#include "../ValueListener.hpp"
-#include <juce_gui_basics/juce_gui_basics.h>
+#include "PluginProcessor.hpp"
 
+#include "EditorComponent/MainComponent.hpp"
+#include "EditorComponent/HeaderComponent.hpp"
 
-class HeaderComponent : public juce::Component {
+#include <memory>
 
+class PluginEditor : public juce::AudioProcessorEditor
+{
 public:
+    explicit PluginEditor(PluginProcessor&);
 
-    HeaderComponent(ProcessorParameters *params);
+private:
+
+    PluginProcessor& proc_;
+
+    juce::Value tooltip_value_{juce::var{true}};
+    ValueListener tooltip_listener_;
+    std::unique_ptr<juce::TooltipWindow> tooltip_window_;
 
     void paint(juce::Graphics&) override;
     void resized() override;
 
-private:
-    juce::Label nameLabel_;
+    void set_tooltips(juce::Value &v);
 
-    juce::TextButton menuButton_;
+    HeaderComponent header_component_;
+    MainComponent main_component_;
 
-    juce::Value tooltip_value_{juce::var{true}};
 
-    void show_menu_();
-    void process_menu_(int results);
-    void show_about_box_();
-    void toggle_tooltips_();
-
-//==========================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(HeaderComponent)
-
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginEditor)
 };
