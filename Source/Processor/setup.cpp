@@ -74,6 +74,9 @@ void PluginProcessor::force_gliders() {
     right_side_glider_.forceValue(mode == MidSide || mode == SideCopy);
     right_left_glider_.forceValue(mode == LeftCopy);
 
+    pan_glider_.restart(0.5, parameters_.pan->get(), GLIDER_TIMING);
+    gain_glider_.restart(0.0, parameters_.gain->get(), GLIDER_TIMING);
+
 }
 
 

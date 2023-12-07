@@ -49,9 +49,25 @@ ProcessorParameters::ProcessorParameters(juce::AudioProcessor& processor) {
     dc_offset = new juce::AudioParameterBool({"dc_offset", 1}, "DC Offset", false);
     layout.add(RangedParam(dc_offset));
 
-    pan = new juce::AudioParameterFloat({"pan", 1}, "Pan", 0.f, 1.f, 0.5f);
-    layout.add(RangedParam(pan));
+    auto pan_range = juce::NormalisableRange<float>(0.f, 1.f);
 
+    auto pan_attributes = juce::AudioParameterFloatAttributes()
+        .withStringFromValueFunction([](auto value, auto) { 
+            const auto threshold = static_cast<decltype(value)>(0.5);
+            if ( juce::approximatelyEqual(value, threshold) ) {
+                return juce::String("C");
+            } else if (value > threshold) {
+                int v = int((value-threshold) * 200);
+                return juce::String(float(v), 0, false) + "R";
+            } else {
+                int v = int((threshold-value) * 200);
+                return juce::String(float(v), 0, false) + "L";
+            }
+         });
+
+    pan = new juce::AudioParameterFloat({"pan", 1}, "Pan", pan_range, 0.5f, 
+            pan_attributes);
+    layout.add(RangedParam(pan));
 
     apvts = std::unique_ptr<juce::AudioProcessorValueTreeState>(
         new juce::AudioProcessorValueTreeState(

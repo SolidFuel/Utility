@@ -73,7 +73,8 @@ void PluginProcessor::process_samples(juce::AudioBuffer<FT>& buffer) {
     right_left_glider_.go(mode == LeftCopy);
 
     // -- GAIN parameter
-    float gain = std::pow(10.f, parameters_.gain->get() / 20.f);
+    gain_glider_.change_target( parameters_.gain->get());
+
 
     // INVERTL parameter
     leftGlider_.go(parameters_.invertL->get()); 
@@ -96,8 +97,8 @@ void PluginProcessor::process_samples(juce::AudioBuffer<FT>& buffer) {
     // PAN parameter
     // Compensated 3 db pan law
     const auto pan = parameters_.pan->get();
-    float pan_left = std::sin(PIf * (1.0f - pan) / 2.0f) * float(sqrt2);
-    float pan_right = std::sin(PIf * pan / 2.0f) * float(sqrt2);
+    pan_glider_.change_target(pan);
+
 
 
     // --- LOOP Start
@@ -154,12 +155,18 @@ void PluginProcessor::process_samples(juce::AudioBuffer<FT>& buffer) {
         out1 = out1 *(1.f-swap_value) + swap_temp * swap_value;
 
         // pan
+        auto pan_value = pan_glider_.nextValue();
+        float pan_left = std::sin(PIf * (1.0f - pan_value) / 2.0f) * float(sqrt2);
+        float pan_right = std::sin(PIf * pan_value / 2.0f) * float(sqrt2);
+
         out0 = out0 * pan_left;
         out1 = out1 * pan_right;
 
         // gain
-        out0 = gain * out0;
-        out1 = gain * out1;
+        float gain_value = std::pow(10.f, gain_glider_.nextValue() / 20.f);
+
+        out0 = gain_value * out0;
+        out1 = gain_value * out1;
 
         // mute
         auto left_mute_value = left_mute_glider_.nextValue();

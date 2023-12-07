@@ -73,14 +73,23 @@ private:
     // -- Left box itself
     BoxComponent left_box_{BCO::Vertical};
 
-    //++++++ Gain box
+    //++++++ Right box
 
+    // Gain
     juce::Slider gain_slider_;
     std::unique_ptr<SliderAttachment> gainAttachment;
 
     BoxComponent gain_box_{BCO::Vertical, true};
 
-    //++++++ 
+    // Pan
+    juce::Slider pan_slider_;
+    std::unique_ptr<SliderAttachment> panAttachment;
+
+    BoxComponent pan_box_{BCO::Vertical, false};
+
+    // -- Right box itself
+
+    BoxComponent right_box_{BCO::Vertical};
 
 
     // ===================================================

@@ -88,6 +88,9 @@ private:
     
     BooleanGlider<float> swapGlider_ {0.f, 1.f, GLIDER_TIMING};
 
+    Glider<float> gain_glider_{0.0, 0.0, GLIDER_TIMING};
+    Glider<float> pan_glider_{0.5, 0.5, GLIDER_TIMING};
+
     void parseCurrentXml(const juce::XmlElement * elem);
 
     // For the high pass filter used to remove DC offset

@@ -64,7 +64,6 @@
 
     left_box_.add(offset_box_, 5, 0);
 
-
     left_box_.setMargin(0, 5);
     left_box_.setGap(5);
 
@@ -80,9 +79,21 @@
     gain_box_.setText("Gain");
     gain_box_.setMargin({0, 6, 0, 0});
 
+    right_box_.add(gain_box_);
+
+    pan_slider_.setTooltip("Pan output left/right");
+    // make the textbox read-only
+    pan_slider_.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxLeft, true, 60, 20);
+    panAttachment.reset (new SliderAttachment (*apvts, "pan", pan_slider_));
+    pan_box_.add(pan_slider_);
+
+    right_box_.add(pan_box_);
+
+    right_box_.setMargin({0, 6, 0, 0});
+
     //==============================================
     addAndMakeVisible(left_box_);
-    addAndMakeVisible(gain_box_);
+    addAndMakeVisible(right_box_);
 
  }
 
@@ -100,6 +111,7 @@ void MainComponent::resized()
  
     using Track = juce::Grid::TrackInfo;
     using Fr = juce::Grid::Fr;
+    using Px = juce::Grid::Px;
     using GridItem = juce::GridItem;
 
     grid.alignItems = juce::Grid::AlignItems::start;
@@ -122,8 +134,12 @@ void MainComponent::resized()
         };
     grid.items.add(GridItem(left_box_).withMargin({0, 5, 7, 0 }));
 
-    gain_box_.layoutTemplate = { Track(Fr(1))};
-    grid.items.add(GridItem(gain_box_).withMargin({5, 5, 10, 2 }));
+    gain_box_.layoutTemplate = { Track(Fr(1)) };
+    pan_box_.layoutTemplate = { Track(Fr(1)) };
+
+    right_box_.layoutTemplate = { Track(Fr(1)), Track(Px(35)) };
+
+    grid.items.add(GridItem(right_box_).withMargin({5, 5, 10, 2 }));
 
 
     grid.performLayout (getLocalBounds());

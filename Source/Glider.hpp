@@ -12,6 +12,11 @@
 
 #pragma once
 
+template <typename T>
+bool approxEqual(T a, T b, T eps) {
+    return std::abs(a-b) <= std::max(std::abs(a), std::abs(b)) * eps;
+}
+
 /**
  * Glider
  * Simple linear ramping class that returns a sequence of numbers that
@@ -25,9 +30,9 @@ public :
     /**
      * Default Constructor
      * 
-     * restart() will need to called before using the object.
+     * restart() will need to be called before using the object.
     */
-    Glider() : samples_(0) {}
+    Glider() : samples_(0), samples_left_(0) {}
 
     /**
      * @param startValue
@@ -41,17 +46,26 @@ public :
 
     void restart(FT startValue, FT targetValue, long samples) {
         samples_ = samples;
+        samples_left_ = samples;
         delta_ = (targetValue - startValue) / samples;
         latestValue_ = startValue;
+        target_value_ = targetValue;
+    }
+
+    // may need to allow passing in the epsilon in the future.
+    void change_target(FT targetValue) {
+        if (! approxEqual(targetValue, target_value_.get(), FT(0.00001))) {
+            restart(latestValue_.get(), targetValue, samples_.get());
+        }
     }
 
     bool in_progress() const {
-        return samples_.get() > 0;
+        return samples_left_.get() > 0;
     }
 
     FT nextValue() { 
         latestValue_ = latestValue_.get() + delta_.get() * in_progress();
-        samples_ -= in_progress();
+        samples_left_ -= in_progress();
         return latestValue_.get();
     }
 
@@ -59,7 +73,7 @@ public :
      * Stop the sequence. The Glider will continue to return
      * the same value until reset() is called.
     */
-    void stop() { samples_ = 0; }
+    void stop() { samples_left_ = 0; }
 
     /**
      * Stop the sequence and set the Glider's value.
@@ -75,11 +89,14 @@ public :
 
 private :
     juce::Atomic<long> samples_;
+    juce::Atomic<long> samples_left_;
+
     juce::Atomic<FT> delta_;
     juce::Atomic<FT> latestValue_;
+    juce::Atomic<FT> target_value_;
 };
 
-
+//===========================================================================
 template <class FT> class BooleanGlider {
 public:
     BooleanGlider() {
