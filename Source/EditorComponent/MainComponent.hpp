@@ -63,6 +63,13 @@ private:
     // -- Mute
     MuteModeComponent mute_mode_;
 
+    // -- DC Offset
+    juce::ToggleButton offset_button_;
+    std::unique_ptr<ButtonAttachment> offsetAttachment;
+
+    BoxComponent offset_box_{BCO::Vertical, true};
+
+
     // -- Left box itself
     BoxComponent left_box_{BCO::Vertical};
 

@@ -35,6 +35,7 @@ struct ProcessorParameters  {
     juce::AudioParameterBool* swap;
     juce::AudioParameterBool* invertL;
     juce::AudioParameterBool* invertR;
+    juce::AudioParameterBool* dc_offset;
 
     std::unique_ptr<juce::AudioProcessorValueTreeState> apvts;
 

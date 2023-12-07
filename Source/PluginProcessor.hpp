@@ -90,11 +90,25 @@ private:
 
     void parseCurrentXml(const juce::XmlElement * elem);
 
+    // For the high pass filter used to remove DC offset
+
+    // Filter constant
+    // alpha will be computed in the prepareToPlay()
+    // function since it is based on sample rate.
+    double alpha = 1.00;
+    // The last values we computed to remove offset
+    double last_left_value = 0.0;
+    double last_right_value = 0.0;
+    // The last values we saw BEFORE removing offset
+    double last_offset_left_value = 0.0;
+    double last_offset_right_value = 0.0;
+
     // in processing.cpp
     template <class FT> void process_samples(juce::AudioBuffer<FT>&);
 
     // in setup.cpp
     void force_gliders();
+
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginProcessor)

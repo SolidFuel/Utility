@@ -57,6 +57,14 @@ Clicking on an active button will turn it off.
 - **Left** : (Labelled 'L') Mute the left output.
 - **Right** : (Labelled 'R' ) Mute the right output.
 
+### DC Offset
+
+When active, filters the incoming signal to remove any DC (0 Hz) component.
+
+DC removal is done via a High Pass Filter with a cut-off frequency below the
+audible limit. This means that it can also be used to help reduce inaudible
+low-frequency "rumble" that can use up head room in the mix.
+
 ### Gain
 
 The gain knob sets the overall gain of the output.
@@ -68,8 +76,9 @@ You can also click in the text box and type in a specific value.
 
 ## Signal Flow
 
-The signal flows through the controls in the following order (mostly top-to-bottom):
+The signal flows through the controls in the following order:
 
+- DC Offset
 - Channel Mode Selector
 - Swap
 - Invert
@@ -85,6 +94,7 @@ to the host and which control on the UI it corresponds to.
 
 |Parameter Name|UI Control|
 |---|---|
+|DC Offset  | The DC Offset toggle button |
 |Gain       | The Gain knob|
 |InvertL    | The "Left" checkbox in the Invert group|
 |InvertR    | The "Right" checkbox in the Invert group|

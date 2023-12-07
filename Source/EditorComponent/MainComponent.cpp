@@ -56,6 +56,15 @@
     //==============================================
     left_box_.add(mute_mode_, 0, 10);
 
+    //==============================================
+    offset_button_.setButtonText("DC Offset");
+    offset_button_.setTooltip("Remove any DC component");
+    offsetAttachment.reset (new ButtonAttachment (*apvts, "dc_offset", offset_button_));
+    offset_box_.add(offset_button_);
+
+    left_box_.add(offset_box_, 5, 0);
+
+
     left_box_.setMargin(0, 5);
     left_box_.setGap(5);
 
@@ -103,11 +112,13 @@ void MainComponent::resized()
 
     invert_box_.layoutTemplate = { Track(Fr(1)), Track(Fr(1))};
     swap_box_.layoutTemplate = { Track(Fr(1)) };
+    offset_box_.layoutTemplate = { Track(Fr(1)) };
     left_box_.layoutTemplate =  {
         Track(Fr(30)), // Mode 
         Track(Fr(12)), // Swap
         Track(Fr(20)), // Invert
         Track(Fr(10)), // Mute
+        Track(Fr(12)), // DC Offset
         };
     grid.items.add(GridItem(left_box_).withMargin({0, 5, 7, 0 }));
 

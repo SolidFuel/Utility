@@ -15,7 +15,7 @@
 
 constexpr int WIDTH = 450;
 constexpr int HEADER_HEIGHT = 50;
-constexpr int PROPERTY_HEIGHT = 300;
+constexpr int PROPERTY_HEIGHT = 320;
 constexpr int HEIGHT = HEADER_HEIGHT + PROPERTY_HEIGHT;
 constexpr int MARGIN = 5;
 

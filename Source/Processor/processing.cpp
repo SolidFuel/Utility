@@ -17,15 +17,25 @@
 
 #include <cmath>
 
+// Frequency for the high pass filter used for
+// DC offset remove (in Hz)
+// Keep below audible range.
+constexpr double CUTOFF_FREQUENCY = 15.0;
+
+constexpr double PI = juce::MathConstants<double>::pi;
 
 #if NANCHECK
 std::unique_ptr<juce::FileLogger> nan_dbgout;
 #endif
 
 //============================================================================
-void PluginProcessor::prepareToPlay(double, int) {
+void PluginProcessor::prepareToPlay(double sampleRate, int) {
 
     force_gliders();
+
+    alpha = 1.0 / ((2.0 * PI * CUTOFF_FREQUENCY / sampleRate ) + 1.0);
+
+    DBGLOG("Alpha = ", alpha)
 
 }
 
@@ -46,7 +56,7 @@ void PluginProcessor::processBlock(juce::AudioBuffer<double>& buffer,
 template <class FT>
 void PluginProcessor::process_samples(juce::AudioBuffer<FT>& buffer) {
 
-    const FT sqrt2 = std::sqrt(FT(2.0));
+    const FT sqrt2 = juce::MathConstants<FT>::sqrt2;
     auto num_samples = buffer.getNumSamples();
 
     // ---- Stero Mode parameter
@@ -79,6 +89,9 @@ void PluginProcessor::process_samples(juce::AudioBuffer<FT>& buffer) {
     left_mute_glider_.go(mute == MuteBoth || mute == MuteLeft);
     right_mute_glider_.go(mute == MuteBoth || mute == MuteRight);
 
+    // DC Offset parameter
+    const auto dc_offset = parameters_.dc_offset->get();
+    const double local_alpha = dc_offset ? alpha : 1.0;
 
     // --- LOOP Start
     auto* channel0_data = buffer.getWritePointer(0);
@@ -86,6 +99,20 @@ void PluginProcessor::process_samples(juce::AudioBuffer<FT>& buffer) {
     for (int i = 0; i < num_samples; ++i) {
         auto in0 = channel0_data[i];
         auto in1 = channel1_data[i];
+
+        // apply DC ofset removal to the INPUT
+        double dc_temp = FT(in0);
+        in0 = static_cast<FT>( local_alpha * (last_left_value + 
+            in0 - last_offset_left_value));
+        last_offset_left_value = dc_temp;
+        last_left_value = in0; 
+
+        dc_temp = FT(in1);
+        in1 = static_cast<FT>( local_alpha * (last_right_value + 
+            in1 - last_offset_right_value));
+        last_offset_right_value = dc_temp;
+        last_right_value = in1;
+
         auto out0 = in0;
         auto out1 = in1;
 
@@ -116,9 +143,9 @@ void PluginProcessor::process_samples(juce::AudioBuffer<FT>& buffer) {
 
         // Swap the channels
         auto swap_value = swapGlider_.nextValue();
-        auto temp = out0;
+        auto swap_temp = out0;
         out0 = out0 *(1.f-swap_value) + out1 * swap_value;
-        out1 = out1 *(1.f-swap_value) + temp * swap_value;
+        out1 = out1 *(1.f-swap_value) + swap_temp * swap_value;
 
 
         // gain
