@@ -9,10 +9,6 @@ project(UnitTestRunner VERSION 0.1)
 set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
 include(CTest)
 
-#Declaring that we want 'doctest', a testing framework.
-#Instructions on how to find it would appear under CMake/finddoctest.cmake
-find_package(doctest REQUIRED)
-
 juce_add_console_app(UnitTestRunner PRODUCT_NAME "Unit Test Runner")
 
 target_sources(UnitTestRunner PRIVATE Tests.cpp)

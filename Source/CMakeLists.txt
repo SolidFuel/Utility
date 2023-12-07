@@ -28,9 +28,6 @@ string(TOUPPER "${PLUGIN_PRODUCT_NAME}" PLUGIN_NAME_UPPER)
 configure_file(version.hpp.in version.hpp @ONLY)
 
 set(VST3_manifest TRUE)
-#if(APPLE)
-#        set(VST_manifest FALSE)
-#endif()
 
 juce_add_plugin("${BaseTargetName}"
         # VERSION ...                               # Set this if the plugin version is different to the project version
@@ -53,7 +50,6 @@ target_sources(${BaseTargetName} PRIVATE
         Debug.hpp
         Glider.hpp
         PluginProcessor.hpp
-        ValueListener.hpp
         Processor/setup.cpp Processor/processing.cpp
         ProcessorParameters.hpp ProcessorParameters.cpp
         PluginEditor.hpp PluginEditor.cpp
@@ -74,8 +70,6 @@ target_compile_definitions(${BaseTargetName}
         JUCE_USE_CURL=0
         JUCE_DISPLAY_SPLASH_SCREEN=0
         JUCE_VST3_CAN_REPLACE_VST2=0)
-
-CPMAddPackage("gh:SolidFuel/CommonComponents#v0.3.1")
 
 target_link_libraries(${BaseTargetName} PRIVATE
         solidfuel

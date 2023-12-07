@@ -14,7 +14,6 @@
 
 #include "../ProcessorParameters.hpp"
 #include "../Debug.hpp"
-#include "../ValueListener.hpp"
 #include "StereoModeComponent.hpp"
 #include "MuteModeComponent.hpp"
 

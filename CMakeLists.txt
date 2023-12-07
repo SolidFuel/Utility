@@ -68,6 +68,10 @@ endif()
 #CMake/Findjuce.cmake, where you can see how JUCE is brought in/configured
 find_package(juce REQUIRED)
 
+add_subdirectory(external)
+
+add_subdirectory(common)
+
 add_subdirectory(Source)
 
 #optionally, we're also adding the unit tests:

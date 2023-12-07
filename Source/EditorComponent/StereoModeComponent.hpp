@@ -12,10 +12,14 @@
 
 #pragma once
 
-#include "../ValueListener.hpp"
 #include "../ProcessorParameters.hpp"
 
 #include <juce_gui_basics/juce_gui_basics.h>
+
+#include "solidfuel/solidfuel.hpp"
+
+using namespace solidfuel;
+
 
 class StereoModeComponent : public juce::Component {
 

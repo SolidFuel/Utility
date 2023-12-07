@@ -12,6 +12,8 @@
 
 #include "MuteModeComponent.hpp"
 
+#include "../Debug.hpp"
+
 MuteModeComponent::MuteModeComponent() {
 
     using Conn = juce::Button::ConnectedEdgeFlags;

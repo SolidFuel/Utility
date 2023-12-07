@@ -11,7 +11,7 @@
  ****/
 
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#include <doctest/doctest.h>
+#include <doctest.h>
 #include <juce_core/juce_core.h>
 
 template <typename T>

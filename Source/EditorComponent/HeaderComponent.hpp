@@ -13,9 +13,11 @@
 #pragma once
 
 #include "../ProcessorParameters.hpp"
-#include "../ValueListener.hpp"
-#include <juce_gui_basics/juce_gui_basics.h>
 
+#include <juce_gui_basics/juce_gui_basics.h>
+#include "solidfuel/solidfuel.hpp"
+
+using namespace solidfuel;
 
 class HeaderComponent : public juce::Component {
 
