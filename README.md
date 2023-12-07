@@ -2,7 +2,13 @@
 
 Versatile VST3 Channel Utility for Digital Audio Workstations.
 
-solidUtility can swap channels, mute channels, do mid-side encoding and decoding, phase invert and more!
+solidUtility can :
+- swap channels
+- mute channels
+- do mid-side encoding and decoding
+- phase invert 
+- remove DC offset
+- and more!
 
 ![Utility UI](docs/utility-ui.png)
 

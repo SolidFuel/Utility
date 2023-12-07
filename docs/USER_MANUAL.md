@@ -71,8 +71,21 @@ The gain knob sets the overall gain of the output.
 
 It can be controlled by clicking in the box and dragging up and down.
 There is fine adjustment mode available if you hold Cmd/Ctrl while dragging.
+Double clicking will set the control back to the default (0 dB)
 
 You can also click in the text box and type in a specific value.
+
+## Pan
+
+Pan the signal left and right.
+
+There is fine adjustment mode available if you hold Cmd/Ctrl while dragging.
+Double clicking will set the control back to the default (C)
+
+Note: This simply sets the relative levels of the left and right channels.
+So, if one channel has no output, this slider will not affect that.
+
+Uses a compensated 3 dB panning law.
 
 ## Signal Flow
 
@@ -82,6 +95,7 @@ The signal flows through the controls in the following order:
 - Channel Mode Selector
 - Swap
 - Invert
+- Pan
 - Gain
 - Mute
 
@@ -94,10 +108,11 @@ to the host and which control on the UI it corresponds to.
 
 |Parameter Name|UI Control|
 |---|---|
-|DC Offset  | The DC Offset toggle button |
+|DC Offset  | The DC Offset checkbox |
 |Gain       | The Gain knob|
 |InvertL    | The "Left" checkbox in the Invert group|
 |InvertR    | The "Right" checkbox in the Invert group|
 |Mute       | The Mute Selector button set|
-|Stereo Mode| The Channel Mode Selector|
-|Swap       | The Swap checkbox|
+|Pan        | Pan control |
+|Stereo Mode| The Channel Mode Selector button set|
+|Swap       | The Swap checkbox |
