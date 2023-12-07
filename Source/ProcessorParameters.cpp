@@ -49,6 +49,10 @@ ProcessorParameters::ProcessorParameters(juce::AudioProcessor& processor) {
     dc_offset = new juce::AudioParameterBool({"dc_offset", 1}, "DC Offset", false);
     layout.add(RangedParam(dc_offset));
 
+    pan = new juce::AudioParameterFloat({"pan", 1}, "Pan", 0.f, 1.f, 0.5f);
+    layout.add(RangedParam(pan));
+
+
     apvts = std::unique_ptr<juce::AudioProcessorValueTreeState>(
         new juce::AudioProcessorValueTreeState(
         processor, nullptr, "CHANNELTOOLS-PARAMETERS", std::move(layout)));

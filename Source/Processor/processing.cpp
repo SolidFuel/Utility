@@ -23,6 +23,7 @@
 constexpr double CUTOFF_FREQUENCY = 15.0;
 
 constexpr double PI = juce::MathConstants<double>::pi;
+constexpr float PIf = juce::MathConstants<float>::pi;
 
 #if NANCHECK
 std::unique_ptr<juce::FileLogger> nan_dbgout;
@@ -81,8 +82,7 @@ void PluginProcessor::process_samples(juce::AudioBuffer<FT>& buffer) {
     rightGlider_.go(parameters_.invertR->get()); 
 
     // SWAP parameter
-    auto swap = parameters_.swap->get();
-    swapGlider_.go(swap);
+    swapGlider_.go(parameters_.swap->get());
 
     // MUTE parameter
     const auto mute = MuteMode(parameters_.mute->getIndex());
@@ -92,6 +92,13 @@ void PluginProcessor::process_samples(juce::AudioBuffer<FT>& buffer) {
     // DC Offset parameter
     const auto dc_offset = parameters_.dc_offset->get();
     const double local_alpha = dc_offset ? alpha : 1.0;
+
+    // PAN parameter
+    // Compensated 3 db pan law
+    const auto pan = parameters_.pan->get();
+    float pan_left = std::sin(PIf * (1.0f - pan) / 2.0f) * float(sqrt2);
+    float pan_right = std::sin(PIf * pan / 2.0f) * float(sqrt2);
+
 
     // --- LOOP Start
     auto* channel0_data = buffer.getWritePointer(0);
@@ -118,7 +125,6 @@ void PluginProcessor::process_samples(juce::AudioBuffer<FT>& buffer) {
 
         auto mid = (out0 + out1)/sqrt2;
         auto side = (out0 - out1)/sqrt2;
-
 
         // stereo mode
         auto left_left = left_left_glider_.nextValue();
@@ -147,6 +153,9 @@ void PluginProcessor::process_samples(juce::AudioBuffer<FT>& buffer) {
         out0 = out0 *(1.f-swap_value) + out1 * swap_value;
         out1 = out1 *(1.f-swap_value) + swap_temp * swap_value;
 
+        // pan
+        out0 = out0 * pan_left;
+        out1 = out1 * pan_right;
 
         // gain
         out0 = gain * out0;
