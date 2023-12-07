@@ -62,8 +62,8 @@ jobs:
               working-directory: ${{github.workspace}}/${{env.BUILD_DIR}}
               run : |
                   Set-Location ${env:SF_VST3_BUILD_PATH}/${env:SF_ARTIFACT_PATH}
-                  $ZIPNAME="${env:SF_OUTPUT_STEM}-vst3.zip"
-                  Compress-Archive -Path ${env:SF_BUILD_FILE} `
+                  $ZIPNAME="${{github.workspace}}/${{env.BUILD_DIR}}/${{env.SF_OUTPUT_STEM}}-vst3.zip"
+                  Compress-Archive -Path ${{env.SF_BUILD_FILE}} `
                     -CompressionLevel Optimal `
                     -Destination ${ZIPNAME}     
           
