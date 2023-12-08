@@ -13,10 +13,14 @@
 #include "PluginProcessor.hpp"
 #include "PluginEditor.hpp"
 
-constexpr int WIDTH = 450;
+constexpr int GAIN_WIDTH = 300;
+constexpr int TOOL_WIDTH = 150;
+constexpr int FULL_WIDTH = GAIN_WIDTH + TOOL_WIDTH;
+
 constexpr int HEADER_HEIGHT = 50;
 constexpr int PROPERTY_HEIGHT = 320;
-constexpr int HEIGHT = HEADER_HEIGHT + PROPERTY_HEIGHT;
+constexpr int FULL_HEIGHT = HEADER_HEIGHT + PROPERTY_HEIGHT;
+
 constexpr int MARGIN = 5;
 
 
@@ -34,10 +38,17 @@ PluginEditor::PluginEditor(PluginProcessor& p) :
     set_tooltips(tooltip_value_);
     tooltip_value_.addListener(&tooltip_listener_);
 
+    gain_only_value_.referTo(proc_.getParameters()->show_only_gain);
+    gain_only_listener_.onChange = [this](juce::Value &v) { set_gain_only(v); };
+    set_gain_only(gain_only_value_);
+    gain_only_value_.addListener(&gain_only_listener_);
+
+
     addAndMakeVisible (header_component_);
     addAndMakeVisible (main_component_);
 
-    setSize(WIDTH, HEIGHT);
+    // This will be done by set_gain_only()
+    //setSize(FULL_WIDTH, FULL_HEIGHT);
 }
 
 //==============================================================================
@@ -53,6 +64,20 @@ void PluginEditor::set_tooltips(juce::Value &v) {
     }
 }
 
+//==============================================================================
+void PluginEditor::set_gain_only(juce::Value &v) {
+    auto gain_only = bool(v.getValue());
+
+    DBGLOG("PluginEditor::set_gain_only -- changing to ", gain_only);
+
+    if (gain_only) {
+        current_width_ = GAIN_WIDTH;
+    }  else {
+        current_width_ = FULL_WIDTH;
+    }
+
+    setSize(current_width_,  FULL_HEIGHT);
+}
 
 //==============================================================================
 void PluginEditor::paint(juce::Graphics& g)
@@ -69,8 +94,8 @@ void PluginEditor::resized()
     box.flexDirection = juce::FlexBox::Direction::column;
     box.alignContent = juce::FlexBox::AlignContent::center;
 
-    box.items.add(FlexItem(float(WIDTH), float(HEADER_HEIGHT), header_component_));
-    box.items.add(FlexItem(float(WIDTH-(MARGIN*2)), float(PROPERTY_HEIGHT), main_component_)
+    box.items.add(FlexItem(float(current_width_), float(HEADER_HEIGHT), header_component_));
+    box.items.add(FlexItem(float(current_width_-(MARGIN*2)), float(PROPERTY_HEIGHT), main_component_)
             .withMargin(FlexItem::Margin(0, MARGIN, 0, MARGIN)));
 
 

@@ -30,15 +30,21 @@ private:
 
     juce::Value tooltip_value_{juce::var{true}};
     ValueListener tooltip_listener_;
+    juce::Value gain_only_value_{juce::var{false}};
+    ValueListener gain_only_listener_;
+
     std::unique_ptr<juce::TooltipWindow> tooltip_window_;
 
     void paint(juce::Graphics&) override;
     void resized() override;
 
     void set_tooltips(juce::Value &v);
+    void set_gain_only(juce::Value &v);
 
     HeaderComponent header_component_;
     MainComponent main_component_;
+
+    int current_width_ = 100;
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginEditor)

@@ -83,9 +83,10 @@
 
     pan_slider_.setTooltip("Pan output left/right");
     // make the textbox read-only
-    pan_slider_.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxLeft, true, 60, 20);
+    pan_slider_.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxLeft, true, 50, 20);
     panAttachment.reset (new SliderAttachment (*apvts, "pan", pan_slider_));
     pan_box_.add(pan_slider_);
+    pan_box_.setMargin({5, 0, 0, 0});
 
     right_box_.add(pan_box_);
 
@@ -117,22 +118,33 @@ void MainComponent::resized()
     grid.alignItems = juce::Grid::AlignItems::start;
     grid.justifyContent = juce::Grid::JustifyContent::start;
     grid.justifyItems = juce::Grid::JustifyItems::start;
-    grid.templateColumns = { Track (Fr (1)), Track (Fr (2)) };
+
     grid.rowGap = juce::Grid::Px(5);
+    grid.templateRows = { Track (Fr (1)) };
 
-    grid.templateRows.add(Track (Fr (1)));
+    if (! bool(params_->show_only_gain.getValue())) {
+        DBGLOG("MainComponent::resized --- Showing both sides")
+        grid.templateColumns = { Track (Fr (1)), Track (Fr (2)) };
 
-    invert_box_.layoutTemplate = { Track(Fr(1)), Track(Fr(1))};
-    swap_box_.layoutTemplate = { Track(Fr(1)) };
-    offset_box_.layoutTemplate = { Track(Fr(1)) };
-    left_box_.layoutTemplate =  {
-        Track(Fr(30)), // Mode 
-        Track(Fr(12)), // Swap
-        Track(Fr(20)), // Invert
-        Track(Fr(10)), // Mute
-        Track(Fr(12)), // DC Offset
-        };
-    grid.items.add(GridItem(left_box_).withMargin({0, 5, 7, 0 }));
+        invert_box_.layoutTemplate = { Track(Fr(1)), Track(Fr(1))};
+        swap_box_.layoutTemplate = { Track(Fr(1)) };
+        offset_box_.layoutTemplate = { Track(Fr(1)) };
+        left_box_.layoutTemplate =  {
+            Track(Fr(30)), // Mode 
+            Track(Fr(12)), // Swap
+            Track(Fr(20)), // Invert
+            Track(Fr(10)), // Mute
+            Track(Fr(12)), // DC Offset
+            };
+        left_box_.setVisible(true);
+        grid.items.add(GridItem(left_box_).withMargin({0, 5, 7, 0 }));
+    } else {
+        left_box_.setVisible(false);
+        grid.templateColumns = { Track (Fr (1)) };
+        DBGLOG("MainComponent::resized --- Showing only gain side")
+
+    }
+
 
     gain_box_.layoutTemplate = { Track(Fr(1)) };
     pan_box_.layoutTemplate = { Track(Fr(1)) };

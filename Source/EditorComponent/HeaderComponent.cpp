@@ -37,6 +37,7 @@ const std::string about_text = "      " + PLUGIN_NAME_UPPER + "    \n"
 HeaderComponent::HeaderComponent(ProcessorParameters *params) {
 
     tooltip_value_.referTo(params->show_tooltips);
+    gain_only_value_.referTo(params->show_only_gain);
 
     nameLabel_.setText (JucePlugin_Name, juce::dontSendNotification);
     nameLabel_.setFont(juce::Font(32.0f, juce::Font::bold));
@@ -63,6 +64,7 @@ void HeaderComponent::show_menu_() {
 
     juce::PopupMenu menu;
 
+    menu.addItem(3, "Gain Only", true, bool(gain_only_value_.getValue()));
     menu.addItem(2, "Tooltips", true, bool(tooltip_value_.getValue()));
     menu.addItem(1, "About");
 
@@ -95,10 +97,13 @@ void HeaderComponent::show_about_box_() {
 void HeaderComponent::toggle_tooltips_() {
     auto new_value = ! bool(tooltip_value_.getValue());
     tooltip_value_.setValue(new_value);
-
-    // set up tick mark here.
 }
 
+//==============================================================================
+void HeaderComponent::toggle_gain_only_() {
+    auto new_value = ! bool(gain_only_value_.getValue());
+    gain_only_value_.setValue(new_value);
+}
 
 //==============================================================================
 void HeaderComponent::process_menu_(int results) {
@@ -109,14 +114,19 @@ void HeaderComponent::process_menu_(int results) {
         case 2 :
             toggle_tooltips_();
             break;
+        case 3 :
+            toggle_gain_only_();
+            break;
         default :
             break;
     }
     menuButton_.setEnabled(true);
 }
 
-constexpr int MARGIN = 10;
 //==============================================================================
+constexpr int MARGIN = 10;
+constexpr int LABEL_WIDTH = 220;
+
 void HeaderComponent::resized() {
 
     //const auto component_width = getWidth();
@@ -126,6 +136,22 @@ void HeaderComponent::resized() {
     menuButton_.changeWidthToFitText(int(menu_height));
     menuButton_.setTopLeftPosition({MARGIN, int(menu_height / 2.0f)});
 
-    nameLabel_.setSize(220, component_height-MARGIN);
-    nameLabel_.setCentreRelative(0.5f, 0.5f);
+    auto button_right_side = menuButton_.getWidth() + MARGIN;
+
+    nameLabel_.setSize(LABEL_WIDTH, component_height-MARGIN);
+
+    auto label_left = (getWidth() - LABEL_WIDTH)/2;
+
+    // The idea is - If the label won't crowd the button, then
+    // center the label on the entire window. Otherwise, center it
+    // it in the space left after placing the menu button.
+    if (label_left - button_right_side < 10 ) {
+        auto room = getWidth() - button_right_side;
+        auto start = button_right_side + (room - LABEL_WIDTH)/2;
+
+        nameLabel_.setTopLeftPosition(start, MARGIN/2);
+
+    } else {
+        nameLabel_.setCentreRelative(0.5f, 0.5f);
+    }
 }

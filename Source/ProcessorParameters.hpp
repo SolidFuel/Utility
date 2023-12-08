@@ -40,7 +40,10 @@ struct ProcessorParameters  {
 
     std::unique_ptr<juce::AudioProcessorValueTreeState> apvts;
 
+    // Only used by the UI. But we place them here
+    // to make it easier to save/restore
     juce::Value show_tooltips{juce::var{true}};
+    juce::Value show_only_gain{juce::var{false}};
 
     ProcessorParameters(juce::AudioProcessor& processor); 
 };
