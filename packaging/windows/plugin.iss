@@ -5,7 +5,7 @@
 #define MyAppVersion "${SF_VERSION}"
 #define MyAppPublisher "SolidFuel"
 #define MyAppURL "https://www.github.com/SolidFuel"
-#define MyFileNameStem "${SF_FILENAME_STEM}"
+#define MyFileNameStem "${SF_OUTPUT_STEM}"
 
 ; NOTE -- the command invocation must supply #srcdir
 
