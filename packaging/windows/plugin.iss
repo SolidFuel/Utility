@@ -5,12 +5,15 @@
 #define MyAppVersion "${SF_VERSION}"
 #define MyAppPublisher "SolidFuel"
 #define MyAppURL "https://www.github.com/SolidFuel"
-#define MyAppLower "${SF_PROJ_LOWER}
+#define MyFileNameStem "${SF_FILENAME_STEM}"
+
+; NOTE -- the command invocation must supply #srcdir
 
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
+; New-Guid in powershell
 AppId={{C4995BDB-DF8A-4DF1-AA01-A5EC2D1F1497}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
@@ -29,7 +32,7 @@ AllowNoIcons=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 OutputDir={#srcdir}\build
-OutputBaseFilename={#MyAppLower}
+OutputBaseFilename={#MyFileNameStem}-install
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern

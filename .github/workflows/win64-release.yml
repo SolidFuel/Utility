@@ -86,5 +86,5 @@ jobs:
               uses: actions/upload-artifact@v3
               with:
                 name: ${{env.SF_OUTPUT_STEM}}-install.exe
-                path: ${{github.workspace}}/${{env.BUILD_DIR}}/${{env.SF_PROJ_LOWER}}.exe
+                path: ${{github.workspace}}/${{env.BUILD_DIR}}/${{env.SF_OUTPUT_STEM}}-install.exe
             

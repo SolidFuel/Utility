@@ -3,9 +3,11 @@ VERSION 0.4.0 2024-01-01
 [New Features]
 * DC Offset removal
 * Pan control
+* Add ability to show only gain and pan controls
 
 [Bug Fixes]
 * Remove pops when gain control is fast slewed.
+* correct windows installer naming
 
 VERSION 0.3.0 2023-12-02
 
