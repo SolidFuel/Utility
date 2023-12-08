@@ -13,8 +13,11 @@ This user's manual will walk you through each of the controls on the _solidUtili
 
 The `menu` button on the left contains:
 
-- `tooltip` : Turn on/off the tooltips that most controls have.
-- `about`   : menu option to display version, copyright, and 
+![solidUtility's menu](utility-menu.png)
+
+- `Gain Only` : When on, the plugin only displays the gain and pan controls (Off by default).
+- `Tooltip` : Turn on/off the tooltips that most controls have (On by default).
+- `About`   : menu option to display version, copyright, and 
               other information about the software.
 
 ## Main Controls

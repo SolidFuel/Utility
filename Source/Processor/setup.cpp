@@ -15,10 +15,16 @@
 #include "../PluginEditor.hpp"
 #include "../Debug.hpp"
 
+#include "version.hpp"
+
+
 #if SF_DEBUG
     std::unique_ptr<juce::FileLogger> dbgout = 
         std::unique_ptr<juce::FileLogger>
-            (juce::FileLogger::createDateStampedLogger(JucePlugin_Name, "LogFile", ".txt", "--------V1--------"));
+            (juce::FileLogger::createDateStampedLogger(
+                std::string("SolidFuel/") + JucePlugin_Name, "LogFile", 
+                ".txt", "---- " + PLUGIN_VERSION + " (" + GIT_HASH +")")
+            );
 #endif
 
 
@@ -107,6 +113,7 @@ void PluginProcessor::getStateInformation(juce::MemoryBlock& destData) {
     //--------------------------------------
     auto child = xml->createNewChildElement("GUI-Parameters");
     child->setAttribute("show_tooltips", bool(parameters_.show_tooltips.getValue()));
+    child->setAttribute("show_only_gain", bool(parameters_.show_only_gain.getValue()));
 
     //--------------------------------------
     DBGLOG("XML out =", xml->toString());
@@ -137,6 +144,8 @@ void PluginProcessor::parseCurrentXml(const juce::XmlElement * elem) {
     if (child) {
         parameters_.show_tooltips = child->getBoolAttribute("show_tooltips", 
             bool(parameters_.show_tooltips.getValue()));
+        parameters_.show_only_gain = child->getBoolAttribute("show_only_gain", 
+            bool(parameters_.show_only_gain.getValue()));
     }
 
     DBGLOG(" -- others done")

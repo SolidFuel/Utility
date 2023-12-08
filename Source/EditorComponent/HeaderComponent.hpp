@@ -34,11 +34,13 @@ private:
     juce::TextButton menuButton_;
 
     juce::Value tooltip_value_{juce::var{true}};
+    juce::Value gain_only_value_{juce::var{false}};
 
     void show_menu_();
     void process_menu_(int results);
     void show_about_box_();
     void toggle_tooltips_();
+    void toggle_gain_only_();
 
 //==========================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(HeaderComponent)
