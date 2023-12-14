@@ -1,4 +1,4 @@
-# solidUtility _V0.3.0_
+# solidUtility _V1.0.0_
 
 **solidUtility** is a versatile channel utility plug-in for Digital Audio Workstations.
 It is compatible with all DAWs that support the VST3 plug-in format.
